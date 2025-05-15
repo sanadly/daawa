@@ -1,0 +1,91 @@
+{
+  "meta": {
+    "generatedAt": "2025-05-12T17:23:01.684Z",
+    "tasksAnalyzed": 10,
+    "thresholdScore": 5,
+    "projectName": "Task Master",
+    "usedResearch": false
+  },
+  "complexityAnalysis": [
+    {
+      "taskId": 1,
+      "taskTitle": "Set up project infrastructure and architecture",
+      "complexityScore": 8,
+      "recommendedSubtasks": 3,
+      "expansionPrompt": "Break down the project infrastructure setup into detailed subtasks covering frontend initialization with Next.js, backend setup with NestJS and PostgreSQL, and DevOps configuration with Docker and CI/CD.",
+      "reasoning": "High complexity due to multiple technologies (Next.js, NestJS, PostgreSQL, Docker, CI/CD) and architectural decisions. The task requires setting up both frontend and backend with proper configuration, internationalization, and DevOps practices."
+    },
+    {
+      "taskId": 2,
+      "taskTitle": "Implement authentication and user management",
+      "complexityScore": 7,
+      "recommendedSubtasks": 4,
+      "expansionPrompt": "Break down the authentication system implementation into subtasks covering backend authentication API development, frontend authentication UI components, role-based access control, and user profile management.",
+      "reasoning": "Authentication involves security considerations, multiple user roles, and both frontend and backend components. JWT implementation with refresh tokens adds complexity, as does internationalization requirements for the UI components."
+    },
+    {
+      "taskId": 3,
+      "taskTitle": "Develop event creation and draft state functionality",
+      "complexityScore": 6,
+      "recommendedSubtasks": 3,
+      "expansionPrompt": "Break down the event creation functionality into subtasks covering backend event entity and API development, frontend multi-step creation wizard, and draft state implementation with preview capability.",
+      "reasoning": "This task involves creating a multi-step form wizard, implementing state management for events, and ensuring proper validation. The draft state functionality adds complexity but is more focused than the infrastructure or authentication tasks."
+    },
+    {
+      "taskId": 4,
+      "taskTitle": "Implement admin interface and manual activation flow",
+      "complexityScore": 5,
+      "recommendedSubtasks": 3,
+      "expansionPrompt": "Break down the admin interface implementation into subtasks covering admin dashboard UI development, event review and activation workflow, and admin-specific API endpoints with proper authorization.",
+      "reasoning": "The admin interface is moderately complex, requiring specialized UI components, role-based access control, and email notification integration. However, it builds upon existing authentication and event systems."
+    },
+    {
+      "taskId": 5,
+      "taskTitle": "Build guest management and invitation system",
+      "complexityScore": 7,
+      "recommendedSubtasks": 4,
+      "expansionPrompt": "Break down the guest management system into subtasks covering guest entity and API development, guest list UI with filtering, invitation methods (manual, bulk import, self-registration), and guest status tracking.",
+      "reasoning": "This task involves complex data relationships, multiple import methods, email integration, and capacity management with +N guest logic. The duplicate detection and various invitation methods add significant complexity."
+    },
+    {
+      "taskId": 6,
+      "taskTitle": "Develop digital pass generation system",
+      "complexityScore": 9,
+      "recommendedSubtasks": 5,
+      "expansionPrompt": "Break down the digital pass system into subtasks covering pass customization interface, PDF generation implementation, Apple Wallet integration, Google Wallet integration, and QR code generation with delivery system.",
+      "reasoning": "This is one of the most complex tasks due to integration with multiple external systems (Apple Wallet, Google Wallet), certificate management, PDF generation, and QR code implementation. Each pass type requires different technical approaches and testing on actual devices."
+    },
+    {
+      "taskId": 7,
+      "taskTitle": "Create guest portal and self-registration flow",
+      "complexityScore": 5,
+      "recommendedSubtasks": 3,
+      "expansionPrompt": "Break down the guest portal development into subtasks covering self-registration form with +N capability, pass display and download interface, and guest authentication via unique links.",
+      "reasoning": "The guest portal is moderately complex, building on existing systems but requiring careful UX design for self-registration. Mobile optimization and internationalization add some complexity, but the scope is more focused than other tasks."
+    },
+    {
+      "taskId": 8,
+      "taskTitle": "Implement check-in web module",
+      "complexityScore": 8,
+      "recommendedSubtasks": 4,
+      "expansionPrompt": "Break down the check-in module implementation into subtasks covering mobile-optimized UI development, QR scanning integration, check-in processing logic for primary and +N guests, and check-in staff authentication and history tracking.",
+      "reasoning": "The check-in module is highly complex due to camera API integration, mobile browser compatibility requirements, and real-time processing needs. The QR scanning functionality and handling various check-in scenarios add significant technical challenges."
+    },
+    {
+      "taskId": 9,
+      "taskTitle": "Develop reporting and analytics",
+      "complexityScore": 6,
+      "recommendedSubtasks": 3,
+      "expansionPrompt": "Break down the reporting system into subtasks covering analytics data models and API endpoints, dashboard widgets and visualizations, and exportable report generation.",
+      "reasoning": "Reporting involves data aggregation, visualization components, and export functionality. The real-time monitoring adds complexity, but the task is more focused on data presentation than complex business logic."
+    },
+    {
+      "taskId": 10,
+      "taskTitle": "Implement account management and finalize system",
+      "complexityScore": 7,
+      "recommendedSubtasks": 4,
+      "expansionPrompt": "Break down the system finalization into subtasks covering account settings and organization profile management, system-wide error handling and logging, documentation and user guides, and final testing and deployment preparation.",
+      "reasoning": "This task involves multiple disparate elements including account management, documentation, optimization, and deployment preparation. The comprehensive nature of system-wide testing and internationalization verification adds significant complexity."
+    }
+  ]
+}

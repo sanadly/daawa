@@ -1,0 +1,155 @@
+Product Requirements Document: Daawa
+
+Version: 1.9 [UPDATED]
+Date: October 26, 2023
+
+Status: Draft
+
+---
+1. Introduction
+---
+
+1.1 Purpose:
+This document outlines requirements for Daawa, a SaaS platform enabling organizers to manage event invitations, guest lists, and check-in via unique QR codes. Daawa supports guest acquisition via shareable self-registration links or direct channels (Email initially; SMS/WhatsApp Post-MVP). Organizers can specify the number of additional guests (+N) allowed per primary invitee, within the overall event capacity limit. Organizers explore setup features in a 'Draft' state before activating the event via manual admin approval (primary) or potential automated payment integration. Daawa emphasizes simple, unified customization for digital passes (PDF, Apple Wallet, Google Wallet) and mandates support for English and Arabic (RTL). Check-in is facilitated via a mobile-responsive web-based Check-in Module within the main application, utilizing the device camera. The backend uses a modular, API-first architecture for potential reuse. [UPDATED] The frontend user interfaces will be developed using **React/Next.js styled with Tailwind CSS and utilizing Daisy UI component library** for consistency and rapid development.
+
+1.2 Problem Statement:
+Organizers need flexible guest management (+N guests per invite), easy setup, branded digital passes, and reliable check-in, often without dedicated hardware or native app installations. Handling various payment methods, exploring features pre-payment, managing diverse guest tech-savviness, supporting Arabic/RTL, and enabling simple cross-format pass design are key challenges. Building backend systems monolithically also hinders future agility, and consistent, maintainable UI development requires standardized tools.
+
+1.3 Proposed Solution:
+Daawa offers a tiered, usage-based SaaS model. Organizers explore in 'Draft' state. To activate, they select a guest count tier and submit for manual (primary) or potential automated activation. Active events allow organizers to set a default '+N' guest limit for self-registrants and specify '+N' for manually added guests. All guests (primary + additional) count towards the paid event limit. Features include the live registration link, email invites (SMS/WhatsApp Post-MVP), customizable PDF/Wallet pass generation, and QR check-in via a mobile-optimized web module. A modular, API-first backend powers the platform, localized for EN/AR. [UPDATED] The frontend is built with **React/Next.js, leveraging Tailwind CSS utility classes and Daisy UI components** for a consistent look and feel across the Organizer Portal, Guest Portal, and Check-in Module.
+
+1.4 Scope:
+Covers MVP features: 'Draft' state exploration; Manual activation; Core 'Active' features (Self-Reg Link, Email Invites, +N Guest specification, Pass Generation with unified customization, Web-based Check-in Module); EN/AR support; API-first backend; [UPDATED] **Frontend built with specified UI stack (Tailwind/Daisy UI)**. SMS/WhatsApp, automated payments, native scanner app are Post-MVP.
+
+---
+2. Goals & Objectives
+---
+
+2.1 Business Goals: (As in v1.5)
+  - Acquire paying organizers... Facilitate adoption via 'Draft' state... Implement efficient activation... Maximize LTV... Establish revenue stream... Minimize churn... Serve EN/AR markets...
+
+2.2 Product Goals:
+  - Provide seamless 'Draft' state... Offer clear tiered pricing... Implement reliable activation process... Provide simple, unified pass customization... Offer flexible invitation methods... Allow simple control over +N guests... Ensure accurate status tracking...
+  - Deliver a reliable QR check-in system via a web-based, mobile-responsive module.
+  - Ensure full usability for English and Arabic users...
+  - Build on a scalable, reusable API-first backend using preferred technologies (NestJS).
+  - [UPDATED] Deliver a consistent, responsive, and maintainable user interface using **React/Next.js with Tailwind CSS and Daisy UI**.
+
+2.3 User Goals (Organizer): (As in v1.5)
+  - Explore setup risk-free... Understand pricing... Easily activate event... Simply define +N guests... Customize pass easily... Know event status... Manage guests/check-in via web... Request upgrades...
+
+2.4 User Goals (Guest): (As in v1.5)
+  - Register easily... Receive digital pass... Access details... Quick check-in... Receive updates...
+
+2.5 User Goals (Platform Administrator): (As in v1.5)
+  - Efficiently process activations... Securely activate... Monitor... Manage tiers/upgrades...
+
+---
+3. User Personas
+---
+(As in v1.5 - Organizer, Guest, Check-in Staff [using web module on mobile], Platform Administrator)
+
+---
+4. Functional Requirements
+---
+*(Implication: Frontend components, built with React/Next.js/Tailwind/Daisy UI, interact with backend APIs)*
+
+4.0 Platform Onboarding & Dashboard (As in v1.5)
+4.1 Event Creation & Setup (Organizer Portal) (As in v1.5)
+4.2 Guest List Management (Organizer Portal) ('Active' Events Only) (As in v1.8)
+4.3 Invitation & Card Delivery ('Active' Events Only) (As in v1.8)
+4.4 RSVP Management & Updates ('Active' Events Only) (As in v1.5)
+4.5 QR Code & Card System ('Active' Events Only) (As in v1.8)
+4.6 Guest Experience (Guest Portal via QR/Card Link) ('Active' Events Only) (As in v1.8)
+4.7 Event Day Check-in (Web-Based Module) ('Active' Events Only) (As in v1.8)
+4.8 Communication (Organizer Portal) ('Active' Events Only) (As in v1.8)
+4.9 Reporting & Analytics (Organizer Portal) ('Active' Events Only) (As in v1.8)
+4.10 Account Management & SaaS Structure (As in v1.8)
+4.11 Platform Administration Interface (As in v1.8)
+4.12 API Definitions (High-Level) & Data Models (As in v1.8)
+
+---
+5. Non-Functional Requirements
+---
+
+5.1 Performance: (As in v1.8)
+5.2 Architecture & Design Principles: (As in v1.8 - Backend: Modular, API-First, NestJS).
+5.3 Reliability: (As in v1.8 - Online-only check-in MVP).
+5.4 Security: (As in v1.8).
+5.5 Usability: (As in v1.8 - Focus on simplicity, clarity, mobile web for check-in).
+5.6 Compatibility:
+  - NFR-6.1: Web Portals: Latest 2 versions of Chrome, Firefox, Safari, Edge.
+  - NFR-6.2: Guest portal: Responsive across common mobile/tablet/desktop sizes.
+  - NFR-6.3: Wallet passes: Compatible with current iOS/Android Wallet functionality.
+  - NFR-6.4: Check-in Web Module: Requires mobile browsers supporting `getUserMedia`.
+  - [UPDATED] NFR-6.5: Preferred Technology Stack:
+      - **Frontend:** **React / Next.js**
+      - **UI Styling/Components:** **Tailwind CSS, Daisy UI**
+      - **Backend:** **NestJS (Node.js)**
+      - **Database:** **PostgreSQL**
+5.7 Internationalization & Localization (I18n & L10n): (As in v1.8 - Strings externalized, EN/AR, RTL support essential for UI stack).
+5.8 Image Handling Strategy: (As defined in v1.7).
+5.9 Library Selections: (As defined in v1.8 - Puppeteer, passkit-generator, Google Pay API).
+5.10 Certificate Management: (As defined in v1.7).
+
+---
+6. Design & UX Considerations
+---
+
+6.1 Visual Design:
+  - Clean, modern, professional (**Daawa** branding). Visually distinct states. Simple, appealing card output.
+  - [UPDATED] Leverage **Daisy UI themes and components** for a consistent look and feel across the application, while allowing customization where necessary (e.g., within card design options). Ensure selected Daisy UI theme works well with both LTR and RTL.
+
+6.2 User Experience:
+  - Intuitive flow... Clear manual activation communication... Simple unified card designer... Effortless guest registration... Actionable dashboard... Efficient Admin UI... Check-in module optimized for speed...
+  - [UPDATED] Ensure **Daisy UI components** enhance usability and accessibility.
+
+6.3 Mobile First:
+  - Guest Portal, Check-in Web Module are primary focus. Tailwind CSS facilitates responsiveness.
+
+6.4 Font Selection: (As in v1.8 - PDF fonts; Web UI uses theme/Tailwind defaults unless overridden).
+
+6.5 Iconography:
+  - Utilize icons consistent with Daisy UI's style or a compatible library (e.g., Heroicons often used with Tailwind). Ensure RTL support.
+
+6.6 Proxy Registration Handling: [CONFIRMED UX APPROACH] (As in v1.8)
+6.7 Offline Sync Conflict Resolution (Web Check-in Module): [CONFIRMED UX APPROACH] (As in v1.8 - MVP Online-Only).
+
+---
+7. Release Criteria (MVP - Minimum Viable Product)
+---
+
+Focus: Exploration in 'Draft'. Manual admin activation. Core 'Active' features incl. +N guest handling (counting towards limit), unified customizable PDF/Wallet pass generation. Web-based Check-in Module (online-only). Full EN/AR. Modular API-first backend (NestJS/PostgreSQL). [UPDATED] **Frontend built with React/Next.js using Tailwind CSS and Daisy UI.**
+
+Must Include:
+  - Platform Onboarding, Dashboard (Draft/Pending/Active states).
+  - 'Draft' State Functionality (Setup, Form Config incl. Default +N, Unified Card Design/Preview).
+  - Event Submission Flow (Manual activation request).
+  - Admin Interface (View Pending, Activate Button, Basic User Lookup).
+  - Feature Activation Logic (Manual). Organizer Notification.
+  - 'Active' State Features: Generate Reg Link, Guest Self-Registration (incl. adding +N guests), Manual Guest Add/Import (incl. specifying +N, enforcing capacity with +N), Direct Email Invites, PDF/Wallet Pass Generation (custom design, showing primary/+N names).
+  - Basic Guest Portal.
+  - Web-Based Check-in Module (FE-7.0): Mobile responsive, Login, QR Scan via Camera API, Display Primary/+N, Manual Lookup, Check-in UI with +N checkboxes, Online-only check-in recording via API.
+  - Basic Organizer Notifications. Account Management (Basic Billing Status).
+  - Backend developed via modular API-first principles. Basic API documentation.
+  - [UPDATED] **Frontend interfaces (Organizer, Guest, Check-in, Admin) developed using React/Next.js, Tailwind CSS, and Daisy UI components.**
+  - Core NFRs met (incl. confirmed Library choices, Image Handling, Cert Mgt Plan, Online-Only Check-in for MVP, DB Schema approach).
+
+Explicitly Excluded from MVP:
+  Automated Payment Integration/Activation, Automated Upgrades, SMS/WhatsApp Integration, Native Scanner App, Offline Check-in Capability, Advanced Form Customization/Logic, Advanced Card Design options/layouts, Sub-events, Team Roles, Advanced Analytics, Guest self-update portal, Waitlist feature, Physical card ordering, Wallet Pass *update* notifications, Broadcast messages beyond email, Complex Duplicate Merging UI, Printable Guest List, Public API Access, Additional Languages, Admin Audit Log.
+
+---
+8. Future Considerations / Roadmap
+---
+(As in v1.8 - Native Scanner, SMS/WhatsApp, Auto Payments, etc.)
+
+---
+9. Open Issues / Questions
+---
+  - [Process] Finalize specific Admin activation confirmation messages/emails and payment method details displayed to organizer.
+  - [Technical] Detailed PostgreSQL indexing strategy based on query patterns.
+  - [Technical] Robust error handling/logging strategy across APIs and frontend.
+  - [UX] Final testing/refinement of Check-in Web Module UI flow on various mobile devices.
+  - [UI] Specific Daisy UI theme selection and any necessary theme customizations.
+
+---
