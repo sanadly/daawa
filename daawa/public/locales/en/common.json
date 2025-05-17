@@ -119,5 +119,17 @@
   "resend_verification_email_label": "Email Address",
   "resend_verification_email_placeholder": "Enter your registered email address",
   "resend_verification_submit_button": "Resend Email",
-  "resend_verification_go_back_button": "Go back"
+  "resend_verification_go_back_button": "Go back",
+  "error_api_email_not_verified": "Your email address is not verified. Please check your inbox for a verification link or request a new one.",
+  "error_api_email_already_registered": "This email address is already registered. Please try logging in or use a different email.",
+  "error_api_invalid_or_expired_reset_token": "This password reset link is invalid or has expired. Please request a new one.",
+  "error_api_password_too_short": "The password must be at least 8 characters long.",
+  "dashboard_redirecting": "Redirecting to login...",
+  "dashboard_login_success_message": "You have successfully logged in.",
+  "dashboard_auth_status_label": "Your Authentication Status:",
+  "dashboard_auth_status_authenticated": "Authenticated",
+  "dashboard_auth_status_not_authenticated": "Not Authenticated",
+  "dashboard_user_id_label": "User ID:",
+  "dashboard_user_email_label": "Email:",
+  "dashboard_go_to_homepage_button": "Go to Homepage"
 } 

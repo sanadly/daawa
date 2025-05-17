@@ -119,5 +119,17 @@
   "resend_verification_email_label": "عنوان البريد الإلكتروني",
   "resend_verification_email_placeholder": "أدخل عنوان بريدك الإلكتروني المسجل",
   "resend_verification_submit_button": "إعادة إرسال البريد",
-  "resend_verification_go_back_button": "العودة"
+  "resend_verification_go_back_button": "العودة",
+  "error_api_email_not_verified": "لم يتم التحقق من عنوان بريدك الإلكتروني. يرجى مراجعة صندوق الوارد الخاص بك للحصول على رابط التحقق أو طلب رابط جديد.",
+  "error_api_email_already_registered": "عنوان البريد الإلكتروني هذا مسجل بالفعل. يرجى محاولة تسجيل الدخول أو استخدام بريد إلكتروني مختلف.",
+  "error_api_invalid_or_expired_reset_token": "رابط إعادة تعيين كلمة المرور هذا غير صالح أو انتهت صلاحيته. يرجى طلب رابط جديد.",
+  "error_api_password_too_short": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.",
+  "dashboard_redirecting": "يتم الآن إعادة توجيهك إلى صفحة تسجيل الدخول...",
+  "dashboard_login_success_message": "لقد سجلت دخولك بنجاح.",
+  "dashboard_auth_status_label": "حالة المصادقة الخاصة بك:",
+  "dashboard_auth_status_authenticated": "تمت المصادقة",
+  "dashboard_auth_status_not_authenticated": "لم تتم المصادقة",
+  "dashboard_user_id_label": "معرف المستخدم:",
+  "dashboard_user_email_label": "البريد الإلكتروني:",
+  "dashboard_go_to_homepage_button": "الذهاب إلى الصفحة الرئيسية"
 } 

@@ -10,6 +10,17 @@ interface LoginFormProps {
   onSuccess?: () => void; // Optional callback for successful login
 }
 
+// Define a type for the expected API error structure
+interface ApiErrorResponse {
+  response?: {
+    data?: {
+      message?: string | string[]; // Message can be a string or an array of strings (e.g., class-validator)
+      error?: string;
+      statusCode?: number;
+    };
+  };
+}
+
 const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
   const { t } = useTranslation('common'); // Or your specific auth namespace
   const auth = useAuth();
@@ -40,11 +51,23 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
         router.push('/dashboard'); // Changed from '/' to '/dashboard'
       }
     } catch (err) {
-        if (err instanceof Error) {
-            setError(err.message || t('login_failed', 'Login failed. Please try again.'));
+      let errorMessage = t('login_failed_unknown', 'An unknown error occurred during login.');
+      const apiError = err as ApiErrorResponse; // Type assertion
+
+      if (typeof apiError?.response?.data?.message === 'string') {
+        const apiErrorMessageString = apiError.response.data.message as string;
+        if (apiErrorMessageString === 'Please verify your email address before logging in.') {
+          errorMessage = t('error_api_email_not_verified', 'Your email address is not verified. Please check your inbox for a verification link or request a new one.');
         } else {
-            setError(t('login_failed_unknown', 'An unknown error occurred during login.'));
+          errorMessage = apiErrorMessageString || t('login_failed', 'Login failed. Please try again.');
         }
+      } else if (Array.isArray(apiError?.response?.data?.message) && apiError.response.data.message.length > 0) {
+        // Handle case where message is an array (e.g., from class-validator)
+        errorMessage = apiError.response.data.message.join(', '); // Simple join, could be more sophisticated
+      } else if (err instanceof Error) {
+        errorMessage = err.message || t('login_failed', 'Login failed. Please try again.');
+      }
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }

@@ -11,6 +11,17 @@ interface RegisterFormProps {
   onSuccess?: () => void;
 }
 
+// Define a type for the expected API error structure (can be shared or redefined)
+interface ApiErrorResponse {
+  response?: {
+    data?: {
+      message?: string | string[];
+      error?: string;
+      statusCode?: number;
+    };
+  };
+}
+
 // Assuming RegisterData will be made flexible regarding 'username' (e.g., username?: string)
 // or the backend API handles its absence. If not, the apiPayload construction might need adjustment.
 
@@ -58,11 +69,22 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
         onSuccess();
       }
     } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message || t('registration_failed', 'Registration failed. Please try again.'));
-      } else {
-        setError(t('registration_failed_unknown', 'An unknown error occurred during registration.'));
+      let errorMessage = t('registration_failed_unknown', 'An unknown error occurred during registration.');
+      const apiError = err as ApiErrorResponse; // Type assertion
+
+      if (typeof apiError?.response?.data?.message === 'string') {
+        const apiErrorMessageString = apiError.response.data.message as string;
+        if (apiErrorMessageString === 'Email already registered') {
+          errorMessage = t('error_api_email_already_registered', 'This email address is already registered. Please try logging in or use a different email.');
+        } else {
+          errorMessage = apiErrorMessageString || t('registration_failed', 'Registration failed. Please try again.');
+        }
+      } else if (Array.isArray(apiError?.response?.data?.message) && apiError.response.data.message.length > 0) {
+        errorMessage = apiError.response.data.message.join(', ');
+      } else if (err instanceof Error) {
+        errorMessage = err.message || t('registration_failed', 'Registration failed. Please try again.');
       }
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }

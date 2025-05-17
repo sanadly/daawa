@@ -5,6 +5,17 @@ import { useParams, useRouter } from 'next/navigation'; // Corrected import for 
 import { useTranslation } from 'next-i18next'; // Uncommented
 import { fetchApi } from '@/services/apiAuth'; // Assuming apiAuth.ts is in @/services
 
+// Define a type for the expected API error structure
+interface ApiErrorResponse {
+  response?: {
+    data?: {
+      message?: string | string[];
+      error?: string;
+      statusCode?: number;
+    };
+  };
+}
+
 const resetPasswordApiCall = async (token: string, newPassword: string): Promise<{ message: string }> => {
   // Actual API call to your backend.
   return fetchApi('/auth/reset-password', {
@@ -73,7 +84,33 @@ const ResetPasswordPage: React.FC = () => {
       setIsError(false);
       router.push('/login');
     } catch (err) {
-      setMessage((err as Error).message || t('reset_password_generic_error', 'Failed to reset password. The link may be invalid or expired.'));
+      let errorMessage = t('reset_password_generic_error', 'Failed to reset password. The link may be invalid or expired.');
+      const apiError = err as ApiErrorResponse;
+
+      if (typeof apiError?.response?.data?.message === 'string') {
+        const apiErrorMessageString = apiError.response.data.message as string;
+        if (apiErrorMessageString === 'Invalid or expired password reset token.') {
+          errorMessage = t('error_api_invalid_or_expired_reset_token', 'This password reset link is invalid or has expired. Please request a new one.');
+        } else if (apiErrorMessageString === 'Password must be at least 8 characters long.') {
+          errorMessage = t('error_api_password_too_short', 'The password must be at least 8 characters long.');
+        } else {
+          errorMessage = apiErrorMessageString; // Use the specific API message if not one of the above
+        }
+      } else if (Array.isArray(apiError?.response?.data?.message) && apiError.response.data.message.length > 0) {
+        // Handle cases like class-validator errors where message is an array
+        // For "Password must be at least 8 characters long.", class-validator might return it in an array.
+        // You might want to check the array contents more specifically here if needed.
+        const messages = apiError.response.data.message;
+        if (messages.some(msg => msg.includes('Password must be at least 8 characters long'))) {
+            errorMessage = t('error_api_password_too_short', 'The password must be at least 8 characters long.');
+        } else {
+            errorMessage = messages.join(', '); // Fallback to joining messages
+        }
+      } else if (err instanceof Error) {
+        errorMessage = err.message; // Fallback for non-API errors
+      }
+
+      setMessage(errorMessage);
       setIsError(true);
     } finally {
       setIsLoading(false);
