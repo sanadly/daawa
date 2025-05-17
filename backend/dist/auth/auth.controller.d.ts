@@ -10,10 +10,10 @@ export declare class AuthController {
     private readonly authService;
     constructor(authService: AuthService);
     register(createUserDto: CreateUserDto): Promise<{
-        username: string;
-        email: string;
         id: number;
-    } | null>;
+        email: string;
+        role: import("generated/prisma").$Enums.Role;
+    }>;
     login(loginUserDto: LoginUserDto): Promise<import("./auth.service").LoginResponse>;
     refreshToken(req: AuthenticatedRequest, authHeader: string): Promise<import("./auth.service").Tokens>;
     logout(req: AuthenticatedRequest): Promise<{
@@ -23,12 +23,23 @@ export declare class AuthController {
     verifyEmail(token: string): Promise<{
         message: string;
         user?: {
-            username: string;
-            email: string;
             id: number;
+            email: string;
+            role: import("generated/prisma").$Enums.Role;
         };
     }>;
     resendVerificationEmailController(resendVerificationEmailDto: ResendVerificationEmailDto): Promise<{
+        message: string;
+    }>;
+    forgotPasswordController(body: {
+        email: string;
+    }): Promise<{
+        message: string;
+    }>;
+    resetPasswordController(body: {
+        token: string;
+        newPassword: string;
+    }): Promise<{
         message: string;
     }>;
 }

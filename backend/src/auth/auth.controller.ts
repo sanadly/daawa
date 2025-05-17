@@ -11,6 +11,7 @@ import {
   UnauthorizedException,
   Query,
   BadRequestException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -38,7 +39,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async login(@Body() loginUserDto: LoginUserDto) {
     const user = await this.authService.validateUser(
-      loginUserDto.username,
+      loginUserDto.email,
       loginUserDto.password,
     );
     if (!user) {
@@ -100,5 +101,39 @@ export class AuthController {
     return this.authService.resendVerificationEmail(
       resendVerificationEmailDto.email,
     );
+  }
+
+  @Post('forgot-password')
+  @HttpCode(HttpStatus.OK)
+  async forgotPasswordController(
+    @Body() body: { email: string }, // Assuming a simple body with email
+  ): Promise<{ message: string }> {
+    if (!body || !body.email) {
+      throw new BadRequestException('Email is required.');
+    }
+    return this.authService.forgotPassword(body.email);
+  }
+
+  @Post('reset-password')
+  @HttpCode(HttpStatus.OK)
+  async resetPasswordController(
+    @Body() body: { token: string; newPassword: string },
+  ): Promise<{ message: string }> {
+    if (!body || !body.token || !body.newPassword) {
+      throw new BadRequestException('Token and new password are required.');
+    }
+    try {
+      return await this.authService.resetPassword(body.token, body.newPassword);
+    } catch (error) {
+      if (error instanceof UnauthorizedException) {
+        throw new UnauthorizedException(error.message); // Invalid/expired token
+      }
+      if (error instanceof BadRequestException) {
+        throw new BadRequestException(error.message); // Password policy violation
+      }
+      // Log other unexpected errors
+      console.error('Unexpected error during password reset:', error);
+      throw new InternalServerErrorException('Could not reset password.');
+    }
   }
 }

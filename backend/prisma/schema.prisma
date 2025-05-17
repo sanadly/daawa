@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String?
+  language  String   @default("en")
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Adding back fields required by AuthService/UsersService
+  hashedRefreshToken   String? 
+  isEmailVerified      Boolean @default(false)
+  emailVerificationToken String? @unique
+
+  passwordResetTokens PasswordResetToken[]
+  events              Event[]
+}
+
+model PasswordResetToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  expires   DateTime
+  createdAt DateTime @default(now())
+
+  userId    Int      // Foreign key to User
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Event {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  dateTime    DateTime
+  location    String?
+  language    String   @default("en")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  organizerId Int      // Foreign key to the User who organized the event
+  organizer   User     @relation(fields: [organizerId], references: [id], onDelete: Cascade)
+
+  @@index([organizerId])
+}

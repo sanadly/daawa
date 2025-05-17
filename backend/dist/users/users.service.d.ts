@@ -1,14 +1,25 @@
-import { Repository } from 'typeorm';
-import { User } from './entities/user.entity';
+import { PrismaService } from '../prisma/prisma.service';
+import { User, PasswordResetToken } from '../../generated/prisma';
+export interface CreateUserInput {
+    email: string;
+    password: string;
+    name?: string | null;
+    emailVerificationToken?: string | null;
+    isEmailVerified: boolean;
+}
 export declare class UsersService {
-    private readonly usersRepository;
-    constructor(usersRepository: Repository<User>);
-    findOneByUsername(username: string): Promise<User | null>;
+    private readonly prisma;
+    constructor(prisma: PrismaService);
     findOneByEmail(email: string): Promise<User | null>;
-    create(user: Partial<User>): Promise<User>;
+    findOneById(id: number): Promise<User | null>;
+    create(data: CreateUserInput): Promise<User>;
     setCurrentRefreshToken(refreshToken: string | null, userId: number): Promise<void>;
     getUserIfRefreshTokenMatches(refreshToken: string, userId: number): Promise<User | null>;
     findOneByEmailVerificationToken(token: string): Promise<User | null>;
-    setEmailVerified(userId: number): Promise<void>;
-    updateEmailVerificationToken(userId: number, newToken: string): Promise<void>;
+    setEmailVerified(userId: number): Promise<User>;
+    updateEmailVerificationToken(userId: number, newToken: string): Promise<User>;
+    updatePassword(userId: number, newPasswordHash: string): Promise<User>;
+    createPasswordResetToken(userId: number, token: string, expires: Date): Promise<PasswordResetToken>;
+    findUserByPasswordResetToken(tokenValue: string): Promise<User | null>;
+    clearPasswordResetTokensForUser(userId: number): Promise<void>;
 }
