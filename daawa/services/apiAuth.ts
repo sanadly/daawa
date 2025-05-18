@@ -1,6 +1,6 @@
 // daawa/services/apiAuth.ts
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001'; // Ensure your backend port is correct
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3002'; // Updated to port 3002 to match backend
 const TOKEN_STORAGE_KEY = 'daawa_auth_tokens'; // Same key as in AuthContext
 
 // Define types for request bodies and responses based on your DTOs and backend responses

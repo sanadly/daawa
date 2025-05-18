@@ -1,30 +1,34 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { type UserData, type AuthTokens } from '@/services/apiAuth'; // Assuming AuthTokens is exported
+import { User, AuthTokens, Permission, Role } from '@/types/auth';
+import { getMyPermissions } from '@/services/apiRoleManagement';
 
 // Key for localStorage
 const TOKEN_KEY = 'daawa_auth_tokens';
 
 interface AuthContextType {
-  user: UserData | null;
+  user: User | null;
   accessToken: string | null;
   refreshToken: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (userData: UserData, tokens: AuthTokens) => void;
+  permissions: Permission[];
+  login: (userData: User, tokens: AuthTokens) => void;
   logout: () => void;
-  // setTokens: (tokens: AuthTokens) => void; // Could be useful for token refresh
+  hasPermission: (permission: Permission | Permission[]) => boolean;
+  hasRole: (role: Role) => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<UserData | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [permissions, setPermissions] = useState<Permission[]>([]);
 
   useEffect(() => {
     const loadUserFromStorage = async () => {
@@ -55,6 +59,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           // For now, this will just make isAuthenticated true if tokens are present.
           // This is a simplification and should be improved.
           setIsAuthenticated(true); // Simplified: if tokens exist, consider authenticated
+          
+          // Fetch user permissions when authenticated
+          try {
+            const myPermissions = await getMyPermissions();
+            setPermissions(myPermissions);
+          } catch (error) {
+            console.error('Failed to load user permissions', error);
+          }
         }
       } catch (error) {
         console.error('Failed to load user from storage', error);
@@ -67,7 +79,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     loadUserFromStorage();
   }, []);
 
-  const login = (userData: UserData, tokens: AuthTokens) => {
+  const login = async (userData: User, tokens: AuthTokens) => {
     console.log('AuthContext: login called with userData:', userData, 'tokens:', tokens);
     setUser(userData);
     setAccessToken(tokens.access_token);
@@ -77,6 +89,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsAuthenticated(true);
     localStorage.setItem(TOKEN_KEY, JSON.stringify(tokens));
     console.log('AuthContext: state after login - isAuthenticated:', true, 'user:', userData);
+    
+    // Fetch user permissions after login
+    try {
+      const myPermissions = await getMyPermissions();
+      setPermissions(myPermissions);
+    } catch (error) {
+      console.error('Failed to load user permissions after login', error);
+    }
   };
 
   const logout = () => {
@@ -84,13 +104,44 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setAccessToken(null);
     setRefreshToken(null);
     setIsAuthenticated(false);
+    setPermissions([]);
     localStorage.removeItem(TOKEN_KEY);
     // TODO: Call backend logout endpoint to invalidate refresh token if necessary
     // await logoutUserApi(); 
   };
+  
+  // Check if user has a specific permission or any from an array of permissions
+  const hasPermission = (permissionCheck: Permission | Permission[]): boolean => {
+    if (!permissions.length) return false;
+    
+    if (Array.isArray(permissionCheck)) {
+      return permissionCheck.some(p => permissions.includes(p));
+    }
+    
+    return permissions.includes(permissionCheck);
+  };
+  
+  // Check if user has a specific role
+  const hasRole = (roleCheck: Role): boolean => {
+    if (!user) return false;
+    return user.role === roleCheck;
+  };
 
   return (
-    <AuthContext.Provider value={{ user, accessToken, refreshToken, isAuthenticated, isLoading, login, logout }}>
+    <AuthContext.Provider 
+      value={{ 
+        user, 
+        accessToken, 
+        refreshToken, 
+        isAuthenticated, 
+        isLoading, 
+        permissions,
+        login, 
+        logout,
+        hasPermission,
+        hasRole
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

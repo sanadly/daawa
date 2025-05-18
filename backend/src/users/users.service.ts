@@ -15,6 +15,14 @@ export interface CreateUserInput {
   // role and language will use defaults from Prisma schema unless explicitly passed
 }
 
+// Define the input type for updating a user profile
+export interface UpdateProfileInput {
+  email?: string;
+  name?: string;
+  language?: string;
+  password?: string; // This should be already hashed if provided
+}
+
 @Injectable()
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
@@ -39,6 +47,13 @@ export class UsersService {
         // role: data.role || Role.USER, // Role can be set explicitly or rely on default
         // language: data.language || 'en', // Language can be set or rely on default
       },
+    });
+  }
+
+  async updateProfile(userId: number, data: UpdateProfileInput): Promise<User> {
+    return this.prisma.user.update({
+      where: { id: userId },
+      data,
     });
   }
 

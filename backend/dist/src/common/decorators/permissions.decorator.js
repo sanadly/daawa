@@ -1,0 +1,34 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Permissions = exports.PERMISSIONS_KEY = exports.Permission = void 0;
+const common_1 = require("@nestjs/common");
+var Permission;
+(function (Permission) {
+    Permission["MANAGE_USERS"] = "MANAGE_USERS";
+    Permission["CONFIGURE_SYSTEM"] = "CONFIGURE_SYSTEM";
+    Permission["VIEW_LOGS"] = "VIEW_LOGS";
+    Permission["MANAGE_EVENTS"] = "MANAGE_EVENTS";
+    Permission["MANAGE_ATTENDEES"] = "MANAGE_ATTENDEES";
+    Permission["MANAGE_STAFF"] = "MANAGE_STAFF";
+    Permission["VIEW_ANALYTICS"] = "VIEW_ANALYTICS";
+    Permission["VIEW_EVENTS"] = "VIEW_EVENTS";
+    Permission["MANAGE_TASKS"] = "MANAGE_TASKS";
+    Permission["READ_PROFILE"] = "READ_PROFILE";
+    Permission["UPDATE_PROFILE"] = "UPDATE_PROFILE";
+    Permission["READ_EVENT"] = "READ_EVENT";
+    Permission["CREATE_EVENT"] = "CREATE_EVENT";
+    Permission["UPDATE_EVENT"] = "UPDATE_EVENT";
+    Permission["DELETE_EVENT"] = "DELETE_EVENT";
+    Permission["VIEW_ATTENDEES"] = "VIEW_ATTENDEES";
+    Permission["CHECK_IN_ATTENDEE"] = "CHECK_IN_ATTENDEE";
+    Permission["CREATE_SUPPORT_TICKET"] = "CREATE_SUPPORT_TICKET";
+    Permission["VIEW_SUPPORT_TICKETS"] = "VIEW_SUPPORT_TICKETS";
+    Permission["UPDATE_SUPPORT_TICKET"] = "UPDATE_SUPPORT_TICKET";
+    Permission["DELETE_SUPPORT_TICKET"] = "DELETE_SUPPORT_TICKET";
+    Permission["SEND_NOTIFICATIONS"] = "SEND_NOTIFICATIONS";
+    Permission["VIEW_REPORTS"] = "VIEW_REPORTS";
+})(Permission || (exports.Permission = Permission = {}));
+exports.PERMISSIONS_KEY = 'permissions';
+const Permissions = (...permissions) => (0, common_1.SetMetadata)(exports.PERMISSIONS_KEY, permissions);
+exports.Permissions = Permissions;
+//# sourceMappingURL=permissions.decorator.js.map
