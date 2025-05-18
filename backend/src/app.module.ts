@@ -9,6 +9,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { EmailModule } from './email/email.module';
 import * as path from 'path';
 import { PrismaModule } from './prisma/prisma.module';
+import { EventsModule } from './events/events.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { PrismaModule } from './prisma/prisma.module';
     UsersModule,
     EmailModule,
     PrismaModule,
+    EventsModule,
     ThrottlerModule.forRoot([
       {
         ttl: 60000,

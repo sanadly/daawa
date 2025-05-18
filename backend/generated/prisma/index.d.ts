@@ -28,6 +28,11 @@ export type PasswordResetToken = $Result.DefaultSelection<Prisma.$PasswordResetT
  * 
  */
 export type Event = $Result.DefaultSelection<Prisma.$EventPayload>
+/**
+ * Model Guest
+ * 
+ */
+export type Guest = $Result.DefaultSelection<Prisma.$GuestPayload>
 
 /**
  * Enums
@@ -40,11 +45,25 @@ export namespace $Enums {
 
 export type Role = (typeof Role)[keyof typeof Role]
 
+
+export const EventType: {
+  WEDDING: 'WEDDING',
+  CONFERENCE: 'CONFERENCE',
+  PARTY: 'PARTY',
+  OTHER: 'OTHER'
+};
+
+export type EventType = (typeof EventType)[keyof typeof EventType]
+
 }
 
 export type Role = $Enums.Role
 
 export const Role: typeof $Enums.Role
+
+export type EventType = $Enums.EventType
+
+export const EventType: typeof $Enums.EventType
 
 /**
  * ##  Prisma Client ʲˢ
@@ -200,6 +219,16 @@ export class PrismaClient<
     * ```
     */
   get event(): Prisma.EventDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.guest`: Exposes CRUD operations for the **Guest** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Guests
+    * const guests = await prisma.guest.findMany()
+    * ```
+    */
+  get guest(): Prisma.GuestDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -642,7 +671,8 @@ export namespace Prisma {
   export const ModelName: {
     User: 'User',
     PasswordResetToken: 'PasswordResetToken',
-    Event: 'Event'
+    Event: 'Event',
+    Guest: 'Guest'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -661,7 +691,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "passwordResetToken" | "event"
+      modelProps: "user" | "passwordResetToken" | "event" | "guest"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -887,6 +917,80 @@ export namespace Prisma {
           }
         }
       }
+      Guest: {
+        payload: Prisma.$GuestPayload<ExtArgs>
+        fields: Prisma.GuestFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.GuestFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GuestPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.GuestFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GuestPayload>
+          }
+          findFirst: {
+            args: Prisma.GuestFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GuestPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.GuestFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GuestPayload>
+          }
+          findMany: {
+            args: Prisma.GuestFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GuestPayload>[]
+          }
+          create: {
+            args: Prisma.GuestCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GuestPayload>
+          }
+          createMany: {
+            args: Prisma.GuestCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.GuestCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GuestPayload>[]
+          }
+          delete: {
+            args: Prisma.GuestDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GuestPayload>
+          }
+          update: {
+            args: Prisma.GuestUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GuestPayload>
+          }
+          deleteMany: {
+            args: Prisma.GuestDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.GuestUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.GuestUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GuestPayload>[]
+          }
+          upsert: {
+            args: Prisma.GuestUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GuestPayload>
+          }
+          aggregate: {
+            args: Prisma.GuestAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateGuest>
+          }
+          groupBy: {
+            args: Prisma.GuestGroupByArgs<ExtArgs>
+            result: $Utils.Optional<GuestGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.GuestCountArgs<ExtArgs>
+            result: $Utils.Optional<GuestCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -974,6 +1078,7 @@ export namespace Prisma {
     user?: UserOmit
     passwordResetToken?: PasswordResetTokenOmit
     event?: EventOmit
+    guest?: GuestOmit
   }
 
   /* Types for Logging */
@@ -1068,11 +1173,13 @@ export namespace Prisma {
    */
 
   export type UserCountOutputType = {
+    staffEvents: number
     passwordResetTokens: number
     events: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    staffEvents?: boolean | UserCountOutputTypeCountStaffEventsArgs
     passwordResetTokens?: boolean | UserCountOutputTypeCountPasswordResetTokensArgs
     events?: boolean | UserCountOutputTypeCountEventsArgs
   }
@@ -1091,6 +1198,13 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
+  export type UserCountOutputTypeCountStaffEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EventWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
   export type UserCountOutputTypeCountPasswordResetTokensArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PasswordResetTokenWhereInput
   }
@@ -1100,6 +1214,46 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: EventWhereInput
+  }
+
+
+  /**
+   * Count Type EventCountOutputType
+   */
+
+  export type EventCountOutputType = {
+    staff: number
+    guests: number
+  }
+
+  export type EventCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    staff?: boolean | EventCountOutputTypeCountStaffArgs
+    guests?: boolean | EventCountOutputTypeCountGuestsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * EventCountOutputType without action
+   */
+  export type EventCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EventCountOutputType
+     */
+    select?: EventCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * EventCountOutputType without action
+   */
+  export type EventCountOutputTypeCountStaffArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserWhereInput
+  }
+
+  /**
+   * EventCountOutputType without action
+   */
+  export type EventCountOutputTypeCountGuestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GuestWhereInput
   }
 
 
@@ -1353,6 +1507,7 @@ export namespace Prisma {
     hashedRefreshToken?: boolean
     isEmailVerified?: boolean
     emailVerificationToken?: boolean
+    staffEvents?: boolean | User$staffEventsArgs<ExtArgs>
     passwordResetTokens?: boolean | User$passwordResetTokensArgs<ExtArgs>
     events?: boolean | User$eventsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -1402,6 +1557,7 @@ export namespace Prisma {
 
   export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "name" | "language" | "role" | "createdAt" | "updatedAt" | "hashedRefreshToken" | "isEmailVerified" | "emailVerificationToken", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    staffEvents?: boolean | User$staffEventsArgs<ExtArgs>
     passwordResetTokens?: boolean | User$passwordResetTokensArgs<ExtArgs>
     events?: boolean | User$eventsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -1412,6 +1568,7 @@ export namespace Prisma {
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
     objects: {
+      staffEvents: Prisma.$EventPayload<ExtArgs>[]
       passwordResetTokens: Prisma.$PasswordResetTokenPayload<ExtArgs>[]
       events: Prisma.$EventPayload<ExtArgs>[]
     }
@@ -1821,6 +1978,7 @@ export namespace Prisma {
    */
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    staffEvents<T extends User$staffEventsArgs<ExtArgs> = {}>(args?: Subset<T, User$staffEventsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     passwordResetTokens<T extends User$passwordResetTokensArgs<ExtArgs> = {}>(args?: Subset<T, User$passwordResetTokensArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PasswordResetTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     events<T extends User$eventsArgs<ExtArgs> = {}>(args?: Subset<T, User$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -2248,6 +2406,30 @@ export namespace Prisma {
      * Limit how many Users to delete.
      */
     limit?: number
+  }
+
+  /**
+   * User.staffEvents
+   */
+  export type User$staffEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Event
+     */
+    select?: EventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Event
+     */
+    omit?: EventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EventInclude<ExtArgs> | null
+    where?: EventWhereInput
+    orderBy?: EventOrderByWithRelationInput | EventOrderByWithRelationInput[]
+    cursor?: EventWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: EventScalarFieldEnum | EventScalarFieldEnum[]
   }
 
   /**
@@ -3427,11 +3609,13 @@ export namespace Prisma {
 
   export type EventAvgAggregateOutputType = {
     id: number | null
+    expectedGuests: number | null
     organizerId: number | null
   }
 
   export type EventSumAggregateOutputType = {
     id: number | null
+    expectedGuests: number | null
     organizerId: number | null
   }
 
@@ -3442,8 +3626,11 @@ export namespace Prisma {
     dateTime: Date | null
     location: string | null
     language: string | null
+    type: $Enums.EventType | null
+    state: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    expectedGuests: number | null
     organizerId: number | null
   }
 
@@ -3454,8 +3641,11 @@ export namespace Prisma {
     dateTime: Date | null
     location: string | null
     language: string | null
+    type: $Enums.EventType | null
+    state: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    expectedGuests: number | null
     organizerId: number | null
   }
 
@@ -3466,8 +3656,11 @@ export namespace Prisma {
     dateTime: number
     location: number
     language: number
+    type: number
+    state: number
     createdAt: number
     updatedAt: number
+    expectedGuests: number
     organizerId: number
     _all: number
   }
@@ -3475,11 +3668,13 @@ export namespace Prisma {
 
   export type EventAvgAggregateInputType = {
     id?: true
+    expectedGuests?: true
     organizerId?: true
   }
 
   export type EventSumAggregateInputType = {
     id?: true
+    expectedGuests?: true
     organizerId?: true
   }
 
@@ -3490,8 +3685,11 @@ export namespace Prisma {
     dateTime?: true
     location?: true
     language?: true
+    type?: true
+    state?: true
     createdAt?: true
     updatedAt?: true
+    expectedGuests?: true
     organizerId?: true
   }
 
@@ -3502,8 +3700,11 @@ export namespace Prisma {
     dateTime?: true
     location?: true
     language?: true
+    type?: true
+    state?: true
     createdAt?: true
     updatedAt?: true
+    expectedGuests?: true
     organizerId?: true
   }
 
@@ -3514,8 +3715,11 @@ export namespace Prisma {
     dateTime?: true
     location?: true
     language?: true
+    type?: true
+    state?: true
     createdAt?: true
     updatedAt?: true
+    expectedGuests?: true
     organizerId?: true
     _all?: true
   }
@@ -3613,8 +3817,11 @@ export namespace Prisma {
     dateTime: Date
     location: string | null
     language: string
+    type: $Enums.EventType
+    state: string
     createdAt: Date
     updatedAt: Date
+    expectedGuests: number | null
     organizerId: number
     _count: EventCountAggregateOutputType | null
     _avg: EventAvgAggregateOutputType | null
@@ -3644,10 +3851,16 @@ export namespace Prisma {
     dateTime?: boolean
     location?: boolean
     language?: boolean
+    type?: boolean
+    state?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    expectedGuests?: boolean
     organizerId?: boolean
     organizer?: boolean | UserDefaultArgs<ExtArgs>
+    staff?: boolean | Event$staffArgs<ExtArgs>
+    guests?: boolean | Event$guestsArgs<ExtArgs>
+    _count?: boolean | EventCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["event"]>
 
   export type EventSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -3657,8 +3870,11 @@ export namespace Prisma {
     dateTime?: boolean
     location?: boolean
     language?: boolean
+    type?: boolean
+    state?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    expectedGuests?: boolean
     organizerId?: boolean
     organizer?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["event"]>
@@ -3670,8 +3886,11 @@ export namespace Prisma {
     dateTime?: boolean
     location?: boolean
     language?: boolean
+    type?: boolean
+    state?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    expectedGuests?: boolean
     organizerId?: boolean
     organizer?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["event"]>
@@ -3683,14 +3902,20 @@ export namespace Prisma {
     dateTime?: boolean
     location?: boolean
     language?: boolean
+    type?: boolean
+    state?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    expectedGuests?: boolean
     organizerId?: boolean
   }
 
-  export type EventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "dateTime" | "location" | "language" | "createdAt" | "updatedAt" | "organizerId", ExtArgs["result"]["event"]>
+  export type EventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "dateTime" | "location" | "language" | "type" | "state" | "createdAt" | "updatedAt" | "expectedGuests" | "organizerId", ExtArgs["result"]["event"]>
   export type EventInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     organizer?: boolean | UserDefaultArgs<ExtArgs>
+    staff?: boolean | Event$staffArgs<ExtArgs>
+    guests?: boolean | Event$guestsArgs<ExtArgs>
+    _count?: boolean | EventCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type EventIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     organizer?: boolean | UserDefaultArgs<ExtArgs>
@@ -3703,6 +3928,8 @@ export namespace Prisma {
     name: "Event"
     objects: {
       organizer: Prisma.$UserPayload<ExtArgs>
+      staff: Prisma.$UserPayload<ExtArgs>[]
+      guests: Prisma.$GuestPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -3711,8 +3938,11 @@ export namespace Prisma {
       dateTime: Date
       location: string | null
       language: string
+      type: $Enums.EventType
+      state: string
       createdAt: Date
       updatedAt: Date
+      expectedGuests: number | null
       organizerId: number
     }, ExtArgs["result"]["event"]>
     composites: {}
@@ -4109,6 +4339,8 @@ export namespace Prisma {
   export interface Prisma__EventClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     organizer<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    staff<T extends Event$staffArgs<ExtArgs> = {}>(args?: Subset<T, Event$staffArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    guests<T extends Event$guestsArgs<ExtArgs> = {}>(args?: Subset<T, Event$guestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GuestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4144,8 +4376,11 @@ export namespace Prisma {
     readonly dateTime: FieldRef<"Event", 'DateTime'>
     readonly location: FieldRef<"Event", 'String'>
     readonly language: FieldRef<"Event", 'String'>
+    readonly type: FieldRef<"Event", 'EventType'>
+    readonly state: FieldRef<"Event", 'String'>
     readonly createdAt: FieldRef<"Event", 'DateTime'>
     readonly updatedAt: FieldRef<"Event", 'DateTime'>
+    readonly expectedGuests: FieldRef<"Event", 'Int'>
     readonly organizerId: FieldRef<"Event", 'Int'>
   }
     
@@ -4543,6 +4778,54 @@ export namespace Prisma {
   }
 
   /**
+   * Event.staff
+   */
+  export type Event$staffArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
+    cursor?: UserWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+  }
+
+  /**
+   * Event.guests
+   */
+  export type Event$guestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Guest
+     */
+    select?: GuestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Guest
+     */
+    omit?: GuestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
+    where?: GuestWhereInput
+    orderBy?: GuestOrderByWithRelationInput | GuestOrderByWithRelationInput[]
+    cursor?: GuestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: GuestScalarFieldEnum | GuestScalarFieldEnum[]
+  }
+
+  /**
    * Event without action
    */
   export type EventDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4558,6 +4841,1102 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: EventInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Guest
+   */
+
+  export type AggregateGuest = {
+    _count: GuestCountAggregateOutputType | null
+    _avg: GuestAvgAggregateOutputType | null
+    _sum: GuestSumAggregateOutputType | null
+    _min: GuestMinAggregateOutputType | null
+    _max: GuestMaxAggregateOutputType | null
+  }
+
+  export type GuestAvgAggregateOutputType = {
+    id: number | null
+    eventId: number | null
+  }
+
+  export type GuestSumAggregateOutputType = {
+    id: number | null
+    eventId: number | null
+  }
+
+  export type GuestMinAggregateOutputType = {
+    id: number | null
+    name: string | null
+    email: string | null
+    status: string | null
+    eventId: number | null
+  }
+
+  export type GuestMaxAggregateOutputType = {
+    id: number | null
+    name: string | null
+    email: string | null
+    status: string | null
+    eventId: number | null
+  }
+
+  export type GuestCountAggregateOutputType = {
+    id: number
+    name: number
+    email: number
+    status: number
+    eventId: number
+    _all: number
+  }
+
+
+  export type GuestAvgAggregateInputType = {
+    id?: true
+    eventId?: true
+  }
+
+  export type GuestSumAggregateInputType = {
+    id?: true
+    eventId?: true
+  }
+
+  export type GuestMinAggregateInputType = {
+    id?: true
+    name?: true
+    email?: true
+    status?: true
+    eventId?: true
+  }
+
+  export type GuestMaxAggregateInputType = {
+    id?: true
+    name?: true
+    email?: true
+    status?: true
+    eventId?: true
+  }
+
+  export type GuestCountAggregateInputType = {
+    id?: true
+    name?: true
+    email?: true
+    status?: true
+    eventId?: true
+    _all?: true
+  }
+
+  export type GuestAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Guest to aggregate.
+     */
+    where?: GuestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Guests to fetch.
+     */
+    orderBy?: GuestOrderByWithRelationInput | GuestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: GuestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Guests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Guests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Guests
+    **/
+    _count?: true | GuestCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: GuestAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: GuestSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: GuestMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: GuestMaxAggregateInputType
+  }
+
+  export type GetGuestAggregateType<T extends GuestAggregateArgs> = {
+        [P in keyof T & keyof AggregateGuest]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateGuest[P]>
+      : GetScalarType<T[P], AggregateGuest[P]>
+  }
+
+
+
+
+  export type GuestGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GuestWhereInput
+    orderBy?: GuestOrderByWithAggregationInput | GuestOrderByWithAggregationInput[]
+    by: GuestScalarFieldEnum[] | GuestScalarFieldEnum
+    having?: GuestScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: GuestCountAggregateInputType | true
+    _avg?: GuestAvgAggregateInputType
+    _sum?: GuestSumAggregateInputType
+    _min?: GuestMinAggregateInputType
+    _max?: GuestMaxAggregateInputType
+  }
+
+  export type GuestGroupByOutputType = {
+    id: number
+    name: string
+    email: string | null
+    status: string
+    eventId: number
+    _count: GuestCountAggregateOutputType | null
+    _avg: GuestAvgAggregateOutputType | null
+    _sum: GuestSumAggregateOutputType | null
+    _min: GuestMinAggregateOutputType | null
+    _max: GuestMaxAggregateOutputType | null
+  }
+
+  type GetGuestGroupByPayload<T extends GuestGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<GuestGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof GuestGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], GuestGroupByOutputType[P]>
+            : GetScalarType<T[P], GuestGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type GuestSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    email?: boolean
+    status?: boolean
+    eventId?: boolean
+    event?: boolean | EventDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["guest"]>
+
+  export type GuestSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    email?: boolean
+    status?: boolean
+    eventId?: boolean
+    event?: boolean | EventDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["guest"]>
+
+  export type GuestSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    email?: boolean
+    status?: boolean
+    eventId?: boolean
+    event?: boolean | EventDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["guest"]>
+
+  export type GuestSelectScalar = {
+    id?: boolean
+    name?: boolean
+    email?: boolean
+    status?: boolean
+    eventId?: boolean
+  }
+
+  export type GuestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "status" | "eventId", ExtArgs["result"]["guest"]>
+  export type GuestInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    event?: boolean | EventDefaultArgs<ExtArgs>
+  }
+  export type GuestIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    event?: boolean | EventDefaultArgs<ExtArgs>
+  }
+  export type GuestIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    event?: boolean | EventDefaultArgs<ExtArgs>
+  }
+
+  export type $GuestPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Guest"
+    objects: {
+      event: Prisma.$EventPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      name: string
+      email: string | null
+      status: string
+      eventId: number
+    }, ExtArgs["result"]["guest"]>
+    composites: {}
+  }
+
+  type GuestGetPayload<S extends boolean | null | undefined | GuestDefaultArgs> = $Result.GetResult<Prisma.$GuestPayload, S>
+
+  type GuestCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<GuestFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: GuestCountAggregateInputType | true
+    }
+
+  export interface GuestDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Guest'], meta: { name: 'Guest' } }
+    /**
+     * Find zero or one Guest that matches the filter.
+     * @param {GuestFindUniqueArgs} args - Arguments to find a Guest
+     * @example
+     * // Get one Guest
+     * const guest = await prisma.guest.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends GuestFindUniqueArgs>(args: SelectSubset<T, GuestFindUniqueArgs<ExtArgs>>): Prisma__GuestClient<$Result.GetResult<Prisma.$GuestPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Guest that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {GuestFindUniqueOrThrowArgs} args - Arguments to find a Guest
+     * @example
+     * // Get one Guest
+     * const guest = await prisma.guest.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends GuestFindUniqueOrThrowArgs>(args: SelectSubset<T, GuestFindUniqueOrThrowArgs<ExtArgs>>): Prisma__GuestClient<$Result.GetResult<Prisma.$GuestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Guest that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GuestFindFirstArgs} args - Arguments to find a Guest
+     * @example
+     * // Get one Guest
+     * const guest = await prisma.guest.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends GuestFindFirstArgs>(args?: SelectSubset<T, GuestFindFirstArgs<ExtArgs>>): Prisma__GuestClient<$Result.GetResult<Prisma.$GuestPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Guest that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GuestFindFirstOrThrowArgs} args - Arguments to find a Guest
+     * @example
+     * // Get one Guest
+     * const guest = await prisma.guest.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends GuestFindFirstOrThrowArgs>(args?: SelectSubset<T, GuestFindFirstOrThrowArgs<ExtArgs>>): Prisma__GuestClient<$Result.GetResult<Prisma.$GuestPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Guests that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GuestFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Guests
+     * const guests = await prisma.guest.findMany()
+     * 
+     * // Get first 10 Guests
+     * const guests = await prisma.guest.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const guestWithIdOnly = await prisma.guest.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends GuestFindManyArgs>(args?: SelectSubset<T, GuestFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GuestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Guest.
+     * @param {GuestCreateArgs} args - Arguments to create a Guest.
+     * @example
+     * // Create one Guest
+     * const Guest = await prisma.guest.create({
+     *   data: {
+     *     // ... data to create a Guest
+     *   }
+     * })
+     * 
+     */
+    create<T extends GuestCreateArgs>(args: SelectSubset<T, GuestCreateArgs<ExtArgs>>): Prisma__GuestClient<$Result.GetResult<Prisma.$GuestPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Guests.
+     * @param {GuestCreateManyArgs} args - Arguments to create many Guests.
+     * @example
+     * // Create many Guests
+     * const guest = await prisma.guest.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends GuestCreateManyArgs>(args?: SelectSubset<T, GuestCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Guests and returns the data saved in the database.
+     * @param {GuestCreateManyAndReturnArgs} args - Arguments to create many Guests.
+     * @example
+     * // Create many Guests
+     * const guest = await prisma.guest.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Guests and only return the `id`
+     * const guestWithIdOnly = await prisma.guest.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends GuestCreateManyAndReturnArgs>(args?: SelectSubset<T, GuestCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GuestPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Guest.
+     * @param {GuestDeleteArgs} args - Arguments to delete one Guest.
+     * @example
+     * // Delete one Guest
+     * const Guest = await prisma.guest.delete({
+     *   where: {
+     *     // ... filter to delete one Guest
+     *   }
+     * })
+     * 
+     */
+    delete<T extends GuestDeleteArgs>(args: SelectSubset<T, GuestDeleteArgs<ExtArgs>>): Prisma__GuestClient<$Result.GetResult<Prisma.$GuestPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Guest.
+     * @param {GuestUpdateArgs} args - Arguments to update one Guest.
+     * @example
+     * // Update one Guest
+     * const guest = await prisma.guest.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends GuestUpdateArgs>(args: SelectSubset<T, GuestUpdateArgs<ExtArgs>>): Prisma__GuestClient<$Result.GetResult<Prisma.$GuestPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Guests.
+     * @param {GuestDeleteManyArgs} args - Arguments to filter Guests to delete.
+     * @example
+     * // Delete a few Guests
+     * const { count } = await prisma.guest.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends GuestDeleteManyArgs>(args?: SelectSubset<T, GuestDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Guests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GuestUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Guests
+     * const guest = await prisma.guest.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends GuestUpdateManyArgs>(args: SelectSubset<T, GuestUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Guests and returns the data updated in the database.
+     * @param {GuestUpdateManyAndReturnArgs} args - Arguments to update many Guests.
+     * @example
+     * // Update many Guests
+     * const guest = await prisma.guest.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Guests and only return the `id`
+     * const guestWithIdOnly = await prisma.guest.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends GuestUpdateManyAndReturnArgs>(args: SelectSubset<T, GuestUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GuestPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Guest.
+     * @param {GuestUpsertArgs} args - Arguments to update or create a Guest.
+     * @example
+     * // Update or create a Guest
+     * const guest = await prisma.guest.upsert({
+     *   create: {
+     *     // ... data to create a Guest
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Guest we want to update
+     *   }
+     * })
+     */
+    upsert<T extends GuestUpsertArgs>(args: SelectSubset<T, GuestUpsertArgs<ExtArgs>>): Prisma__GuestClient<$Result.GetResult<Prisma.$GuestPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Guests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GuestCountArgs} args - Arguments to filter Guests to count.
+     * @example
+     * // Count the number of Guests
+     * const count = await prisma.guest.count({
+     *   where: {
+     *     // ... the filter for the Guests we want to count
+     *   }
+     * })
+    **/
+    count<T extends GuestCountArgs>(
+      args?: Subset<T, GuestCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], GuestCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Guest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GuestAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends GuestAggregateArgs>(args: Subset<T, GuestAggregateArgs>): Prisma.PrismaPromise<GetGuestAggregateType<T>>
+
+    /**
+     * Group by Guest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GuestGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends GuestGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: GuestGroupByArgs['orderBy'] }
+        : { orderBy?: GuestGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, GuestGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGuestGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Guest model
+   */
+  readonly fields: GuestFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Guest.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__GuestClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    event<T extends EventDefaultArgs<ExtArgs> = {}>(args?: Subset<T, EventDefaultArgs<ExtArgs>>): Prisma__EventClient<$Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Guest model
+   */
+  interface GuestFieldRefs {
+    readonly id: FieldRef<"Guest", 'Int'>
+    readonly name: FieldRef<"Guest", 'String'>
+    readonly email: FieldRef<"Guest", 'String'>
+    readonly status: FieldRef<"Guest", 'String'>
+    readonly eventId: FieldRef<"Guest", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Guest findUnique
+   */
+  export type GuestFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Guest
+     */
+    select?: GuestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Guest
+     */
+    omit?: GuestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
+    /**
+     * Filter, which Guest to fetch.
+     */
+    where: GuestWhereUniqueInput
+  }
+
+  /**
+   * Guest findUniqueOrThrow
+   */
+  export type GuestFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Guest
+     */
+    select?: GuestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Guest
+     */
+    omit?: GuestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
+    /**
+     * Filter, which Guest to fetch.
+     */
+    where: GuestWhereUniqueInput
+  }
+
+  /**
+   * Guest findFirst
+   */
+  export type GuestFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Guest
+     */
+    select?: GuestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Guest
+     */
+    omit?: GuestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
+    /**
+     * Filter, which Guest to fetch.
+     */
+    where?: GuestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Guests to fetch.
+     */
+    orderBy?: GuestOrderByWithRelationInput | GuestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Guests.
+     */
+    cursor?: GuestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Guests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Guests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Guests.
+     */
+    distinct?: GuestScalarFieldEnum | GuestScalarFieldEnum[]
+  }
+
+  /**
+   * Guest findFirstOrThrow
+   */
+  export type GuestFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Guest
+     */
+    select?: GuestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Guest
+     */
+    omit?: GuestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
+    /**
+     * Filter, which Guest to fetch.
+     */
+    where?: GuestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Guests to fetch.
+     */
+    orderBy?: GuestOrderByWithRelationInput | GuestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Guests.
+     */
+    cursor?: GuestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Guests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Guests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Guests.
+     */
+    distinct?: GuestScalarFieldEnum | GuestScalarFieldEnum[]
+  }
+
+  /**
+   * Guest findMany
+   */
+  export type GuestFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Guest
+     */
+    select?: GuestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Guest
+     */
+    omit?: GuestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
+    /**
+     * Filter, which Guests to fetch.
+     */
+    where?: GuestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Guests to fetch.
+     */
+    orderBy?: GuestOrderByWithRelationInput | GuestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Guests.
+     */
+    cursor?: GuestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Guests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Guests.
+     */
+    skip?: number
+    distinct?: GuestScalarFieldEnum | GuestScalarFieldEnum[]
+  }
+
+  /**
+   * Guest create
+   */
+  export type GuestCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Guest
+     */
+    select?: GuestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Guest
+     */
+    omit?: GuestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Guest.
+     */
+    data: XOR<GuestCreateInput, GuestUncheckedCreateInput>
+  }
+
+  /**
+   * Guest createMany
+   */
+  export type GuestCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Guests.
+     */
+    data: GuestCreateManyInput | GuestCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Guest createManyAndReturn
+   */
+  export type GuestCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Guest
+     */
+    select?: GuestSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Guest
+     */
+    omit?: GuestOmit<ExtArgs> | null
+    /**
+     * The data used to create many Guests.
+     */
+    data: GuestCreateManyInput | GuestCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Guest update
+   */
+  export type GuestUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Guest
+     */
+    select?: GuestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Guest
+     */
+    omit?: GuestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Guest.
+     */
+    data: XOR<GuestUpdateInput, GuestUncheckedUpdateInput>
+    /**
+     * Choose, which Guest to update.
+     */
+    where: GuestWhereUniqueInput
+  }
+
+  /**
+   * Guest updateMany
+   */
+  export type GuestUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Guests.
+     */
+    data: XOR<GuestUpdateManyMutationInput, GuestUncheckedUpdateManyInput>
+    /**
+     * Filter which Guests to update
+     */
+    where?: GuestWhereInput
+    /**
+     * Limit how many Guests to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Guest updateManyAndReturn
+   */
+  export type GuestUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Guest
+     */
+    select?: GuestSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Guest
+     */
+    omit?: GuestOmit<ExtArgs> | null
+    /**
+     * The data used to update Guests.
+     */
+    data: XOR<GuestUpdateManyMutationInput, GuestUncheckedUpdateManyInput>
+    /**
+     * Filter which Guests to update
+     */
+    where?: GuestWhereInput
+    /**
+     * Limit how many Guests to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Guest upsert
+   */
+  export type GuestUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Guest
+     */
+    select?: GuestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Guest
+     */
+    omit?: GuestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Guest to update in case it exists.
+     */
+    where: GuestWhereUniqueInput
+    /**
+     * In case the Guest found by the `where` argument doesn't exist, create a new Guest with this data.
+     */
+    create: XOR<GuestCreateInput, GuestUncheckedCreateInput>
+    /**
+     * In case the Guest was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<GuestUpdateInput, GuestUncheckedUpdateInput>
+  }
+
+  /**
+   * Guest delete
+   */
+  export type GuestDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Guest
+     */
+    select?: GuestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Guest
+     */
+    omit?: GuestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
+    /**
+     * Filter which Guest to delete.
+     */
+    where: GuestWhereUniqueInput
+  }
+
+  /**
+   * Guest deleteMany
+   */
+  export type GuestDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Guests to delete
+     */
+    where?: GuestWhereInput
+    /**
+     * Limit how many Guests to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Guest without action
+   */
+  export type GuestDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Guest
+     */
+    select?: GuestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Guest
+     */
+    omit?: GuestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GuestInclude<ExtArgs> | null
   }
 
 
@@ -4610,12 +5989,26 @@ export namespace Prisma {
     dateTime: 'dateTime',
     location: 'location',
     language: 'language',
+    type: 'type',
+    state: 'state',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
+    expectedGuests: 'expectedGuests',
     organizerId: 'organizerId'
   };
 
   export type EventScalarFieldEnum = (typeof EventScalarFieldEnum)[keyof typeof EventScalarFieldEnum]
+
+
+  export const GuestScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    email: 'email',
+    status: 'status',
+    eventId: 'eventId'
+  };
+
+  export type GuestScalarFieldEnum = (typeof GuestScalarFieldEnum)[keyof typeof GuestScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -4711,6 +6104,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'EventType'
+   */
+  export type EnumEventTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EventType'>
+    
+
+
+  /**
+   * Reference to a field of type 'EventType[]'
+   */
+  export type ListEnumEventTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EventType[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -4742,6 +6149,7 @@ export namespace Prisma {
     hashedRefreshToken?: StringNullableFilter<"User"> | string | null
     isEmailVerified?: BoolFilter<"User"> | boolean
     emailVerificationToken?: StringNullableFilter<"User"> | string | null
+    staffEvents?: EventListRelationFilter
     passwordResetTokens?: PasswordResetTokenListRelationFilter
     events?: EventListRelationFilter
   }
@@ -4758,6 +6166,7 @@ export namespace Prisma {
     hashedRefreshToken?: SortOrderInput | SortOrder
     isEmailVerified?: SortOrder
     emailVerificationToken?: SortOrderInput | SortOrder
+    staffEvents?: EventOrderByRelationAggregateInput
     passwordResetTokens?: PasswordResetTokenOrderByRelationAggregateInput
     events?: EventOrderByRelationAggregateInput
   }
@@ -4777,6 +6186,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
     hashedRefreshToken?: StringNullableFilter<"User"> | string | null
     isEmailVerified?: BoolFilter<"User"> | boolean
+    staffEvents?: EventListRelationFilter
     passwordResetTokens?: PasswordResetTokenListRelationFilter
     events?: EventListRelationFilter
   }, "id" | "email" | "emailVerificationToken">
@@ -4884,10 +6294,15 @@ export namespace Prisma {
     dateTime?: DateTimeFilter<"Event"> | Date | string
     location?: StringNullableFilter<"Event"> | string | null
     language?: StringFilter<"Event"> | string
+    type?: EnumEventTypeFilter<"Event"> | $Enums.EventType
+    state?: StringFilter<"Event"> | string
     createdAt?: DateTimeFilter<"Event"> | Date | string
     updatedAt?: DateTimeFilter<"Event"> | Date | string
+    expectedGuests?: IntNullableFilter<"Event"> | number | null
     organizerId?: IntFilter<"Event"> | number
     organizer?: XOR<UserScalarRelationFilter, UserWhereInput>
+    staff?: UserListRelationFilter
+    guests?: GuestListRelationFilter
   }
 
   export type EventOrderByWithRelationInput = {
@@ -4897,10 +6312,15 @@ export namespace Prisma {
     dateTime?: SortOrder
     location?: SortOrderInput | SortOrder
     language?: SortOrder
+    type?: SortOrder
+    state?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    expectedGuests?: SortOrderInput | SortOrder
     organizerId?: SortOrder
     organizer?: UserOrderByWithRelationInput
+    staff?: UserOrderByRelationAggregateInput
+    guests?: GuestOrderByRelationAggregateInput
   }
 
   export type EventWhereUniqueInput = Prisma.AtLeast<{
@@ -4913,10 +6333,15 @@ export namespace Prisma {
     dateTime?: DateTimeFilter<"Event"> | Date | string
     location?: StringNullableFilter<"Event"> | string | null
     language?: StringFilter<"Event"> | string
+    type?: EnumEventTypeFilter<"Event"> | $Enums.EventType
+    state?: StringFilter<"Event"> | string
     createdAt?: DateTimeFilter<"Event"> | Date | string
     updatedAt?: DateTimeFilter<"Event"> | Date | string
+    expectedGuests?: IntNullableFilter<"Event"> | number | null
     organizerId?: IntFilter<"Event"> | number
     organizer?: XOR<UserScalarRelationFilter, UserWhereInput>
+    staff?: UserListRelationFilter
+    guests?: GuestListRelationFilter
   }, "id">
 
   export type EventOrderByWithAggregationInput = {
@@ -4926,8 +6351,11 @@ export namespace Prisma {
     dateTime?: SortOrder
     location?: SortOrderInput | SortOrder
     language?: SortOrder
+    type?: SortOrder
+    state?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    expectedGuests?: SortOrderInput | SortOrder
     organizerId?: SortOrder
     _count?: EventCountOrderByAggregateInput
     _avg?: EventAvgOrderByAggregateInput
@@ -4946,9 +6374,69 @@ export namespace Prisma {
     dateTime?: DateTimeWithAggregatesFilter<"Event"> | Date | string
     location?: StringNullableWithAggregatesFilter<"Event"> | string | null
     language?: StringWithAggregatesFilter<"Event"> | string
+    type?: EnumEventTypeWithAggregatesFilter<"Event"> | $Enums.EventType
+    state?: StringWithAggregatesFilter<"Event"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Event"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Event"> | Date | string
+    expectedGuests?: IntNullableWithAggregatesFilter<"Event"> | number | null
     organizerId?: IntWithAggregatesFilter<"Event"> | number
+  }
+
+  export type GuestWhereInput = {
+    AND?: GuestWhereInput | GuestWhereInput[]
+    OR?: GuestWhereInput[]
+    NOT?: GuestWhereInput | GuestWhereInput[]
+    id?: IntFilter<"Guest"> | number
+    name?: StringFilter<"Guest"> | string
+    email?: StringNullableFilter<"Guest"> | string | null
+    status?: StringFilter<"Guest"> | string
+    eventId?: IntFilter<"Guest"> | number
+    event?: XOR<EventScalarRelationFilter, EventWhereInput>
+  }
+
+  export type GuestOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    email?: SortOrderInput | SortOrder
+    status?: SortOrder
+    eventId?: SortOrder
+    event?: EventOrderByWithRelationInput
+  }
+
+  export type GuestWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: GuestWhereInput | GuestWhereInput[]
+    OR?: GuestWhereInput[]
+    NOT?: GuestWhereInput | GuestWhereInput[]
+    name?: StringFilter<"Guest"> | string
+    email?: StringNullableFilter<"Guest"> | string | null
+    status?: StringFilter<"Guest"> | string
+    eventId?: IntFilter<"Guest"> | number
+    event?: XOR<EventScalarRelationFilter, EventWhereInput>
+  }, "id">
+
+  export type GuestOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    email?: SortOrderInput | SortOrder
+    status?: SortOrder
+    eventId?: SortOrder
+    _count?: GuestCountOrderByAggregateInput
+    _avg?: GuestAvgOrderByAggregateInput
+    _max?: GuestMaxOrderByAggregateInput
+    _min?: GuestMinOrderByAggregateInput
+    _sum?: GuestSumOrderByAggregateInput
+  }
+
+  export type GuestScalarWhereWithAggregatesInput = {
+    AND?: GuestScalarWhereWithAggregatesInput | GuestScalarWhereWithAggregatesInput[]
+    OR?: GuestScalarWhereWithAggregatesInput[]
+    NOT?: GuestScalarWhereWithAggregatesInput | GuestScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Guest"> | number
+    name?: StringWithAggregatesFilter<"Guest"> | string
+    email?: StringNullableWithAggregatesFilter<"Guest"> | string | null
+    status?: StringWithAggregatesFilter<"Guest"> | string
+    eventId?: IntWithAggregatesFilter<"Guest"> | number
   }
 
   export type UserCreateInput = {
@@ -4962,6 +6450,7 @@ export namespace Prisma {
     hashedRefreshToken?: string | null
     isEmailVerified?: boolean
     emailVerificationToken?: string | null
+    staffEvents?: EventCreateNestedManyWithoutStaffInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     events?: EventCreateNestedManyWithoutOrganizerInput
   }
@@ -4978,6 +6467,7 @@ export namespace Prisma {
     hashedRefreshToken?: string | null
     isEmailVerified?: boolean
     emailVerificationToken?: string | null
+    staffEvents?: EventUncheckedCreateNestedManyWithoutStaffInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     events?: EventUncheckedCreateNestedManyWithoutOrganizerInput
   }
@@ -4993,6 +6483,7 @@ export namespace Prisma {
     hashedRefreshToken?: NullableStringFieldUpdateOperationsInput | string | null
     isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
     emailVerificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    staffEvents?: EventUpdateManyWithoutStaffNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     events?: EventUpdateManyWithoutOrganizerNestedInput
   }
@@ -5009,6 +6500,7 @@ export namespace Prisma {
     hashedRefreshToken?: NullableStringFieldUpdateOperationsInput | string | null
     isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
     emailVerificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    staffEvents?: EventUncheckedUpdateManyWithoutStaffNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     events?: EventUncheckedUpdateManyWithoutOrganizerNestedInput
   }
@@ -5112,9 +6604,14 @@ export namespace Prisma {
     dateTime: Date | string
     location?: string | null
     language?: string
+    type: $Enums.EventType
+    state?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    expectedGuests?: number | null
     organizer: UserCreateNestedOneWithoutEventsInput
+    staff?: UserCreateNestedManyWithoutStaffEventsInput
+    guests?: GuestCreateNestedManyWithoutEventInput
   }
 
   export type EventUncheckedCreateInput = {
@@ -5124,9 +6621,14 @@ export namespace Prisma {
     dateTime: Date | string
     location?: string | null
     language?: string
+    type: $Enums.EventType
+    state?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    expectedGuests?: number | null
     organizerId: number
+    staff?: UserUncheckedCreateNestedManyWithoutStaffEventsInput
+    guests?: GuestUncheckedCreateNestedManyWithoutEventInput
   }
 
   export type EventUpdateInput = {
@@ -5135,9 +6637,14 @@ export namespace Prisma {
     dateTime?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: NullableStringFieldUpdateOperationsInput | string | null
     language?: StringFieldUpdateOperationsInput | string
+    type?: EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
+    state?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expectedGuests?: NullableIntFieldUpdateOperationsInput | number | null
     organizer?: UserUpdateOneRequiredWithoutEventsNestedInput
+    staff?: UserUpdateManyWithoutStaffEventsNestedInput
+    guests?: GuestUpdateManyWithoutEventNestedInput
   }
 
   export type EventUncheckedUpdateInput = {
@@ -5147,9 +6654,14 @@ export namespace Prisma {
     dateTime?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: NullableStringFieldUpdateOperationsInput | string | null
     language?: StringFieldUpdateOperationsInput | string
+    type?: EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
+    state?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expectedGuests?: NullableIntFieldUpdateOperationsInput | number | null
     organizerId?: IntFieldUpdateOperationsInput | number
+    staff?: UserUncheckedUpdateManyWithoutStaffEventsNestedInput
+    guests?: GuestUncheckedUpdateManyWithoutEventNestedInput
   }
 
   export type EventCreateManyInput = {
@@ -5159,8 +6671,11 @@ export namespace Prisma {
     dateTime: Date | string
     location?: string | null
     language?: string
+    type: $Enums.EventType
+    state?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    expectedGuests?: number | null
     organizerId: number
   }
 
@@ -5170,8 +6685,11 @@ export namespace Prisma {
     dateTime?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: NullableStringFieldUpdateOperationsInput | string | null
     language?: StringFieldUpdateOperationsInput | string
+    type?: EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
+    state?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expectedGuests?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type EventUncheckedUpdateManyInput = {
@@ -5181,9 +6699,64 @@ export namespace Prisma {
     dateTime?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: NullableStringFieldUpdateOperationsInput | string | null
     language?: StringFieldUpdateOperationsInput | string
+    type?: EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
+    state?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expectedGuests?: NullableIntFieldUpdateOperationsInput | number | null
     organizerId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type GuestCreateInput = {
+    name: string
+    email?: string | null
+    status?: string
+    event: EventCreateNestedOneWithoutGuestsInput
+  }
+
+  export type GuestUncheckedCreateInput = {
+    id?: number
+    name: string
+    email?: string | null
+    status?: string
+    eventId: number
+  }
+
+  export type GuestUpdateInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    event?: EventUpdateOneRequiredWithoutGuestsNestedInput
+  }
+
+  export type GuestUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    eventId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type GuestCreateManyInput = {
+    id?: number
+    name: string
+    email?: string | null
+    status?: string
+    eventId: number
+  }
+
+  export type GuestUpdateManyMutationInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type GuestUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    eventId?: IntFieldUpdateOperationsInput | number
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -5250,16 +6823,16 @@ export namespace Prisma {
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
-  export type PasswordResetTokenListRelationFilter = {
-    every?: PasswordResetTokenWhereInput
-    some?: PasswordResetTokenWhereInput
-    none?: PasswordResetTokenWhereInput
-  }
-
   export type EventListRelationFilter = {
     every?: EventWhereInput
     some?: EventWhereInput
     none?: EventWhereInput
+  }
+
+  export type PasswordResetTokenListRelationFilter = {
+    every?: PasswordResetTokenWhereInput
+    some?: PasswordResetTokenWhereInput
+    none?: PasswordResetTokenWhereInput
   }
 
   export type SortOrderInput = {
@@ -5267,11 +6840,11 @@ export namespace Prisma {
     nulls?: NullsOrder
   }
 
-  export type PasswordResetTokenOrderByRelationAggregateInput = {
+  export type EventOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
-  export type EventOrderByRelationAggregateInput = {
+  export type PasswordResetTokenOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -5448,6 +7021,44 @@ export namespace Prisma {
     userId?: SortOrder
   }
 
+  export type EnumEventTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.EventType | EnumEventTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.EventType[] | ListEnumEventTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.EventType[] | ListEnumEventTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumEventTypeFilter<$PrismaModel> | $Enums.EventType
+  }
+
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type UserListRelationFilter = {
+    every?: UserWhereInput
+    some?: UserWhereInput
+    none?: UserWhereInput
+  }
+
+  export type GuestListRelationFilter = {
+    every?: GuestWhereInput
+    some?: GuestWhereInput
+    none?: GuestWhereInput
+  }
+
+  export type UserOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type GuestOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type EventCountOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
@@ -5455,13 +7066,17 @@ export namespace Prisma {
     dateTime?: SortOrder
     location?: SortOrder
     language?: SortOrder
+    type?: SortOrder
+    state?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    expectedGuests?: SortOrder
     organizerId?: SortOrder
   }
 
   export type EventAvgOrderByAggregateInput = {
     id?: SortOrder
+    expectedGuests?: SortOrder
     organizerId?: SortOrder
   }
 
@@ -5472,8 +7087,11 @@ export namespace Prisma {
     dateTime?: SortOrder
     location?: SortOrder
     language?: SortOrder
+    type?: SortOrder
+    state?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    expectedGuests?: SortOrder
     organizerId?: SortOrder
   }
 
@@ -5484,14 +7102,89 @@ export namespace Prisma {
     dateTime?: SortOrder
     location?: SortOrder
     language?: SortOrder
+    type?: SortOrder
+    state?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    expectedGuests?: SortOrder
     organizerId?: SortOrder
   }
 
   export type EventSumOrderByAggregateInput = {
     id?: SortOrder
+    expectedGuests?: SortOrder
     organizerId?: SortOrder
+  }
+
+  export type EnumEventTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.EventType | EnumEventTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.EventType[] | ListEnumEventTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.EventType[] | ListEnumEventTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumEventTypeWithAggregatesFilter<$PrismaModel> | $Enums.EventType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumEventTypeFilter<$PrismaModel>
+    _max?: NestedEnumEventTypeFilter<$PrismaModel>
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type EventScalarRelationFilter = {
+    is?: EventWhereInput
+    isNot?: EventWhereInput
+  }
+
+  export type GuestCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    email?: SortOrder
+    status?: SortOrder
+    eventId?: SortOrder
+  }
+
+  export type GuestAvgOrderByAggregateInput = {
+    id?: SortOrder
+    eventId?: SortOrder
+  }
+
+  export type GuestMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    email?: SortOrder
+    status?: SortOrder
+    eventId?: SortOrder
+  }
+
+  export type GuestMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    email?: SortOrder
+    status?: SortOrder
+    eventId?: SortOrder
+  }
+
+  export type GuestSumOrderByAggregateInput = {
+    id?: SortOrder
+    eventId?: SortOrder
+  }
+
+  export type EventCreateNestedManyWithoutStaffInput = {
+    create?: XOR<EventCreateWithoutStaffInput, EventUncheckedCreateWithoutStaffInput> | EventCreateWithoutStaffInput[] | EventUncheckedCreateWithoutStaffInput[]
+    connectOrCreate?: EventCreateOrConnectWithoutStaffInput | EventCreateOrConnectWithoutStaffInput[]
+    connect?: EventWhereUniqueInput | EventWhereUniqueInput[]
   }
 
   export type PasswordResetTokenCreateNestedManyWithoutUserInput = {
@@ -5505,6 +7198,12 @@ export namespace Prisma {
     create?: XOR<EventCreateWithoutOrganizerInput, EventUncheckedCreateWithoutOrganizerInput> | EventCreateWithoutOrganizerInput[] | EventUncheckedCreateWithoutOrganizerInput[]
     connectOrCreate?: EventCreateOrConnectWithoutOrganizerInput | EventCreateOrConnectWithoutOrganizerInput[]
     createMany?: EventCreateManyOrganizerInputEnvelope
+    connect?: EventWhereUniqueInput | EventWhereUniqueInput[]
+  }
+
+  export type EventUncheckedCreateNestedManyWithoutStaffInput = {
+    create?: XOR<EventCreateWithoutStaffInput, EventUncheckedCreateWithoutStaffInput> | EventCreateWithoutStaffInput[] | EventUncheckedCreateWithoutStaffInput[]
+    connectOrCreate?: EventCreateOrConnectWithoutStaffInput | EventCreateOrConnectWithoutStaffInput[]
     connect?: EventWhereUniqueInput | EventWhereUniqueInput[]
   }
 
@@ -5542,6 +7241,19 @@ export namespace Prisma {
     set?: boolean
   }
 
+  export type EventUpdateManyWithoutStaffNestedInput = {
+    create?: XOR<EventCreateWithoutStaffInput, EventUncheckedCreateWithoutStaffInput> | EventCreateWithoutStaffInput[] | EventUncheckedCreateWithoutStaffInput[]
+    connectOrCreate?: EventCreateOrConnectWithoutStaffInput | EventCreateOrConnectWithoutStaffInput[]
+    upsert?: EventUpsertWithWhereUniqueWithoutStaffInput | EventUpsertWithWhereUniqueWithoutStaffInput[]
+    set?: EventWhereUniqueInput | EventWhereUniqueInput[]
+    disconnect?: EventWhereUniqueInput | EventWhereUniqueInput[]
+    delete?: EventWhereUniqueInput | EventWhereUniqueInput[]
+    connect?: EventWhereUniqueInput | EventWhereUniqueInput[]
+    update?: EventUpdateWithWhereUniqueWithoutStaffInput | EventUpdateWithWhereUniqueWithoutStaffInput[]
+    updateMany?: EventUpdateManyWithWhereWithoutStaffInput | EventUpdateManyWithWhereWithoutStaffInput[]
+    deleteMany?: EventScalarWhereInput | EventScalarWhereInput[]
+  }
+
   export type PasswordResetTokenUpdateManyWithoutUserNestedInput = {
     create?: XOR<PasswordResetTokenCreateWithoutUserInput, PasswordResetTokenUncheckedCreateWithoutUserInput> | PasswordResetTokenCreateWithoutUserInput[] | PasswordResetTokenUncheckedCreateWithoutUserInput[]
     connectOrCreate?: PasswordResetTokenCreateOrConnectWithoutUserInput | PasswordResetTokenCreateOrConnectWithoutUserInput[]
@@ -5576,6 +7288,19 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type EventUncheckedUpdateManyWithoutStaffNestedInput = {
+    create?: XOR<EventCreateWithoutStaffInput, EventUncheckedCreateWithoutStaffInput> | EventCreateWithoutStaffInput[] | EventUncheckedCreateWithoutStaffInput[]
+    connectOrCreate?: EventCreateOrConnectWithoutStaffInput | EventCreateOrConnectWithoutStaffInput[]
+    upsert?: EventUpsertWithWhereUniqueWithoutStaffInput | EventUpsertWithWhereUniqueWithoutStaffInput[]
+    set?: EventWhereUniqueInput | EventWhereUniqueInput[]
+    disconnect?: EventWhereUniqueInput | EventWhereUniqueInput[]
+    delete?: EventWhereUniqueInput | EventWhereUniqueInput[]
+    connect?: EventWhereUniqueInput | EventWhereUniqueInput[]
+    update?: EventUpdateWithWhereUniqueWithoutStaffInput | EventUpdateWithWhereUniqueWithoutStaffInput[]
+    updateMany?: EventUpdateManyWithWhereWithoutStaffInput | EventUpdateManyWithWhereWithoutStaffInput[]
+    deleteMany?: EventScalarWhereInput | EventScalarWhereInput[]
   }
 
   export type PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput = {
@@ -5626,12 +7351,118 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type UserCreateNestedManyWithoutStaffEventsInput = {
+    create?: XOR<UserCreateWithoutStaffEventsInput, UserUncheckedCreateWithoutStaffEventsInput> | UserCreateWithoutStaffEventsInput[] | UserUncheckedCreateWithoutStaffEventsInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutStaffEventsInput | UserCreateOrConnectWithoutStaffEventsInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type GuestCreateNestedManyWithoutEventInput = {
+    create?: XOR<GuestCreateWithoutEventInput, GuestUncheckedCreateWithoutEventInput> | GuestCreateWithoutEventInput[] | GuestUncheckedCreateWithoutEventInput[]
+    connectOrCreate?: GuestCreateOrConnectWithoutEventInput | GuestCreateOrConnectWithoutEventInput[]
+    createMany?: GuestCreateManyEventInputEnvelope
+    connect?: GuestWhereUniqueInput | GuestWhereUniqueInput[]
+  }
+
+  export type UserUncheckedCreateNestedManyWithoutStaffEventsInput = {
+    create?: XOR<UserCreateWithoutStaffEventsInput, UserUncheckedCreateWithoutStaffEventsInput> | UserCreateWithoutStaffEventsInput[] | UserUncheckedCreateWithoutStaffEventsInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutStaffEventsInput | UserCreateOrConnectWithoutStaffEventsInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type GuestUncheckedCreateNestedManyWithoutEventInput = {
+    create?: XOR<GuestCreateWithoutEventInput, GuestUncheckedCreateWithoutEventInput> | GuestCreateWithoutEventInput[] | GuestUncheckedCreateWithoutEventInput[]
+    connectOrCreate?: GuestCreateOrConnectWithoutEventInput | GuestCreateOrConnectWithoutEventInput[]
+    createMany?: GuestCreateManyEventInputEnvelope
+    connect?: GuestWhereUniqueInput | GuestWhereUniqueInput[]
+  }
+
+  export type EnumEventTypeFieldUpdateOperationsInput = {
+    set?: $Enums.EventType
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type UserUpdateOneRequiredWithoutEventsNestedInput = {
     create?: XOR<UserCreateWithoutEventsInput, UserUncheckedCreateWithoutEventsInput>
     connectOrCreate?: UserCreateOrConnectWithoutEventsInput
     upsert?: UserUpsertWithoutEventsInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutEventsInput, UserUpdateWithoutEventsInput>, UserUncheckedUpdateWithoutEventsInput>
+  }
+
+  export type UserUpdateManyWithoutStaffEventsNestedInput = {
+    create?: XOR<UserCreateWithoutStaffEventsInput, UserUncheckedCreateWithoutStaffEventsInput> | UserCreateWithoutStaffEventsInput[] | UserUncheckedCreateWithoutStaffEventsInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutStaffEventsInput | UserCreateOrConnectWithoutStaffEventsInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutStaffEventsInput | UserUpsertWithWhereUniqueWithoutStaffEventsInput[]
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutStaffEventsInput | UserUpdateWithWhereUniqueWithoutStaffEventsInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutStaffEventsInput | UserUpdateManyWithWhereWithoutStaffEventsInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
+  export type GuestUpdateManyWithoutEventNestedInput = {
+    create?: XOR<GuestCreateWithoutEventInput, GuestUncheckedCreateWithoutEventInput> | GuestCreateWithoutEventInput[] | GuestUncheckedCreateWithoutEventInput[]
+    connectOrCreate?: GuestCreateOrConnectWithoutEventInput | GuestCreateOrConnectWithoutEventInput[]
+    upsert?: GuestUpsertWithWhereUniqueWithoutEventInput | GuestUpsertWithWhereUniqueWithoutEventInput[]
+    createMany?: GuestCreateManyEventInputEnvelope
+    set?: GuestWhereUniqueInput | GuestWhereUniqueInput[]
+    disconnect?: GuestWhereUniqueInput | GuestWhereUniqueInput[]
+    delete?: GuestWhereUniqueInput | GuestWhereUniqueInput[]
+    connect?: GuestWhereUniqueInput | GuestWhereUniqueInput[]
+    update?: GuestUpdateWithWhereUniqueWithoutEventInput | GuestUpdateWithWhereUniqueWithoutEventInput[]
+    updateMany?: GuestUpdateManyWithWhereWithoutEventInput | GuestUpdateManyWithWhereWithoutEventInput[]
+    deleteMany?: GuestScalarWhereInput | GuestScalarWhereInput[]
+  }
+
+  export type UserUncheckedUpdateManyWithoutStaffEventsNestedInput = {
+    create?: XOR<UserCreateWithoutStaffEventsInput, UserUncheckedCreateWithoutStaffEventsInput> | UserCreateWithoutStaffEventsInput[] | UserUncheckedCreateWithoutStaffEventsInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutStaffEventsInput | UserCreateOrConnectWithoutStaffEventsInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutStaffEventsInput | UserUpsertWithWhereUniqueWithoutStaffEventsInput[]
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutStaffEventsInput | UserUpdateWithWhereUniqueWithoutStaffEventsInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutStaffEventsInput | UserUpdateManyWithWhereWithoutStaffEventsInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
+  export type GuestUncheckedUpdateManyWithoutEventNestedInput = {
+    create?: XOR<GuestCreateWithoutEventInput, GuestUncheckedCreateWithoutEventInput> | GuestCreateWithoutEventInput[] | GuestUncheckedCreateWithoutEventInput[]
+    connectOrCreate?: GuestCreateOrConnectWithoutEventInput | GuestCreateOrConnectWithoutEventInput[]
+    upsert?: GuestUpsertWithWhereUniqueWithoutEventInput | GuestUpsertWithWhereUniqueWithoutEventInput[]
+    createMany?: GuestCreateManyEventInputEnvelope
+    set?: GuestWhereUniqueInput | GuestWhereUniqueInput[]
+    disconnect?: GuestWhereUniqueInput | GuestWhereUniqueInput[]
+    delete?: GuestWhereUniqueInput | GuestWhereUniqueInput[]
+    connect?: GuestWhereUniqueInput | GuestWhereUniqueInput[]
+    update?: GuestUpdateWithWhereUniqueWithoutEventInput | GuestUpdateWithWhereUniqueWithoutEventInput[]
+    updateMany?: GuestUpdateManyWithWhereWithoutEventInput | GuestUpdateManyWithWhereWithoutEventInput[]
+    deleteMany?: GuestScalarWhereInput | GuestScalarWhereInput[]
+  }
+
+  export type EventCreateNestedOneWithoutGuestsInput = {
+    create?: XOR<EventCreateWithoutGuestsInput, EventUncheckedCreateWithoutGuestsInput>
+    connectOrCreate?: EventCreateOrConnectWithoutGuestsInput
+    connect?: EventWhereUniqueInput
+  }
+
+  export type EventUpdateOneRequiredWithoutGuestsNestedInput = {
+    create?: XOR<EventCreateWithoutGuestsInput, EventUncheckedCreateWithoutGuestsInput>
+    connectOrCreate?: EventCreateOrConnectWithoutGuestsInput
+    upsert?: EventUpsertWithoutGuestsInput
+    connect?: EventWhereUniqueInput
+    update?: XOR<XOR<EventUpdateToOneWithWhereWithoutGuestsInput, EventUpdateWithoutGuestsInput>, EventUncheckedUpdateWithoutGuestsInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -5800,6 +7631,86 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type NestedEnumEventTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.EventType | EnumEventTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.EventType[] | ListEnumEventTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.EventType[] | ListEnumEventTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumEventTypeFilter<$PrismaModel> | $Enums.EventType
+  }
+
+  export type NestedEnumEventTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.EventType | EnumEventTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.EventType[] | ListEnumEventTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.EventType[] | ListEnumEventTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumEventTypeWithAggregatesFilter<$PrismaModel> | $Enums.EventType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumEventTypeFilter<$PrismaModel>
+    _max?: NestedEnumEventTypeFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type EventCreateWithoutStaffInput = {
+    title: string
+    description?: string | null
+    dateTime: Date | string
+    location?: string | null
+    language?: string
+    type: $Enums.EventType
+    state?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    expectedGuests?: number | null
+    organizer: UserCreateNestedOneWithoutEventsInput
+    guests?: GuestCreateNestedManyWithoutEventInput
+  }
+
+  export type EventUncheckedCreateWithoutStaffInput = {
+    id?: number
+    title: string
+    description?: string | null
+    dateTime: Date | string
+    location?: string | null
+    language?: string
+    type: $Enums.EventType
+    state?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    expectedGuests?: number | null
+    organizerId: number
+    guests?: GuestUncheckedCreateNestedManyWithoutEventInput
+  }
+
+  export type EventCreateOrConnectWithoutStaffInput = {
+    where: EventWhereUniqueInput
+    create: XOR<EventCreateWithoutStaffInput, EventUncheckedCreateWithoutStaffInput>
+  }
+
   export type PasswordResetTokenCreateWithoutUserInput = {
     token: string
     expires: Date | string
@@ -5829,8 +7740,13 @@ export namespace Prisma {
     dateTime: Date | string
     location?: string | null
     language?: string
+    type: $Enums.EventType
+    state?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    expectedGuests?: number | null
+    staff?: UserCreateNestedManyWithoutStaffEventsInput
+    guests?: GuestCreateNestedManyWithoutEventInput
   }
 
   export type EventUncheckedCreateWithoutOrganizerInput = {
@@ -5840,8 +7756,13 @@ export namespace Prisma {
     dateTime: Date | string
     location?: string | null
     language?: string
+    type: $Enums.EventType
+    state?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    expectedGuests?: number | null
+    staff?: UserUncheckedCreateNestedManyWithoutStaffEventsInput
+    guests?: GuestUncheckedCreateNestedManyWithoutEventInput
   }
 
   export type EventCreateOrConnectWithoutOrganizerInput = {
@@ -5852,6 +7773,40 @@ export namespace Prisma {
   export type EventCreateManyOrganizerInputEnvelope = {
     data: EventCreateManyOrganizerInput | EventCreateManyOrganizerInput[]
     skipDuplicates?: boolean
+  }
+
+  export type EventUpsertWithWhereUniqueWithoutStaffInput = {
+    where: EventWhereUniqueInput
+    update: XOR<EventUpdateWithoutStaffInput, EventUncheckedUpdateWithoutStaffInput>
+    create: XOR<EventCreateWithoutStaffInput, EventUncheckedCreateWithoutStaffInput>
+  }
+
+  export type EventUpdateWithWhereUniqueWithoutStaffInput = {
+    where: EventWhereUniqueInput
+    data: XOR<EventUpdateWithoutStaffInput, EventUncheckedUpdateWithoutStaffInput>
+  }
+
+  export type EventUpdateManyWithWhereWithoutStaffInput = {
+    where: EventScalarWhereInput
+    data: XOR<EventUpdateManyMutationInput, EventUncheckedUpdateManyWithoutStaffInput>
+  }
+
+  export type EventScalarWhereInput = {
+    AND?: EventScalarWhereInput | EventScalarWhereInput[]
+    OR?: EventScalarWhereInput[]
+    NOT?: EventScalarWhereInput | EventScalarWhereInput[]
+    id?: IntFilter<"Event"> | number
+    title?: StringFilter<"Event"> | string
+    description?: StringNullableFilter<"Event"> | string | null
+    dateTime?: DateTimeFilter<"Event"> | Date | string
+    location?: StringNullableFilter<"Event"> | string | null
+    language?: StringFilter<"Event"> | string
+    type?: EnumEventTypeFilter<"Event"> | $Enums.EventType
+    state?: StringFilter<"Event"> | string
+    createdAt?: DateTimeFilter<"Event"> | Date | string
+    updatedAt?: DateTimeFilter<"Event"> | Date | string
+    expectedGuests?: IntNullableFilter<"Event"> | number | null
+    organizerId?: IntFilter<"Event"> | number
   }
 
   export type PasswordResetTokenUpsertWithWhereUniqueWithoutUserInput = {
@@ -5897,21 +7852,6 @@ export namespace Prisma {
     data: XOR<EventUpdateManyMutationInput, EventUncheckedUpdateManyWithoutOrganizerInput>
   }
 
-  export type EventScalarWhereInput = {
-    AND?: EventScalarWhereInput | EventScalarWhereInput[]
-    OR?: EventScalarWhereInput[]
-    NOT?: EventScalarWhereInput | EventScalarWhereInput[]
-    id?: IntFilter<"Event"> | number
-    title?: StringFilter<"Event"> | string
-    description?: StringNullableFilter<"Event"> | string | null
-    dateTime?: DateTimeFilter<"Event"> | Date | string
-    location?: StringNullableFilter<"Event"> | string | null
-    language?: StringFilter<"Event"> | string
-    createdAt?: DateTimeFilter<"Event"> | Date | string
-    updatedAt?: DateTimeFilter<"Event"> | Date | string
-    organizerId?: IntFilter<"Event"> | number
-  }
-
   export type UserCreateWithoutPasswordResetTokensInput = {
     email: string
     password: string
@@ -5923,6 +7863,7 @@ export namespace Prisma {
     hashedRefreshToken?: string | null
     isEmailVerified?: boolean
     emailVerificationToken?: string | null
+    staffEvents?: EventCreateNestedManyWithoutStaffInput
     events?: EventCreateNestedManyWithoutOrganizerInput
   }
 
@@ -5938,6 +7879,7 @@ export namespace Prisma {
     hashedRefreshToken?: string | null
     isEmailVerified?: boolean
     emailVerificationToken?: string | null
+    staffEvents?: EventUncheckedCreateNestedManyWithoutStaffInput
     events?: EventUncheckedCreateNestedManyWithoutOrganizerInput
   }
 
@@ -5968,6 +7910,7 @@ export namespace Prisma {
     hashedRefreshToken?: NullableStringFieldUpdateOperationsInput | string | null
     isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
     emailVerificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    staffEvents?: EventUpdateManyWithoutStaffNestedInput
     events?: EventUpdateManyWithoutOrganizerNestedInput
   }
 
@@ -5983,6 +7926,7 @@ export namespace Prisma {
     hashedRefreshToken?: NullableStringFieldUpdateOperationsInput | string | null
     isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
     emailVerificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    staffEvents?: EventUncheckedUpdateManyWithoutStaffNestedInput
     events?: EventUncheckedUpdateManyWithoutOrganizerNestedInput
   }
 
@@ -5997,6 +7941,7 @@ export namespace Prisma {
     hashedRefreshToken?: string | null
     isEmailVerified?: boolean
     emailVerificationToken?: string | null
+    staffEvents?: EventCreateNestedManyWithoutStaffInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
   }
 
@@ -6012,12 +7957,72 @@ export namespace Prisma {
     hashedRefreshToken?: string | null
     isEmailVerified?: boolean
     emailVerificationToken?: string | null
+    staffEvents?: EventUncheckedCreateNestedManyWithoutStaffInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutEventsInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutEventsInput, UserUncheckedCreateWithoutEventsInput>
+  }
+
+  export type UserCreateWithoutStaffEventsInput = {
+    email: string
+    password: string
+    name?: string | null
+    language?: string
+    role?: $Enums.Role
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    hashedRefreshToken?: string | null
+    isEmailVerified?: boolean
+    emailVerificationToken?: string | null
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    events?: EventCreateNestedManyWithoutOrganizerInput
+  }
+
+  export type UserUncheckedCreateWithoutStaffEventsInput = {
+    id?: number
+    email: string
+    password: string
+    name?: string | null
+    language?: string
+    role?: $Enums.Role
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    hashedRefreshToken?: string | null
+    isEmailVerified?: boolean
+    emailVerificationToken?: string | null
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    events?: EventUncheckedCreateNestedManyWithoutOrganizerInput
+  }
+
+  export type UserCreateOrConnectWithoutStaffEventsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutStaffEventsInput, UserUncheckedCreateWithoutStaffEventsInput>
+  }
+
+  export type GuestCreateWithoutEventInput = {
+    name: string
+    email?: string | null
+    status?: string
+  }
+
+  export type GuestUncheckedCreateWithoutEventInput = {
+    id?: number
+    name: string
+    email?: string | null
+    status?: string
+  }
+
+  export type GuestCreateOrConnectWithoutEventInput = {
+    where: GuestWhereUniqueInput
+    create: XOR<GuestCreateWithoutEventInput, GuestUncheckedCreateWithoutEventInput>
+  }
+
+  export type GuestCreateManyEventInputEnvelope = {
+    data: GuestCreateManyEventInput | GuestCreateManyEventInput[]
+    skipDuplicates?: boolean
   }
 
   export type UserUpsertWithoutEventsInput = {
@@ -6042,6 +8047,7 @@ export namespace Prisma {
     hashedRefreshToken?: NullableStringFieldUpdateOperationsInput | string | null
     isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
     emailVerificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    staffEvents?: EventUpdateManyWithoutStaffNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
   }
 
@@ -6057,7 +8063,146 @@ export namespace Prisma {
     hashedRefreshToken?: NullableStringFieldUpdateOperationsInput | string | null
     isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
     emailVerificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    staffEvents?: EventUncheckedUpdateManyWithoutStaffNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUpsertWithWhereUniqueWithoutStaffEventsInput = {
+    where: UserWhereUniqueInput
+    update: XOR<UserUpdateWithoutStaffEventsInput, UserUncheckedUpdateWithoutStaffEventsInput>
+    create: XOR<UserCreateWithoutStaffEventsInput, UserUncheckedCreateWithoutStaffEventsInput>
+  }
+
+  export type UserUpdateWithWhereUniqueWithoutStaffEventsInput = {
+    where: UserWhereUniqueInput
+    data: XOR<UserUpdateWithoutStaffEventsInput, UserUncheckedUpdateWithoutStaffEventsInput>
+  }
+
+  export type UserUpdateManyWithWhereWithoutStaffEventsInput = {
+    where: UserScalarWhereInput
+    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutStaffEventsInput>
+  }
+
+  export type UserScalarWhereInput = {
+    AND?: UserScalarWhereInput | UserScalarWhereInput[]
+    OR?: UserScalarWhereInput[]
+    NOT?: UserScalarWhereInput | UserScalarWhereInput[]
+    id?: IntFilter<"User"> | number
+    email?: StringFilter<"User"> | string
+    password?: StringFilter<"User"> | string
+    name?: StringNullableFilter<"User"> | string | null
+    language?: StringFilter<"User"> | string
+    role?: EnumRoleFilter<"User"> | $Enums.Role
+    createdAt?: DateTimeFilter<"User"> | Date | string
+    updatedAt?: DateTimeFilter<"User"> | Date | string
+    hashedRefreshToken?: StringNullableFilter<"User"> | string | null
+    isEmailVerified?: BoolFilter<"User"> | boolean
+    emailVerificationToken?: StringNullableFilter<"User"> | string | null
+  }
+
+  export type GuestUpsertWithWhereUniqueWithoutEventInput = {
+    where: GuestWhereUniqueInput
+    update: XOR<GuestUpdateWithoutEventInput, GuestUncheckedUpdateWithoutEventInput>
+    create: XOR<GuestCreateWithoutEventInput, GuestUncheckedCreateWithoutEventInput>
+  }
+
+  export type GuestUpdateWithWhereUniqueWithoutEventInput = {
+    where: GuestWhereUniqueInput
+    data: XOR<GuestUpdateWithoutEventInput, GuestUncheckedUpdateWithoutEventInput>
+  }
+
+  export type GuestUpdateManyWithWhereWithoutEventInput = {
+    where: GuestScalarWhereInput
+    data: XOR<GuestUpdateManyMutationInput, GuestUncheckedUpdateManyWithoutEventInput>
+  }
+
+  export type GuestScalarWhereInput = {
+    AND?: GuestScalarWhereInput | GuestScalarWhereInput[]
+    OR?: GuestScalarWhereInput[]
+    NOT?: GuestScalarWhereInput | GuestScalarWhereInput[]
+    id?: IntFilter<"Guest"> | number
+    name?: StringFilter<"Guest"> | string
+    email?: StringNullableFilter<"Guest"> | string | null
+    status?: StringFilter<"Guest"> | string
+    eventId?: IntFilter<"Guest"> | number
+  }
+
+  export type EventCreateWithoutGuestsInput = {
+    title: string
+    description?: string | null
+    dateTime: Date | string
+    location?: string | null
+    language?: string
+    type: $Enums.EventType
+    state?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    expectedGuests?: number | null
+    organizer: UserCreateNestedOneWithoutEventsInput
+    staff?: UserCreateNestedManyWithoutStaffEventsInput
+  }
+
+  export type EventUncheckedCreateWithoutGuestsInput = {
+    id?: number
+    title: string
+    description?: string | null
+    dateTime: Date | string
+    location?: string | null
+    language?: string
+    type: $Enums.EventType
+    state?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    expectedGuests?: number | null
+    organizerId: number
+    staff?: UserUncheckedCreateNestedManyWithoutStaffEventsInput
+  }
+
+  export type EventCreateOrConnectWithoutGuestsInput = {
+    where: EventWhereUniqueInput
+    create: XOR<EventCreateWithoutGuestsInput, EventUncheckedCreateWithoutGuestsInput>
+  }
+
+  export type EventUpsertWithoutGuestsInput = {
+    update: XOR<EventUpdateWithoutGuestsInput, EventUncheckedUpdateWithoutGuestsInput>
+    create: XOR<EventCreateWithoutGuestsInput, EventUncheckedCreateWithoutGuestsInput>
+    where?: EventWhereInput
+  }
+
+  export type EventUpdateToOneWithWhereWithoutGuestsInput = {
+    where?: EventWhereInput
+    data: XOR<EventUpdateWithoutGuestsInput, EventUncheckedUpdateWithoutGuestsInput>
+  }
+
+  export type EventUpdateWithoutGuestsInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    dateTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    type?: EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
+    state?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expectedGuests?: NullableIntFieldUpdateOperationsInput | number | null
+    organizer?: UserUpdateOneRequiredWithoutEventsNestedInput
+    staff?: UserUpdateManyWithoutStaffEventsNestedInput
+  }
+
+  export type EventUncheckedUpdateWithoutGuestsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    dateTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    type?: EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
+    state?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expectedGuests?: NullableIntFieldUpdateOperationsInput | number | null
+    organizerId?: IntFieldUpdateOperationsInput | number
+    staff?: UserUncheckedUpdateManyWithoutStaffEventsNestedInput
   }
 
   export type PasswordResetTokenCreateManyUserInput = {
@@ -6074,8 +8219,57 @@ export namespace Prisma {
     dateTime: Date | string
     location?: string | null
     language?: string
+    type: $Enums.EventType
+    state?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    expectedGuests?: number | null
+  }
+
+  export type EventUpdateWithoutStaffInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    dateTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    type?: EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
+    state?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expectedGuests?: NullableIntFieldUpdateOperationsInput | number | null
+    organizer?: UserUpdateOneRequiredWithoutEventsNestedInput
+    guests?: GuestUpdateManyWithoutEventNestedInput
+  }
+
+  export type EventUncheckedUpdateWithoutStaffInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    dateTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    type?: EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
+    state?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expectedGuests?: NullableIntFieldUpdateOperationsInput | number | null
+    organizerId?: IntFieldUpdateOperationsInput | number
+    guests?: GuestUncheckedUpdateManyWithoutEventNestedInput
+  }
+
+  export type EventUncheckedUpdateManyWithoutStaffInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    dateTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    type?: EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
+    state?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expectedGuests?: NullableIntFieldUpdateOperationsInput | number | null
+    organizerId?: IntFieldUpdateOperationsInput | number
   }
 
   export type PasswordResetTokenUpdateWithoutUserInput = {
@@ -6104,8 +8298,13 @@ export namespace Prisma {
     dateTime?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: NullableStringFieldUpdateOperationsInput | string | null
     language?: StringFieldUpdateOperationsInput | string
+    type?: EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
+    state?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expectedGuests?: NullableIntFieldUpdateOperationsInput | number | null
+    staff?: UserUpdateManyWithoutStaffEventsNestedInput
+    guests?: GuestUpdateManyWithoutEventNestedInput
   }
 
   export type EventUncheckedUpdateWithoutOrganizerInput = {
@@ -6115,8 +8314,13 @@ export namespace Prisma {
     dateTime?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: NullableStringFieldUpdateOperationsInput | string | null
     language?: StringFieldUpdateOperationsInput | string
+    type?: EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
+    state?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expectedGuests?: NullableIntFieldUpdateOperationsInput | number | null
+    staff?: UserUncheckedUpdateManyWithoutStaffEventsNestedInput
+    guests?: GuestUncheckedUpdateManyWithoutEventNestedInput
   }
 
   export type EventUncheckedUpdateManyWithoutOrganizerInput = {
@@ -6126,8 +8330,83 @@ export namespace Prisma {
     dateTime?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: NullableStringFieldUpdateOperationsInput | string | null
     language?: StringFieldUpdateOperationsInput | string
+    type?: EnumEventTypeFieldUpdateOperationsInput | $Enums.EventType
+    state?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expectedGuests?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type GuestCreateManyEventInput = {
+    id?: number
+    name: string
+    email?: string | null
+    status?: string
+  }
+
+  export type UserUpdateWithoutStaffEventsInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    hashedRefreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
+    emailVerificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    events?: EventUpdateManyWithoutOrganizerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutStaffEventsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    hashedRefreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
+    emailVerificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    events?: EventUncheckedUpdateManyWithoutOrganizerNestedInput
+  }
+
+  export type UserUncheckedUpdateManyWithoutStaffEventsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    hashedRefreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    isEmailVerified?: BoolFieldUpdateOperationsInput | boolean
+    emailVerificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type GuestUpdateWithoutEventInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type GuestUncheckedUpdateWithoutEventInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type GuestUncheckedUpdateManyWithoutEventInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
   }
 
 

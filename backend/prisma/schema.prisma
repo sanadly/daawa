@@ -20,6 +20,13 @@ enum Role {
   ADMIN
 }
 
+enum EventType {
+  WEDDING
+  CONFERENCE
+  PARTY
+  OTHER
+}
+
 model User {
   id        Int      @id @default(autoincrement())
   email     String   @unique
@@ -31,12 +38,12 @@ model User {
   updatedAt DateTime @updatedAt
 
   // Adding back fields required by AuthService/UsersService
-  hashedRefreshToken   String? 
-  isEmailVerified      Boolean @default(false)
-  emailVerificationToken String? @unique
-
-  passwordResetTokens PasswordResetToken[]
-  events              Event[]
+  hashedRefreshToken     String?
+  isEmailVerified        Boolean              @default(false)
+  emailVerificationToken String?              @unique
+  staffEvents            Event[]              @relation("EventStaff")
+  passwordResetTokens    PasswordResetToken[]
+  events                 Event[]
 }
 
 model PasswordResetToken {
@@ -45,24 +52,40 @@ model PasswordResetToken {
   expires   DateTime
   createdAt DateTime @default(now())
 
-  userId    Int      // Foreign key to User
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int // Foreign key to User
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }
 
 model Event {
-  id          Int      @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   title       String
   description String?
   dateTime    DateTime
   location    String?
-  language    String   @default("en")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  language    String    @default("en")
+  type        EventType
+  state       String    @default("Draft")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  expectedGuests Int?
+  organizerId Int
+  organizer   User @relation(fields: [organizerId], references: [id], onDelete: Cascade)
 
-  organizerId Int      // Foreign key to the User who organized the event
-  organizer   User     @relation(fields: [organizerId], references: [id], onDelete: Cascade)
+  staff  User[]  @relation("EventStaff")
+  guests Guest[]
 
   @@index([organizerId])
+}
+
+model Guest {
+  id      Int     @id @default(autoincrement())
+  name    String
+  email   String?
+  status  String  @default("invited") // invited, confirmed, checked-in, etc.
+  eventId Int
+  event   Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  // Add more fields as needed (e.g., phone, RSVP, etc.)
 }

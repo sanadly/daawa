@@ -18,6 +18,7 @@ const core_1 = require("@nestjs/core");
 const email_module_1 = require("./email/email.module");
 const path = require("path");
 const prisma_module_1 = require("./prisma/prisma.module");
+const events_module_1 = require("./events/events.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -32,6 +33,7 @@ exports.AppModule = AppModule = __decorate([
             users_module_1.UsersModule,
             email_module_1.EmailModule,
             prisma_module_1.PrismaModule,
+            events_module_1.EventsModule,
             throttler_1.ThrottlerModule.forRoot([
                 {
                     ttl: 60000,

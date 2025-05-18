@@ -149,9 +149,20 @@ exports.Prisma.EventScalarFieldEnum = {
   dateTime: 'dateTime',
   location: 'location',
   language: 'language',
+  type: 'type',
+  state: 'state',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  expectedGuests: 'expectedGuests',
   organizerId: 'organizerId'
+};
+
+exports.Prisma.GuestScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  status: 'status',
+  eventId: 'eventId'
 };
 
 exports.Prisma.SortOrder = {
@@ -173,10 +184,18 @@ exports.Role = exports.$Enums.Role = {
   ADMIN: 'ADMIN'
 };
 
+exports.EventType = exports.$Enums.EventType = {
+  WEDDING: 'WEDDING',
+  CONFERENCE: 'CONFERENCE',
+  PARTY: 'PARTY',
+  OTHER: 'OTHER'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   PasswordResetToken: 'PasswordResetToken',
-  Event: 'Event'
+  Event: 'Event',
+  Guest: 'Guest'
 };
 
 /**

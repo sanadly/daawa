@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useRouter } from 'next/navigation';
 // No longer importing custom Button component
 // import Navbar from '@/components/layout/Navbar'; // Removed Navbar import
 import { UsersRound, Ticket, QrCode } from 'lucide-react'; // Import Lucide icons
@@ -29,6 +30,7 @@ import { UsersRound, Ticket, QrCode } from 'lucide-react'; // Import Lucide icon
 
 export default function HomePage() {
   const { t } = useTranslation('common'); // i18n instance not needed here anymore
+  const router = useRouter();
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -41,7 +43,7 @@ export default function HomePage() {
             <h1 className="text-5xl font-bold">{t('hero_title_refined')}</h1>
             <p className="py-6">{t('hero_description_refined')}</p>
             {/* Removed language display and switcher buttons from here */}
-            <button className="btn btn-primary" onClick={() => alert(t('get_started_alert'))}>
+            <button className="btn btn-primary" onClick={() => router.push('/events/create')}>
               {t('hero_button_create_event')}
             </button>
           </div>

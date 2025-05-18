@@ -1,0 +1,55 @@
+{
+  "create": {
+    "title": "Create a New Event",
+    "description": "Start by entering your event details. All fields support both English and Arabic."
+  },
+  "form": {
+    "step": {
+      "basic": "Basic Info",
+      "datetime": "Date & Time",
+      "location": "Location",
+      "type": "Event Type"
+    },
+    "titleLabel": "Event Title",
+    "titleDesc": "Give your event a clear, memorable name.",
+    "titlePlaceholder": "e.g. Ali & Sara's Wedding",
+    "titleRequired": "Event title is required.",
+    "descriptionLabel": "Event Description",
+    "descriptionPlaceholder": "Describe your event...",
+    "dateLabel": "Event Date & Time",
+    "dateDesc": "When will your event take place?",
+    "dateRequired": "Date and time are required.",
+    "locationLabel": "Location",
+    "locationDesc": "Where will your event be held?",
+    "locationPlaceholder": "e.g. Al Faisaliah Hotel, Riyadh",
+    "locationRequired": "Location is required.",
+    "typeLabel": "Event Type & Details",
+    "typeDesc": "Select the type and details for your event.",
+    "typeRequired": "Event type is required.",
+    "type": {
+      "wedding": "Wedding",
+      "conference": "Conference",
+      "party": "Party",
+      "other": "Other"
+    },
+    "languageLabel": "Event Language",
+    "languageDesc": "Select the main language for your event content and invitations.",
+    "language": {
+      "en": "English",
+      "ar": "Arabic"
+    },
+    "stateLabel": "Event State",
+    "state": {
+      "draft": "Draft",
+      "pending": "Pending",
+      "active": "Active"
+    },
+"success": "Event created successfully!",
+  "back": "Back",
+  "next": "Next",
+  "submit": "Create Event",
+  "loading": "Creating..."
+}
+}
+
+
