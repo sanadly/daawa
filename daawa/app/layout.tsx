@@ -1,6 +1,7 @@
 // Remove 'use client'; from here if it was added, RootLayout can be a Server Component
 // if it doesn't use client-side hooks directly anymore.
 
+import React from 'react'; // Import React for Suspense
 import type { Metadata } from "next";
 import { IBM_Plex_Sans_Arabic, Geist_Mono } from "next/font/google";
 import I18nProvider from "@/components/providers/I18nProvider";
@@ -42,8 +43,10 @@ export default function RootLayout({
         <I18nProvider>
           <AuthProvider> {/* Wrap children with AuthProvider */}
             <HtmlLangDirUpdater /> {/* Add the updater component here */}
-            <Navbar /> {/* Add Navbar here */}
-            {children}
+            <React.Suspense fallback={<div>Loading...</div>}> {/* Or a proper spinner component */}
+              <Navbar /> {/* Add Navbar here */}
+              {children}
+            </React.Suspense>
           </AuthProvider>
         </I18nProvider>
       </body>

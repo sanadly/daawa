@@ -1,0 +1,59 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+- **Enable React Suspense for i18next**
+    - In your `i18next` initialization (typically within an `I18nProvider` component), ensure that `useSuspense` is set to `true` within the `react` configuration object.
+    - This allows `react-i18next`'s `useTranslation` hook to leverage React Suspense for managing loading states of translations.
+    - **Example (`[I18nProvider.tsx](mdc:daawa/components/providers/I18nProvider.tsx)`):**
+      ```typescript
+      // ...
+      i18nInstance
+        .use(HttpApi)
+        .use(LanguageDetector)
+        .use(initReactI18next)
+        .init({
+          // ... other configurations ...
+          react: {
+            useSuspense: true, // ✅ DO: Set to true
+          },
+          // ... other configurations ...
+        });
+      // ...
+      ```
+
+- **Use `<React.Suspense>` Boundaries**
+    - Wrap sections of your application that depend on translations (especially at the layout or page level) with a `<React.Suspense fallback={...}>` component.
+    - Provide a suitable fallback UI (e.g., a loading spinner, a minimal loading message, or even `null`) that will be displayed while translations are being loaded.
+    - This prevents components from rendering with translation keys before the translated content is available.
+    - **Example (`[layout.tsx](mdc:daawa/app/layout.tsx)`):**
+      ```typescript
+      import React from 'react'; // Ensure React is imported
+      // ... other imports
+
+      export default function RootLayout({ children }) {
+        return (
+          <html>
+            <body>
+              <I18nProvider>
+                {/* Other providers */}
+                <React.Suspense fallback={<div>Loading translations...</div>}> {/* ✅ DO: Wrap content needing translations */}
+                  <Navbar />
+                  {children}
+                </React.Suspense>
+                {/* /Other providers */}
+              </I18nProvider>
+            </body>
+          </html>
+        );
+      }
+      ```
+
+- **Why this pattern is important**
+    - When `useSuspense` is `false`, `useTranslation` returns keys immediately if translations aren't loaded, causing a "flash of unstranslated content" (FOUC) or key flashing.
+    - By using `useSuspense: true` and `<React.Suspense>` boundaries, React will wait for the translations to be ready before rendering the components that use them, showing the fallback UI instead.
+
+- **Testing Considerations**
+    - Always test i18n implementations with simulated slow network conditions (using browser developer tools) to verify that Suspense fallbacks work correctly.
+    - Test language switching thoroughly.

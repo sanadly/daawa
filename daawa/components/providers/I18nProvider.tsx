@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react'; // Removed useState, useEffect
 import { I18nextProvider } from 'react-i18next';
 import i18nInstance from 'i18next'; // Renamed to avoid conflict if i18n is used as prop name
 import HttpApi from 'i18next-http-backend'; // Backend to load translations over http
@@ -44,7 +44,7 @@ if (!i18nInstance.isInitialized) {
         escapeValue: false, // React already safes from xss
       },
       react: {
-        useSuspense: false, // Set to false if you don't want to use Suspense
+        useSuspense: true, // This remains crucial
       },
       debug: process.env.NODE_ENV === 'development', // Enable debug logs in dev
     });
@@ -55,37 +55,9 @@ interface I18nProviderProps {
 }
 
 const I18nProvider: React.FC<I18nProviderProps> = ({ children }) => {
-  const [isInitialized, setIsInitialized] = useState(i18nInstance.isInitialized);
-
-  useEffect(() => {
-    // This effect hook will run only on the client side after mount.
-    // It ensures that we update the state based on the client-side i18n instance.
-    if (!i18nInstance.isInitialized) {
-      const handleInitialized = () => {
-        console.log("I18nProvider: Event 'initialized' received.");
-        setIsInitialized(true);
-      };
-      i18nInstance.on('initialized', handleInitialized);
-      // Initial check in case it initialized between component mount and effect run
-      if (i18nInstance.isInitialized) {
-        setIsInitialized(true);
-      }
-      return () => {
-        i18nInstance.off('initialized', handleInitialized);
-      };
-    } else if (!isInitialized) {
-      // If i18nInstance was already initialized (e.g. by a previous render/HMR) 
-      // but our state is not yet true.
-      setIsInitialized(true);
-    }
-  }, [isInitialized]); // Re-run if isInitialized state changes, though primarily for initial setup
-
-  if (!isInitialized) {
-    console.log("I18nProvider: Client-side, i18next not initialized yet or state not updated. Rendering null.");
-    return null; // Render null on the client until i18n is ready
-  }
-  
-  console.log("I18nProvider: i18next initialized, rendering children.");
+  // With useSuspense: true, React Suspense should handle loading states.
+  // The i18nInstance is initialized at the module level.
+  // console.log("I18nProvider: Rendering simplified provider with instance:", i18nInstance.language, i18nInstance.isInitialized);
   return <I18nextProvider i18n={i18nInstance}>{children}</I18nextProvider>;
 };
 
