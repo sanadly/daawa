@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'; // Added useState, useEffect
 import Link from 'next/link'; // Import Link for navigation
 import { useAuth } from '@/contexts/AuthContext'; // Import useAuth
 import { useRouter } from 'next/navigation'; // For logout redirect
-import { useTranslation } from 'next-i18next'; // Uncommented and will be used
+import { useTranslation } from 'react-i18next'; // Changed from next-i18next
 // If Navbar text needs translation, import useTranslation
 // import { useTranslation } from 'react-i18next';
 
@@ -120,8 +120,8 @@ const Navbar: React.FC = () => {
           <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
             <li><Link href="/#features"><a>{t('nav_features', 'Features')}</a></Link></li>
             <li><Link href="/#pricing"><a>{t('nav_pricing', 'Pricing')}</a></Link></li>
-            <li className="mt-2"><button className="btn btn-ghost btn-sm w-full">Login</button></li>
-            <li><button className="btn btn-primary btn-sm w-full">Sign Up</button></li>
+            <li className="mt-2"><button className="btn btn-ghost btn-sm w-full">{t('navbar_login_button', 'Login')}</button></li>
+            <li><button className="btn btn-primary btn-sm w-full">{t('navbar_signup_button', 'Sign Up')}</button></li>
           </ul>
         </div>
         */}

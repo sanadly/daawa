@@ -131,5 +131,9 @@
   "dashboard_auth_status_not_authenticated": "لم تتم المصادقة",
   "dashboard_user_id_label": "معرف المستخدم:",
   "dashboard_user_email_label": "البريد الإلكتروني:",
-  "dashboard_go_to_homepage_button": "الذهاب إلى الصفحة الرئيسية"
+  "dashboard_go_to_homepage_button": "الذهاب إلى الصفحة الرئيسية",
+  "navbar_login_button": "تسجيل الدخول",
+  "navbar_signup_button": "إنشاء حساب",
+  "error_api_invalid_credentials": "بيانات الاعتماد غير صالحة. يرجى التحقق من بريدك الإلكتروني وكلمة المرور.",
+  "forgot_password_link": "هل نسيت كلمة المرور؟"
 } 

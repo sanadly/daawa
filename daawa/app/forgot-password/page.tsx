@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useTranslation } from 'next-i18next'; // Uncommented
+import { useTranslation } from 'react-i18next'; // Changed from next-i18next
 import { fetchApi } from '@/services/apiAuth'; // Assuming apiAuth.ts is in @/services
 
 // Placeholder for the actual API call function

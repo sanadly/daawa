@@ -25,7 +25,7 @@ export interface UserData {
 
 // Redefined RegisterData to be more explicit for registration requirements
 export interface RegisterData {
-  username: string;
+  username?: string;
   email: string;
   password?: string; // Changed to optional, will be made required in RegisterForm component state
 }

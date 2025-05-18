@@ -4,7 +4,8 @@ import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { loginUser, type LoginCredentials } from '@/services/apiAuth';
 import { useRouter } from 'next/navigation';
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'react-i18next';
+import Link from 'next/link';
 
 interface LoginFormProps {
   onSuccess?: () => void; // Optional callback for successful login
@@ -54,18 +55,33 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
       let errorMessage = t('login_failed_unknown', 'An unknown error occurred during login.');
       const apiError = err as ApiErrorResponse; // Type assertion
 
+      console.error("Login API Error:", JSON.stringify(apiError, null, 2)); // Log the whole error object
       if (typeof apiError?.response?.data?.message === 'string') {
         const apiErrorMessageString = apiError.response.data.message as string;
+        console.log("API Error Message String:", apiErrorMessageString); // Log the specific string
+
         if (apiErrorMessageString === 'Please verify your email address before logging in.') {
           errorMessage = t('error_api_email_not_verified', 'Your email address is not verified. Please check your inbox for a verification link or request a new one.');
+        } else if (apiErrorMessageString.toLowerCase().includes('invalid credentials')) { // Case-insensitive check
+          errorMessage = t('error_api_invalid_credentials', 'Invalid credentials. Please check your email and password.');
         } else {
           errorMessage = apiErrorMessageString || t('login_failed', 'Login failed. Please try again.');
         }
       } else if (Array.isArray(apiError?.response?.data?.message) && apiError.response.data.message.length > 0) {
-        // Handle case where message is an array (e.g., from class-validator)
-        errorMessage = apiError.response.data.message.join(', '); // Simple join, could be more sophisticated
+        console.log("API Error Message Array:", apiError.response.data.message); // Log if it's an array
+        // Check if the array contains "Invalid credentials" or similar
+        if (apiError.response.data.message.some(msg => typeof msg === 'string' && msg.toLowerCase().includes('invalid credentials'))) {
+            errorMessage = t('error_api_invalid_credentials', 'Invalid credentials. Please check your email and password.');
+        } else {
+            errorMessage = apiError.response.data.message.join(', '); // Fallback for other array messages
+        }
       } else if (err instanceof Error) {
-        errorMessage = err.message || t('login_failed', 'Login failed. Please try again.');
+        console.log("Generic Error Message:", err.message);
+        if (err.message && err.message.toLowerCase().includes('invalid credentials')) {
+          errorMessage = t('error_api_invalid_credentials', 'Invalid credentials. Please check your email and password.');
+        } else {
+          errorMessage = err.message || t('login_failed', 'Login failed. Please try again.');
+        }
       }
       setError(errorMessage);
     } finally {
@@ -112,6 +128,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
           required
           disabled={isLoading}
         />
+        <div className="text-right mt-2">
+          <Link href="/forgot-password" className="text-sm link link-hover">
+            {t('forgot_password_link', 'Forgot password?')}
+          </Link>
+        </div>
         {/* TODO: Add "Forgot password?" link */}
       </div>
       <div className="form-control mt-6">

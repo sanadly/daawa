@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 // import { useRouter } from 'next/navigation'; // No longer used here
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'react-i18next';
 import { registerUser, type RegisterData } from '@/services/apiAuth';
 // You might not need useAuth here unless registration immediately logs the user in
 // import { useAuth } from '@/contexts/AuthContext';

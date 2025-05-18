@@ -131,5 +131,9 @@
   "dashboard_auth_status_not_authenticated": "Not Authenticated",
   "dashboard_user_id_label": "User ID:",
   "dashboard_user_email_label": "Email:",
-  "dashboard_go_to_homepage_button": "Go to Homepage"
+  "dashboard_go_to_homepage_button": "Go to Homepage",
+  "navbar_login_button": "Login",
+  "navbar_signup_button": "Sign Up",
+  "error_api_invalid_credentials": "Invalid credentials. Please check your email and password.",
+  "forgot_password_link": "Forgot password?"
 } 

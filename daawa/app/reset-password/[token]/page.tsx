@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation'; // Corrected import for App Router
-import { useTranslation } from 'next-i18next'; // Uncommented
+import { useTranslation } from 'react-i18next'; // Changed from next-i18next
 import { fetchApi } from '@/services/apiAuth'; // Assuming apiAuth.ts is in @/services
 
 // Define a type for the expected API error structure

@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { resendVerificationEmail } from '@/services/apiAuth'; // Adjust import if needed
-import { useTranslation } from 'next-i18next'; // Uncommented
+import { useTranslation } from 'react-i18next'; // Changed from next-i18next
 
 const ResendVerificationPage: React.FC = () => {
   const { t } = useTranslation('common'); // Initialized

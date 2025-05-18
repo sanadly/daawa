@@ -43,7 +43,7 @@ export default function RootLayout({
         <I18nProvider>
           <AuthProvider> {/* Wrap children with AuthProvider */}
             <HtmlLangDirUpdater /> {/* Add the updater component here */}
-            <React.Suspense fallback={<div>Loading...</div>}> {/* Or a proper spinner component */}
+            <React.Suspense fallback={<div style={{fontSize: '40px', color: 'red', background: 'yellow', padding: '20px'}}>SUSPENSE FALLBACK! TRANSLATIONS LOADING...</div>}> {/* Or a proper spinner component */}
               <Navbar /> {/* Add Navbar here */}
               {children}
             </React.Suspense>

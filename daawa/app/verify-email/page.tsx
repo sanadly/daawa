@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation'; // For App Router
 // If using Pages Router, you'd use: import { useRouter } from 'next/router';
-import { useTranslation } from 'next-i18next'; // Added
+import { useTranslation } from 'react-i18next'; // Changed from next-i18next
 
 // You might need a service function to call your backend
 // Similar to how you have loginUser in apiAuth.ts

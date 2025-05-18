@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'react-i18next';
 
 const DashboardPage: React.FC = () => {
   const { isAuthenticated, isLoading, user } = useAuth();
