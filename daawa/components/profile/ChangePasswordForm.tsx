@@ -48,7 +48,8 @@ const ChangePasswordForm: React.FC<ChangePasswordFormProps> = ({
       return;
     }
 
-    const { confirmPassword, ...passwordData } = formData;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { confirmPassword: _confirmPassword, ...passwordData } = formData;
     await onSubmit(passwordData);
     
     // Reset form after submission

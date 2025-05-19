@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var AuthController_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
@@ -20,20 +21,73 @@ const login_user_dto_1 = require("./dto/login-user.dto");
 const jwt_auth_guard_1 = require("./guards/jwt-auth.guard");
 const refresh_token_guard_1 = require("./guards/refresh-token.guard");
 const resend_verification_email_dto_1 = require("./dto/resend-verification-email.dto");
-let AuthController = class AuthController {
+const local_auth_guard_1 = require("./guards/local-auth.guard");
+const public_decorator_1 = require("./decorators/public.decorator");
+const common_2 = require("@nestjs/common");
+let AuthController = AuthController_1 = class AuthController {
     authService;
+    logger = new common_2.Logger(AuthController_1.name);
     constructor(authService) {
         this.authService = authService;
     }
     async register(createUserDto) {
         return this.authService.register(createUserDto);
     }
-    async login(loginUserDto) {
-        const user = await this.authService.validateUser(loginUserDto.email, loginUserDto.password);
-        if (!user) {
-            throw new common_1.UnauthorizedException('Invalid credentials');
+    async login(req, loginDto) {
+        this.logger.debug('Login endpoint called with credentials:');
+        this.logger.debug(`Email: ${loginDto.email}`);
+        this.logger.debug(`Password provided: ${loginDto.password ? '******' + loginDto.password.slice(-3) : 'EMPTY'}`);
+        console.log('LOGIN ATTEMPT', {
+            body: loginDto,
+            user: req.user ? {
+                id: req.user.id,
+                email: req.user.email,
+                name: req.user.name,
+                hasUser: !!req.user
+            } : 'NO USER IN REQUEST',
+        });
+        if (!req.user) {
+            this.logger.error('No user found in request after LocalAuthGuard');
+            throw new common_1.UnauthorizedException('Authentication failed - user not found in request');
         }
-        return this.authService.login(user);
+        try {
+            this.logger.debug(`Generating login response for user: ${req.user.email}`);
+            const result = await this.authService.login(req.user);
+            this.logger.debug('Login successful, returning tokens');
+            return result;
+        }
+        catch (error) {
+            this.logger.error(`Login error: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : undefined);
+            throw new common_1.UnauthorizedException('Authentication failed - could not generate tokens');
+        }
+    }
+    async loginDirect(loginDto) {
+        this.logger.debug('Direct login endpoint called with credentials:');
+        this.logger.debug(`Email: ${loginDto.email}`);
+        this.logger.debug(`Password provided: ${loginDto.password ? '******' + loginDto.password.slice(-3) : 'EMPTY'}`);
+        console.log('DIRECT LOGIN ATTEMPT', {
+            body: {
+                email: loginDto.email,
+                passwordProvided: !!loginDto.password
+            }
+        });
+        try {
+            const user = await this.authService.validateUser(loginDto.email, loginDto.password);
+            if (!user) {
+                this.logger.warn(`Direct login failed - invalid credentials for email: ${loginDto.email}`);
+                throw new common_1.UnauthorizedException('Invalid credentials');
+            }
+            this.logger.debug(`User validated, generating login response for: ${user.email}`);
+            const result = await this.authService.login(user);
+            console.log('DIRECT LOGIN SUCCESS for user:', user.email);
+            this.logger.debug('Direct login successful, returning tokens');
+            return result;
+        }
+        catch (error) {
+            console.error('DIRECT LOGIN ERROR:', error instanceof Error ? error.message : String(error));
+            this.logger.error(`Direct login error: ${error instanceof Error ? error.message : String(error)}`, error instanceof Error ? error.stack : undefined);
+            throw new common_1.UnauthorizedException('Authentication failed');
+        }
     }
     async refreshToken(req, authHeader) {
         const refreshTokenString = authHeader?.split(' ')[1];
@@ -101,12 +155,23 @@ __decorate([
 ], AuthController.prototype, "register", null);
 __decorate([
     (0, common_1.Post)('login'),
+    (0, common_1.UseGuards)(local_auth_guard_1.LocalAuthGuard),
+    (0, public_decorator_1.Public)(),
+    __param(0, (0, common_1.Request)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, login_user_dto_1.LoginUserDto]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "login", null);
+__decorate([
+    (0, common_1.Post)('login-direct'),
+    (0, public_decorator_1.Public)(),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [login_user_dto_1.LoginUserDto]),
     __metadata("design:returntype", Promise)
-], AuthController.prototype, "login", null);
+], AuthController.prototype, "loginDirect", null);
 __decorate([
     (0, common_1.UseGuards)(refresh_token_guard_1.RefreshTokenGuard),
     (0, common_1.Post)('refresh'),
@@ -166,7 +231,7 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "resetPasswordController", null);
-exports.AuthController = AuthController = __decorate([
+exports.AuthController = AuthController = AuthController_1 = __decorate([
     (0, common_1.Controller)('auth'),
     __metadata("design:paramtypes", [auth_service_1.AuthService])
 ], AuthController);

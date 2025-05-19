@@ -59,7 +59,7 @@ const Navbar: React.FC = () => {
     <div className="navbar bg-base-100 shadow-lg px-4 sm:px-6 lg:px-8">
       <div className="navbar-start">
         <Link href="/" className="btn btn-ghost text-xl normal-case">
-          {t('app_name', 'Daawa App')}
+          {isClient ? t('app_name', 'Daawa App') : 'Daawa App'}
         </Link>
       </div>
       {/* <div className="navbar-center hidden lg:flex">

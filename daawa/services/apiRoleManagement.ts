@@ -78,6 +78,7 @@ export const updateUserRole = async (userId: number, role: Role): Promise<UserRo
  * Fetches the current user's permissions
  */
 export const getMyPermissions = async (): Promise<PermissionEnum[]> => {
+  console.log('[apiRoleManagement.ts] getMyPermissions called. Intending to fetch /role-management/my-permissions. Current api.defaults.baseURL should be used by fetchApi.');
   return fetchApi('/role-management/my-permissions', {
     method: 'GET',
   });

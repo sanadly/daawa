@@ -1,37 +1,72 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express'; // For custom extractor
+import { JwtPayload } from '../types/jwt-payload.interface'; // Ensure this path is correct
+import { AuthService } from '../auth.service'; // To validate user if needed
 
-interface RefreshTokenPayload {
-  username: string;
-  sub: number; // User ID
-  // Add any other fields you put in your refresh token payload
-}
+// const DEFAULT_JWT_REFRESH_SECRET = 'YourDefaultRefreshSecret'; // Example: Remove if unused
+// interface RefreshTokenPayload { sub: number; username: string; } // Example: Remove if unused
 
 @Injectable()
-export class RefreshTokenStrategy extends PassportStrategy(Strategy, 'jwt-refresh') { // Unique name 'jwt-refresh'
-  constructor(private configService: ConfigService) {
-    const jwtRefreshSecret = configService.get<string>('JWT_REFRESH_SECRET');
-    if (!jwtRefreshSecret) {
-      throw new Error('JWT_REFRESH_SECRET is not defined');
-    }
+export class RefreshTokenStrategy extends PassportStrategy(
+  Strategy,
+  'jwt-refresh',
+) {
+  private readonly logger = new Logger(RefreshTokenStrategy.name);
+
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly authService: AuthService, // Optional: if you need to re-validate user on refresh
+  ) {
+    const refreshTokenSecret = configService.get<string>(
+      'JWT_REFRESH_SECRET',
+    );
+
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // Assumes refresh token is sent as Bearer
-      secretOrKey: jwtRefreshSecret,
-      passReqToCallback: false, // Set to true if you need request object in validate, e.g. to extract from body
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      secretOrKey: refreshTokenSecret || 'Aachen##2024-DefaultRefreshSecret', // Fallback
+      passReqToCallback: true, // Pass request to validate method
     });
+
+    if (!refreshTokenSecret) {
+      this.logger.warn(
+        'JWT_REFRESH_SECRET not found in environment, using default. This is NOT secure for production!',
+      );
+    }
+    
+    this.logger.debug(
+      `Initializing RefreshTokenStrategy with secret of length: ${(refreshTokenSecret || 'Aachen##2024-DefaultRefreshSecret').length}`,
+    );
   }
 
-  validate(payload: RefreshTokenPayload): any { // Return type can be more specific
-    // This payload comes from the decoded refresh token.
-    // It should contain user identifier (e.g., sub for userId).
-    if (!payload.sub) {
-        throw new UnauthorizedException('Invalid refresh token payload');
+  async validate(req: Request, payload: JwtPayload): Promise<any> {
+    const refreshToken = req.get('authorization')?.split(' ')[1];
+    this.logger.debug(
+      `Validating refresh token for user ID: ${payload.sub}`
+    );
+
+    if (!refreshToken) {
+      this.logger.error('Refresh token not found in request');
+      throw new UnauthorizedException('Refresh token missing');
     }
-    // We are returning the raw payload. AuthService.refreshToken will use this ID
-    // and the actual refresh token (from request body/header) to validate against the stored hash.
-    return { userId: payload.sub, username: payload.username };
+
+    try {
+      // You could add further validation here, e.g., check if the user still exists
+      // or if the refresh token is in a denylist (if you implement revocation)
+      // const user = await this.authService.validateUserById(payload.sub);
+      // if (!user) {
+      //   throw new UnauthorizedException('User not found');
+      // }
+      this.logger.debug('Refresh token validation successful');
+      return { ...payload, refreshToken }; // Append refreshToken to payload for service use
+    } catch (error) {
+      this.logger.error(
+        `Refresh token validation error: ${error instanceof Error ? error.message : String(error)}`,
+        error instanceof Error ? error.stack : undefined
+      );
+      throw new UnauthorizedException('Invalid refresh token');
+    }
   }
 } 

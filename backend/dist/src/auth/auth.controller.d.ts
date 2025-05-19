@@ -8,13 +8,31 @@ interface AuthenticatedRequest extends Express.Request {
 }
 export declare class AuthController {
     private readonly authService;
+    private readonly logger;
     constructor(authService: AuthService);
     register(createUserDto: CreateUserDto): Promise<{
         id: number;
         email: string;
         role: import("generated/prisma").$Enums.Role;
     }>;
-    login(loginUserDto: LoginUserDto): Promise<import("./auth.service").LoginResponse>;
+    login(req: any, loginDto: LoginUserDto): Promise<{
+        access_token: string;
+        user: {
+            id: any;
+            email: any;
+            name: any;
+            roles: any[];
+        };
+    }>;
+    loginDirect(loginDto: LoginUserDto): Promise<{
+        access_token: string;
+        user: {
+            id: any;
+            email: any;
+            name: any;
+            roles: any[];
+        };
+    }>;
     refreshToken(req: AuthenticatedRequest, authHeader: string): Promise<import("./auth.service").Tokens>;
     logout(req: AuthenticatedRequest): Promise<{
         message: string;

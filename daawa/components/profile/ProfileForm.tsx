@@ -3,8 +3,14 @@
 import React, { useState, useEffect } from 'react';
 import { User } from '@/types/auth';
 
+// Extend User type with profile-specific fields
+interface UserProfile extends User {
+  name?: string;
+  language?: string;
+}
+
 interface ProfileFormProps {
-  initialData: User | null;
+  initialData: UserProfile | null;
   onSubmit: (data: {
     name?: string;
     email?: string;

@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { User as PrismaUser } from '../../generated/prisma';
 import { EmailService } from '../email/email.service';
+import { PrismaService } from '../prisma/prisma.service';
 type UserData = Pick<PrismaUser, 'id' | 'email' | 'role'>;
 export interface Tokens {
     access_token: string;
@@ -21,11 +22,20 @@ export declare class AuthService {
     private readonly jwtService;
     private readonly configService;
     private readonly emailService;
+    private readonly prisma;
     private readonly logger;
-    constructor(usersService: UsersService, jwtService: JwtService, configService: ConfigService, emailService: EmailService);
-    validateUser(emailInput: string, pass: string): Promise<UserData | null>;
+    constructor(usersService: UsersService, jwtService: JwtService, configService: ConfigService, emailService: EmailService, prisma: PrismaService);
+    validateUser(email: string, password: string): Promise<any>;
     private getTokens;
-    login(user: UserData): Promise<LoginResponse>;
+    login(user: any): Promise<{
+        access_token: string;
+        user: {
+            id: any;
+            email: any;
+            name: any;
+            roles: any[];
+        };
+    }>;
     register(authRegisterDto: AuthRegisterDto): Promise<UserData>;
     refreshToken(userId: number, rt: string): Promise<Tokens>;
     logout(userId: number): Promise<{
@@ -44,5 +54,6 @@ export declare class AuthService {
     resetPassword(token: string, newPassword: string): Promise<{
         message: string;
     }>;
+    createTestUsers(): Promise<void>;
 }
 export {};

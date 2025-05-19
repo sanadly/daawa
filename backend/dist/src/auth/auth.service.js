@@ -18,39 +18,48 @@ const bcrypt = require("bcrypt");
 const config_1 = require("@nestjs/config");
 const crypto = require("crypto");
 const email_service_1 = require("../email/email.service");
+const prisma_service_1 = require("../prisma/prisma.service");
+const bcrypt_1 = require("bcrypt");
 let AuthService = AuthService_1 = class AuthService {
     usersService;
     jwtService;
     configService;
     emailService;
+    prisma;
     logger = new common_1.Logger(AuthService_1.name);
-    constructor(usersService, jwtService, configService, emailService) {
+    constructor(usersService, jwtService, configService, emailService, prisma) {
         this.usersService = usersService;
         this.jwtService = jwtService;
         this.configService = configService;
         this.emailService = emailService;
+        this.prisma = prisma;
     }
-    async validateUser(emailInput, pass) {
-        this.logger.debug(`Validating user: ${emailInput}`);
-        const user = await this.usersService.findOneByEmail(emailInput);
-        if (!user) {
-            this.logger.warn(`ValidateUser: User not found - ${emailInput}`);
-            return null;
-        }
-        if (!user.password) {
-            this.logger.warn(`ValidateUser: User ${emailInput} has no password set.`);
-            return null;
-        }
-        const isPasswordMatch = await bcrypt.compare(pass, user.password);
-        this.logger.debug(`ValidateUser for ${emailInput}: Password match result - ${isPasswordMatch}`);
-        if (user && user.password && isPasswordMatch) {
-            if (!user.isEmailVerified) {
-                this.logger.warn(`ValidateUser: Email not verified for ${emailInput}`);
-                throw new common_1.UnauthorizedException('Please verify your email address before logging in.');
+    async validateUser(email, password) {
+        this.logger.debug(`Attempting to validate user with email: ${email}`);
+        try {
+            this.logger.debug(`Looking up user with email: ${email}`);
+            const user = await this.usersService.findOneByEmail(email);
+            if (!user) {
+                this.logger.warn(`User not found with email: ${email}`);
+                return null;
             }
-            return { id: user.id, email: user.email, role: user.role };
+            this.logger.debug(`User found with id: ${user.id}, role: ${user.role}`);
+            this.logger.debug(`Comparing provided password with stored hash`);
+            const isPasswordValid = await (0, bcrypt_1.compare)(password, user.password);
+            if (!isPasswordValid) {
+                this.logger.warn(`Invalid password for user: ${email}`);
+                this.logger.debug(`Password comparison failed`);
+                return null;
+            }
+            this.logger.debug(`User ${email} validated successfully, password is valid`);
+            const { password: userPassword, ...result } = user;
+            this.logger.debug(`Returning user data: ${JSON.stringify({ id: result.id, email: result.email, role: result.role })}`);
+            return result;
         }
-        return null;
+        catch (error) {
+            this.logger.error(`Error validating user: ${error?.message || 'Unknown error'}`, error?.stack);
+            return null;
+        }
     }
     async getTokens(userId, email, userRole) {
         const jwtPayload = {
@@ -82,12 +91,33 @@ let AuthService = AuthService_1 = class AuthService {
         };
     }
     async login(user) {
-        const tokens = await this.getTokens(user.id, user.email, user.role);
-        await this.usersService.setCurrentRefreshToken(tokens.refresh_token, user.id);
-        return {
-            ...tokens,
-            user,
-        };
+        this.logger.debug(`Generating JWT for user ID: ${user.id}`);
+        try {
+            const payload = {
+                sub: user.id,
+                email: user.email,
+                role: user.role
+            };
+            const accessTokenExpires = this.configService.get('JWT_EXPIRES_IN') || '1h';
+            const accessToken = this.jwtService.sign(payload, {
+                expiresIn: accessTokenExpires,
+                secret: this.configService.get('JWT_SECRET'),
+            });
+            this.logger.debug(`JWT generated successfully for ${user.email}`);
+            return {
+                access_token: accessToken,
+                user: {
+                    id: user.id,
+                    email: user.email,
+                    name: user.name,
+                    roles: user.role ? [user.role] : [],
+                },
+            };
+        }
+        catch (error) {
+            this.logger.error(`Error generating JWT: ${error?.message || 'Unknown error'}`, error?.stack);
+            throw new common_1.UnauthorizedException('Could not create authentication token');
+        }
     }
     async register(authRegisterDto) {
         const { email, password, name } = authRegisterDto;
@@ -213,6 +243,49 @@ let AuthService = AuthService_1 = class AuthService {
         this.logger.log(`Password reset successfully for user ID: ${user.id}`);
         return { message: 'Password has been reset successfully.' };
     }
+    async createTestUsers() {
+        this.logger.log('Creating test users if they do not exist');
+        try {
+            const existingUser = await this.usersService.findOneByEmail('user@example.com');
+            if (!existingUser) {
+                this.logger.log('Creating test user: user@example.com');
+                await this.usersService.create({
+                    email: 'user@example.com',
+                    name: 'Test User',
+                    password: 'password123',
+                    isEmailVerified: true
+                });
+            }
+            else {
+                this.logger.log('Test user already exists, skipping creation');
+            }
+            const existingAdmin = await this.usersService.findOneByEmail('admin@example.com');
+            if (!existingAdmin) {
+                this.logger.log('Creating test admin: admin@example.com');
+                await this.usersService.create({
+                    email: 'admin@example.com',
+                    name: 'Test Admin',
+                    password: 'admin123',
+                    isEmailVerified: true
+                });
+                const adminUser = await this.usersService.findOneByEmail('admin@example.com');
+                if (adminUser) {
+                    await this.prisma.user.update({
+                        where: { id: adminUser.id },
+                        data: { role: 'ADMIN' }
+                    });
+                    this.logger.log('Updated admin user role to ADMIN');
+                }
+            }
+            else {
+                this.logger.log('Test admin already exists, skipping creation');
+            }
+            this.logger.log('Test user creation completed');
+        }
+        catch (error) {
+            this.logger.error(`Error creating test users: ${error?.message || 'Unknown error'}`, error?.stack);
+        }
+    }
 };
 exports.AuthService = AuthService;
 exports.AuthService = AuthService = AuthService_1 = __decorate([
@@ -220,6 +293,7 @@ exports.AuthService = AuthService = AuthService_1 = __decorate([
     __metadata("design:paramtypes", [users_service_1.UsersService,
         jwt_1.JwtService,
         config_1.ConfigService,
-        email_service_1.EmailService])
+        email_service_1.EmailService,
+        prisma_service_1.PrismaService])
 ], AuthService);
 //# sourceMappingURL=auth.service.js.map

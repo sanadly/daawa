@@ -8,12 +8,28 @@ import ProfileForm from '@/components/profile/ProfileForm';
 import ChangePasswordForm from '@/components/profile/ChangePasswordForm';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
 import { toast } from 'react-toastify';
+import { User } from '@/types/auth';
+
+// Define the type for profile updates
+interface ProfileUpdateData {
+  name?: string;
+  email?: string;
+  language?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any; // For any other fields that might be needed
+}
+
+// Define password data to match the component prop type
+interface PasswordChangeData {
+  currentPassword: string;
+  newPassword: string;
+}
 
 export default function ProfilePage() {
-  const { isAuthenticated, user: authUser } = useAuth();
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [profileData, setProfileData] = useState(null);
+  const [profileData, setProfileData] = useState<User | null>(null);
   const [activeTab, setActiveTab] = useState('profile');
 
   useEffect(() => {
@@ -38,7 +54,7 @@ export default function ProfilePage() {
     loadProfile();
   }, [isAuthenticated, router]);
 
-  const handleProfileUpdate = async (formData) => {
+  const handleProfileUpdate = async (formData: ProfileUpdateData) => {
     try {
       setLoading(true);
       const updatedProfile = await updateProfile(formData);
@@ -52,16 +68,19 @@ export default function ProfilePage() {
     }
   };
 
-  const handlePasswordChange = async (passwordData) => {
+  const handlePasswordChange = async (passwordData: PasswordChangeData) => {
     try {
       setLoading(true);
       await updateProfile(passwordData);
       toast.success('Password changed successfully');
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Failed to update password:', error);
-      toast.error(
-        error.response?.data?.message || 'Failed to update password. Please try again.'
-      );
+      const errorMessage = 
+        error && typeof error === 'object' && 'response' in error 
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          ? (error.response as any)?.data?.message 
+          : 'Failed to update password. Please try again.';
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }

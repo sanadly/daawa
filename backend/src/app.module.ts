@@ -18,7 +18,10 @@ import { EmailModule } from './email/email.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: path.resolve(__dirname, '../../../.env'),
+      envFilePath: [
+        path.resolve(__dirname, '../.env.test'),
+        path.resolve(__dirname, '../.env'),
+      ],
     }),
     ThrottlerModule.forRoot([{
       ttl: 60000,

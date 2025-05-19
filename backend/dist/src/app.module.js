@@ -30,7 +30,10 @@ exports.AppModule = AppModule = __decorate([
         imports: [
             config_1.ConfigModule.forRoot({
                 isGlobal: true,
-                envFilePath: path.resolve(__dirname, '../../../.env'),
+                envFilePath: [
+                    path.resolve(__dirname, '../.env.test'),
+                    path.resolve(__dirname, '../.env'),
+                ],
             }),
             throttler_1.ThrottlerModule.forRoot([{
                     ttl: 60000,

@@ -20,6 +20,9 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { RefreshTokenGuard } from './guards/refresh-token.guard';
 import { ResendVerificationEmailDto } from './dto/resend-verification-email.dto';
 import { JwtPayload } from './types/jwt-payload.interface';
+import { LocalAuthGuard } from './guards/local-auth.guard';
+import { Public } from './decorators/public.decorator';
+import { Logger } from '@nestjs/common';
 
 interface AuthenticatedRequest extends Express.Request {
   user: JwtPayload;
@@ -27,6 +30,8 @@ interface AuthenticatedRequest extends Express.Request {
 
 @Controller('auth')
 export class AuthController {
+  private readonly logger = new Logger(AuthController.name);
+
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
@@ -36,16 +41,81 @@ export class AuthController {
   }
 
   @Post('login')
-  @HttpCode(HttpStatus.OK)
-  async login(@Body() loginUserDto: LoginUserDto) {
-    const user = await this.authService.validateUser(
-      loginUserDto.email,
-      loginUserDto.password,
-    );
-    if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
+  @UseGuards(LocalAuthGuard)
+  @Public()
+  async login(@Request() req: any, @Body() loginDto: LoginUserDto) {
+    this.logger.debug('Login endpoint called with credentials:');
+    this.logger.debug(`Email: ${loginDto.email}`);
+    this.logger.debug(`Password provided: ${loginDto.password ? '******' + loginDto.password.slice(-3) : 'EMPTY'}`);
+    
+    console.log('LOGIN ATTEMPT', {
+      body: loginDto,
+      user: req.user ? {
+        id: req.user.id,
+        email: req.user.email,
+        name: req.user.name,
+        hasUser: !!req.user
+      } : 'NO USER IN REQUEST',
+    });
+    
+    if (!req.user) {
+      this.logger.error('No user found in request after LocalAuthGuard');
+      throw new UnauthorizedException('Authentication failed - user not found in request');
     }
-    return this.authService.login(user);
+    
+    try {
+      this.logger.debug(`Generating login response for user: ${req.user.email}`);
+      const result = await this.authService.login(req.user);
+      this.logger.debug('Login successful, returning tokens');
+      return result;
+    } catch (error) {
+      this.logger.error(
+        `Login error: ${error instanceof Error ? error.message : String(error)}`,
+        error instanceof Error ? error.stack : undefined
+      );
+      throw new UnauthorizedException('Authentication failed - could not generate tokens');
+    }
+  }
+
+  @Post('login-direct')
+  @Public()
+  @HttpCode(HttpStatus.OK)
+  async loginDirect(@Body() loginDto: LoginUserDto) {
+    this.logger.debug('Direct login endpoint called with credentials:');
+    this.logger.debug(`Email: ${loginDto.email}`);
+    this.logger.debug(`Password provided: ${loginDto.password ? '******' + loginDto.password.slice(-3) : 'EMPTY'}`);
+    
+    console.log('DIRECT LOGIN ATTEMPT', {
+      body: {
+        email: loginDto.email,
+        passwordProvided: !!loginDto.password
+      }
+    });
+    
+    try {
+      // First validate the user credentials
+      const user = await this.authService.validateUser(loginDto.email, loginDto.password);
+      
+      if (!user) {
+        this.logger.warn(`Direct login failed - invalid credentials for email: ${loginDto.email}`);
+        throw new UnauthorizedException('Invalid credentials');
+      }
+      
+      // If user is valid, generate tokens
+      this.logger.debug(`User validated, generating login response for: ${user.email}`);
+      const result = await this.authService.login(user);
+      
+      console.log('DIRECT LOGIN SUCCESS for user:', user.email);
+      this.logger.debug('Direct login successful, returning tokens');
+      return result;
+    } catch (error) {
+      console.error('DIRECT LOGIN ERROR:', error instanceof Error ? error.message : String(error));
+      this.logger.error(
+        `Direct login error: ${error instanceof Error ? error.message : String(error)}`,
+        error instanceof Error ? error.stack : undefined
+      );
+      throw new UnauthorizedException('Authentication failed');
+    }
   }
 
   @UseGuards(RefreshTokenGuard)

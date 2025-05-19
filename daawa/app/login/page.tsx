@@ -4,15 +4,20 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'next-i18next'; 
 import LoginForm from '@/components/auth/LoginForm'; // Import the LoginForm component
+import { useAuth } from '@/contexts/AuthContext'; // Import useAuth
 
 const LoginPage = () => {
   const { t } = useTranslation('common');
   const router = useRouter();
+  const { reSyncAuthFromStorage } = useAuth(); // Get the re-sync function
 
-  const handleLoginSuccess = () => {
-    // Potentially show a success message or perform other actions before redirecting
-    console.log('Login successful from page, redirecting...');
-    router.push('/'); // Redirect to homepage or dashboard
+  const handleLoginSuccess = async () => { // Make it async
+    console.log('[LoginPage] Dev login/tokens injected. Attempting to re-sync auth state...');
+    if (reSyncAuthFromStorage) {
+      await reSyncAuthFromStorage(); // Wait for the auth state to re-sync
+      console.log('[LoginPage] Auth state re-synced. Proceeding with redirect.');
+    }
+    router.push('/dashboard');
   };
 
   return (

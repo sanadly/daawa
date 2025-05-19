@@ -1,8 +1,9 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { User, AuthTokens, Permission, Role } from '@/types/auth';
 import { getMyPermissions } from '@/services/apiRoleManagement';
+import { apiInitializationPromise } from '@/services/api';
 
 // Key for localStorage
 const TOKEN_KEY = 'daawa_auth_tokens';
@@ -18,6 +19,7 @@ interface AuthContextType {
   logout: () => void;
   hasPermission: (permission: Permission | Permission[]) => boolean;
   hasRole: (role: Role) => boolean;
+  reSyncAuthFromStorage: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -30,72 +32,88 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [permissions, setPermissions] = useState<Permission[]>([]);
 
-  useEffect(() => {
-    const loadUserFromStorage = async () => {
-      try {
-        const storedTokens = localStorage.getItem(TOKEN_KEY);
-        if (storedTokens) {
-          const parsedTokens: AuthTokens = JSON.parse(storedTokens);
-          // TODO: Here you would typically validate the accessToken with the backend
-          // or use the refreshToken to get a new accessToken if the current one is expired.
-          // For now, if tokens exist, we'll assume they are valid and try to fetch user profile.
-          // This part will need a /profile endpoint on the backend.
-          // For demonstration, we'll just set the tokens and simulate user loading.
+  // Define loadUserFromStorage outside useEffect so it can be reused
+  const loadUserFromStorage = useCallback(async () => {
+    console.log('[AuthContext] Attempting to load/resync user from storage. Awaiting API initialization...');
+    setIsLoading(true); // Set loading true during resync
+    await apiInitializationPromise;
+    console.log('[AuthContext] API initialization complete. Proceeding to load/resync user from storage.');
 
-          setAccessToken(parsedTokens.access_token);
-          if (parsedTokens.refresh_token) {
-            setRefreshToken(parsedTokens.refresh_token);
-          }
-
-          // Placeholder: Fetch user profile using the loaded access token
-          // const userProfile = await getProfile(parsedTokens.access_token);
-          // setUser(userProfile);
-          // setIsAuthenticated(true);
-          
-          // TEMPORARY: If tokens are found, assume authenticated for now, but no user data yet
-          // The actual user data should come from a profile call or be decoded from JWT.
-          console.log('Tokens loaded from storage. User data needs to be fetched.');
-          // To fully re-authenticate, we'd need a way to get user data from the token.
-          // For now, this will just make isAuthenticated true if tokens are present.
-          // This is a simplification and should be improved.
-          setIsAuthenticated(true); // Simplified: if tokens exist, consider authenticated
-          
-          // Fetch user permissions when authenticated
-          try {
-            const myPermissions = await getMyPermissions();
-            setPermissions(myPermissions);
-          } catch (error) {
-            console.error('Failed to load user permissions', error);
-          }
+    try {
+      const storedTokens = localStorage.getItem(TOKEN_KEY);
+      if (storedTokens) {
+        const parsedTokens: AuthTokens = JSON.parse(storedTokens);
+        setAccessToken(parsedTokens.access_token);
+        if (parsedTokens.refresh_token) {
+          setRefreshToken(parsedTokens.refresh_token);
         }
-      } catch (error) {
-        console.error('Failed to load user from storage', error);
-        // Clear tokens if parsing fails or any other error
-        localStorage.removeItem(TOKEN_KEY);
+        // We need to set isAuthenticated to true here BEFORE fetching permissions
+        // so that getMyPermissions uses the new token if the API client inside it relies on AuthContext for the token.
+        // However, getMyPermissions likely gets the token directly or via an interceptor that reads from localStorage or the state.
+        // For now, let's assume getMyPermissions is robust enough.
+        setIsAuthenticated(true); 
+        console.log('[AuthContext] Tokens loaded, isAuthenticated set to true. Fetching permissions...');
+        
+        try {
+          const myPermissions = await getMyPermissions();
+          setPermissions(myPermissions);
+          // Assuming getMyPermissions also fetches user details or we can derive user from token if needed
+          // For dev bypass, we might not have full user object, only what inject-auth.js provides
+          // This part might need adjustment if `user` state needs to be populated from token during resync
+          console.log('[AuthContext] Permissions fetched successfully:', myPermissions);
+        } catch (error) {
+          console.error('[AuthContext] Failed to load user permissions during load/resync', error);
+          // Potentially logout or clear auth state if permissions are critical
+          // For a resync, if permissions fail, we might want to revert isAuthenticated
+          // setIsAuthenticated(false); 
+          // setPermissions([]);
+        }
+      } else {
+        console.log('[AuthContext] No tokens found in storage during load/resync. Clearing auth state.');
+        // Clear auth state if no tokens
+        setUser(null);
+        setAccessToken(null);
+        setRefreshToken(null);
+        setIsAuthenticated(false);
+        setPermissions([]);
       }
-      setIsLoading(false);
-    };
+    } catch (error) {
+      console.error('[AuthContext] Failed to load/resync user from storage or parse tokens', error);
+      localStorage.removeItem(TOKEN_KEY); // Clean up potentially corrupted token
+      setUser(null);
+      setAccessToken(null);
+      setRefreshToken(null);
+      setIsAuthenticated(false);
+      setPermissions([]);
+    }
+    setIsLoading(false);
+    console.log('[AuthContext] Load/resync process complete. isLoading set to false.');
+  }, []); // useCallback dependencies
 
+  useEffect(() => {
     loadUserFromStorage();
-  }, []);
+  }, [loadUserFromStorage]); // useEffect now depends on the memoized loadUserFromStorage
 
   const login = async (userData: User, tokens: AuthTokens) => {
-    console.log('AuthContext: login called with userData:', userData, 'tokens:', tokens);
-    setUser(userData);
+    console.log('[AuthContext] login called. Awaiting API initialization...');
+    await apiInitializationPromise;
+    console.log('[AuthContext] API initialization complete. Proceeding with login.');
+
+    setUser(userData); // Set user object from login
     setAccessToken(tokens.access_token);
     if (tokens.refresh_token) {
       setRefreshToken(tokens.refresh_token);
     }
     setIsAuthenticated(true);
     localStorage.setItem(TOKEN_KEY, JSON.stringify(tokens));
-    console.log('AuthContext: state after login - isAuthenticated:', true, 'user:', userData);
+    console.log('[AuthContext] User and tokens set, isAuthenticated: true. Fetching permissions...');
     
-    // Fetch user permissions after login
     try {
       const myPermissions = await getMyPermissions();
       setPermissions(myPermissions);
+      console.log('[AuthContext] Permissions fetched successfully after login:', myPermissions);
     } catch (error) {
-      console.error('Failed to load user permissions after login', error);
+      console.error('[AuthContext] Failed to load user permissions after login', error);
     }
   };
 
@@ -106,6 +124,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsAuthenticated(false);
     setPermissions([]);
     localStorage.removeItem(TOKEN_KEY);
+    console.log('[AuthContext] User logged out, tokens removed from storage.');
     // TODO: Call backend logout endpoint to invalidate refresh token if necessary
     // await logoutUserApi(); 
   };
@@ -139,7 +158,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         login, 
         logout,
         hasPermission,
-        hasRole
+        hasRole,
+        reSyncAuthFromStorage: loadUserFromStorage
       }}
     >
       {children}

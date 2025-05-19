@@ -28,7 +28,7 @@ const ResetPasswordPage: React.FC = () => {
   const { t } = useTranslation('common'); // Initialized
   const params = useParams();
   const router = useRouter();
-  const token = typeof params.token === 'string' ? params.token : null;
+  const token = params && params.token && typeof params.token === 'string' ? params.token : null;
 
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');

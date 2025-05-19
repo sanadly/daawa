@@ -21,9 +21,196 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
+# Daawa Backend API
+
+## Overview
+
+This is the backend API for the Daawa application, built with:
+
+- NestJS - A progressive Node.js framework for building server-side applications
+- Prisma - Next-generation ORM for Node.js and TypeScript
+- PostgreSQL - The database system
+- Passport & JWT - Authentication and authorization
+
+## Features
+
+- Comprehensive JWT-based authentication system
+- Role-based access control (RBAC)
+- Dynamic port configuration for local development
+- Multi-language support
+- Email functionality
+- Event management capabilities
+- Health check API
+
+## Development Setup
+
+### Prerequisites
+
+- Node.js (v16+)
+- npm or yarn
+- PostgreSQL (local or remote)
+
+### Environment Setup
+
+Create a `.env` file in the root directory with the following variables:
+
+```
+# Database
+DATABASE_URL="postgresql://username:password@localhost:5432/daawa?schema=public"
+DIRECT_URL="postgresql://username:password@localhost:5432/daawa?schema=public"
+
+# JWT
+JWT_SECRET="your-jwt-secret-key"
+JWT_EXPIRES_IN="3600s"
+JWT_REFRESH_SECRET="your-refresh-token-secret"
+JWT_REFRESH_EXPIRES_IN="7d"
+
+# Email (optional)
+EMAIL_HOST=smtp.example.com
+EMAIL_PORT=587
+EMAIL_USER=user@example.com
+EMAIL_PASSWORD=your-password
+EMAIL_FROM=noreply@example.com
+
+# Frontend URL for email links
+FRONTEND_URL=http://localhost:3000
+```
+
+### Installation
+
+```bash
+npm install
+```
+
+### Database Setup
+
+```bash
+# Generate Prisma client
+npx prisma generate
+
+# Run migrations
+npx prisma migrate dev
+```
+
+### Starting the Server
+
+```bash
+# Development mode with auto-restart
+npm run start:dev
+
+# Production mode
+npm run start:prod
+```
+
+The server includes automatic port selection. It will try to use the following in order:
+1. PORT environment variable if set
+2. Available port in the range 3000-3010 (configurable)
+
+### Test Users
+
+When running in development mode, the application automatically creates two test users:
+
+1. Regular User:
+   - Email: user@example.com
+   - Password: password123
+   - Role: USER
+
+2. Admin:
+   - Email: admin@example.com
+   - Password: admin123
+   - Role: ADMIN
+
+## API Endpoints
+
+### Authentication
+
+- `POST /auth/register` - Register a new user
+- `POST /auth/login` - Login and receive access token
+- `POST /auth/refresh` - Refresh access token
+- `POST /auth/logout` - Logout (invalidate tokens)
+- `GET /auth/profile` - Get current user profile
+- `GET /auth/verify-email` - Verify email address
+- `POST /auth/resend-verification` - Resend verification email
+- `POST /auth/forgot-password` - Request password reset
+- `POST /auth/reset-password` - Reset password
+
+### Users
+
+- `GET /users/profile` - Get current user's profile
+- `PUT /users/profile` - Update user profile
+
+### Events
+
+- `GET /events` - List events
+- `GET /events/:id` - Get event details
+- `POST /events` - Create event
+- `PUT /events/:id` - Update event
+- `DELETE /events/:id` - Delete event
+
+### RBAC (Role-Based Access Control)
+
+- Endpoints for testing various permission levels
+- Role management API
+
+## Troubleshooting
+
+If you encounter issues:
+
+1. Check for port conflicts using port-finder:
+   ```bash
+   node scripts/port-finder.js status
+   ```
+
+2. Kill any processes using conflicting ports:
+   ```bash
+   node scripts/port-finder.js kill
+   ```
+
+3. Check for valid `.env` configuration
+
 ## Description
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+
+## Dynamic Port Management
+
+This application includes built-in dynamic port management to prevent port conflicts. The server will automatically find an available port within a configurable range (default: 3000-3010) if the preferred port is already in use.
+
+### How It Works
+
+1. In development mode, the server will attempt to bind to the port specified in the `PORT` environment variable.
+2. If that port is unavailable, it will automatically increment and try the next available port in the range.
+3. Once a port is found, the server writes the port information to `current-port.json` for other services to discover.
+4. The frontend application automatically detects which port the backend is running on.
+
+### Available Scripts
+
+```bash
+# Check for an available port in the range
+npm run port:check
+
+# Find which port the server is currently running on
+npm run port:find
+
+# Kill processes using ports in the range
+npm run port:kill
+
+# Clean up any existing processes and start the server
+npm run start:clean
+
+# Automatically find an available port and start the server on it
+npm run start:auto
+```
+
+### Configuring Port Range
+
+The port range can be configured in two places:
+
+1. `src/main.ts` - For the backend server's auto-port-selection
+2. `scripts/port-finder.js` - For the utility scripts
+3. `daawa/services/api.ts` - For the frontend port discovery
+
+The current configuration uses ports 3000-3010. You can adjust this range based on your specific requirements.
 
 ## Project setup
 

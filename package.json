@@ -1,0 +1,24 @@
+{
+  "name": "daawa",
+  "version": "1.0.0",
+  "description": "Daawa application with backend and frontend",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "backend:start": "cd backend && npm run start:dev",
+    "backend:clean": "cd backend && node scripts/port-finder.js kill && npm run start:dev",
+    "backend:status": "cd backend && node scripts/port-finder.js status",
+    "backend:port": "cd backend && node scripts/port-finder.js find",
+    "backend:build": "cd backend && npm run build",
+    "backend:auto": "cd backend && npm run start:auto",
+    "frontend:dev": "cd daawa && npm run dev",
+    "kill:ports": "cd backend && npm run port:kill",
+    "setup": "npm i && cd backend && npm i && cd ../daawa && npm i"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

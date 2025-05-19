@@ -22,7 +22,7 @@ import { verifyEmailTokenOnBackend } from '@/services/apiAuth'; // Adjust import
 const VerifyEmailPage: React.FC = () => {
   const router = useRouter(); // For navigation
   const searchParams = useSearchParams(); // For App Router to get query params
-  const token = searchParams.get('token');
+  const token = searchParams ? searchParams.get('token') : null;
   const { t } = useTranslation('common'); // Initialized
 
   const [message, setMessage] = useState<string>(t('verify_email_verifying_message', 'Verifying your email, please wait...'));
