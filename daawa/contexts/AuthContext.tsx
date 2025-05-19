@@ -1,12 +1,16 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
-import { User, AuthTokens, Permission, Role } from '@/types/auth';
+import { User, AuthTokens } from '@/types/auth';
 import { getMyPermissions } from '@/services/apiRoleManagement';
 import { apiInitializationPromise } from '@/services/api';
+import { Role } from '@/types/auth';
 
 // Key for localStorage
 const TOKEN_KEY = 'daawa_auth_tokens';
+
+// Export these types
+export type Permission = string;
 
 interface AuthContextType {
   user: User | null;
@@ -15,7 +19,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   permissions: Permission[];
-  login: (userData: User, tokens: AuthTokens) => void;
+  login: (email: string, password: string, bypassAuth?: boolean) => Promise<void>;
   logout: () => void;
   hasPermission: (permission: Permission | Permission[]) => boolean;
   hasRole: (role: Role) => boolean;
@@ -94,26 +98,128 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     loadUserFromStorage();
   }, [loadUserFromStorage]); // useEffect now depends on the memoized loadUserFromStorage
 
-  const login = async (userData: User, tokens: AuthTokens) => {
+  const login = async (email: string, password: string, bypassAuth = false) => {
     console.log('[AuthContext] login called. Awaiting API initialization...');
-    await apiInitializationPromise;
-    console.log('[AuthContext] API initialization complete. Proceeding with login.');
-
-    setUser(userData); // Set user object from login
-    setAccessToken(tokens.access_token);
-    if (tokens.refresh_token) {
-      setRefreshToken(tokens.refresh_token);
-    }
-    setIsAuthenticated(true);
-    localStorage.setItem(TOKEN_KEY, JSON.stringify(tokens));
-    console.log('[AuthContext] User and tokens set, isAuthenticated: true. Fetching permissions...');
+    setIsLoading(true);
     
     try {
-      const myPermissions = await getMyPermissions();
-      setPermissions(myPermissions);
-      console.log('[AuthContext] Permissions fetched successfully after login:', myPermissions);
+      await apiInitializationPromise;
+      console.log('[AuthContext] API initialization complete. Proceeding with login.');
+
+      if (bypassAuth && process.env.NODE_ENV === 'development') {
+        // Development bypass - mock successful login
+        console.log('[AuthContext] Using development bypass login');
+        
+        // Create mock user and token
+        const mockUser: User = {
+          id: 1,
+          email: email,
+          role: Role.ADMIN,
+          username: email.split('@')[0]
+        };
+        
+        // Create mock tokens
+        const mockTokens: AuthTokens = {
+          access_token: 'dev-mock-token-' + Date.now(),
+          refresh_token: 'dev-mock-refresh-token-' + Date.now()
+        };
+        
+        // Set auth state
+        setUser(mockUser);
+        setAccessToken(mockTokens.access_token);
+        setRefreshToken(mockTokens.refresh_token);
+        setIsAuthenticated(true);
+        
+        // Save tokens for persistence
+        localStorage.setItem(TOKEN_KEY, JSON.stringify(mockTokens));
+        
+        // Set mock permissions
+        setPermissions([
+          'VIEW_DASHBOARD', 
+          'MANAGE_USERS', 
+          'MANAGE_ROLES', 
+          'MANAGE_EVENTS',
+          'ADMIN_ACCESS'
+        ]);
+      } else {
+        // Real authentication logic
+        // For now, validate the credentials with some basic checks
+        if (!email || !password) {
+          throw new Error('Email and password are required');
+        }
+        
+        if (email.trim() === '' || password.trim() === '') {
+          throw new Error('Email and password cannot be empty');
+        }
+        
+        // Here you would normally make an API call to authenticate
+        // For example:
+        // const response = await apiAuth.login(email, password);
+        
+        // For now, we'll simulate a failed login unless it matches test credentials
+        if (email === 'admin@example.com' && password === 'admin123') {
+          // Mock successful login for the admin user
+          const mockUser: User = {
+            id: 1,
+            email: email,
+            role: Role.ADMIN,
+            username: email.split('@')[0]
+          };
+          
+          const mockTokens: AuthTokens = {
+            access_token: 'real-mock-token-' + Date.now(),
+            refresh_token: 'real-mock-refresh-token-' + Date.now()
+          };
+          
+          setUser(mockUser);
+          setAccessToken(mockTokens.access_token);
+          setRefreshToken(mockTokens.refresh_token);
+          setIsAuthenticated(true);
+          localStorage.setItem(TOKEN_KEY, JSON.stringify(mockTokens));
+          
+          // Mock permissions based on the user role
+          setPermissions(['VIEW_DASHBOARD', 'MANAGE_USERS', 'ADMIN_ACCESS']);
+        } else if (email === 'user@example.com' && password === 'user123') {
+          // Mock successful login for a regular user
+          const mockUser: User = {
+            id: 2,
+            email: email,
+            role: Role.USER,
+            username: email.split('@')[0]
+          };
+          
+          const mockTokens: AuthTokens = {
+            access_token: 'user-mock-token-' + Date.now(),
+            refresh_token: 'user-mock-refresh-token-' + Date.now()
+          };
+          
+          setUser(mockUser);
+          setAccessToken(mockTokens.access_token);
+          setRefreshToken(mockTokens.refresh_token);
+          setIsAuthenticated(true);
+          localStorage.setItem(TOKEN_KEY, JSON.stringify(mockTokens));
+          
+          // Regular user has fewer permissions
+          setPermissions(['VIEW_DASHBOARD']);
+        } else {
+          // Credentials don't match any test users
+          throw new Error('Invalid email or password');
+        }
+        
+        console.log('[AuthContext] Login successful');
+      }
     } catch (error) {
-      console.error('[AuthContext] Failed to load user permissions after login', error);
+      console.error('[AuthContext] Login failed:', error);
+      // Clear any partial auth state
+      setUser(null);
+      setAccessToken(null);
+      setRefreshToken(null);
+      setIsAuthenticated(false);
+      setPermissions([]);
+      localStorage.removeItem(TOKEN_KEY);
+      throw error; // Re-throw to let the component handle the error
+    } finally {
+      setIsLoading(false);
     }
   };
 

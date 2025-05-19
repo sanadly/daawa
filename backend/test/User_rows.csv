@@ -1,0 +1,5 @@
+id,email,password,name,language,role,createdAt,updatedAt,hashedRefreshToken,isEmailVerified,emailVerificationToken
+1,user@example.com,$2b$10$d0K5pwWWGTvnF4QZnxqIguSOPA0xK5F1A/UsSVC3NP5R8w.bYHcOO,Test User,en,USER,2025-05-19 01:29:46.84,2025-05-19 01:29:46.88,,true,
+7,admin@example.com,$2b$10$d0K5pwWWGTvnF4QZnxqIguSOPA0xK5F1A/UsSVC3NP5R8w.bYHcOO,Admin User,en,ADMIN,2025-05-19 01:29:47.041,2025-05-19 01:29:47.041,,true,
+9,staff@example.com,$2b$10$d0K5pwWWGTvnF4QZnxqIguSOPA0xK5F1A/UsSVC3NP5R8w.bYHcOO,Staff Member,en,STAFF,2025-05-19 01:29:47.19,2025-05-19 01:29:47.19,,true,
+10,organizer@example.com,$2b$10$d0K5pwWWGTvnF4QZnxqIguSOPA0xK5F1A/UsSVC3NP5R8w.bYHcOO,Event Organizer,en,ORGANIZER,2025-05-19 01:29:47.34,2025-05-19 01:29:47.34,,true,

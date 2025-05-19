@@ -360,10 +360,12 @@ export class AuthService {
       
       if (!existingUser) {
         this.logger.log('Creating test user: user@example.com');
+        // Hash the password before creating the user
+        const hashedUserPassword = await bcrypt.hash('password123', 10);
         await this.usersService.create({
           email: 'user@example.com',
           name: 'Test User',
-          password: 'password123',
+          password: hashedUserPassword,
           isEmailVerified: true
         });
       } else {
@@ -375,10 +377,12 @@ export class AuthService {
       
       if (!existingAdmin) {
         this.logger.log('Creating test admin: admin@example.com');
+        // Hash the password before creating the user
+        const hashedAdminPassword = await bcrypt.hash('admin123', 10);
         await this.usersService.create({
           email: 'admin@example.com',
           name: 'Test Admin',
-          password: 'admin123',
+          password: hashedAdminPassword,
           isEmailVerified: true
         });
         

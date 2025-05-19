@@ -1,106 +1,101 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
+import { getAuthToken, clearAuthTokens } from './authToken';
 
-// Function to get the backend port
-async function getBackendBaseUrl(): Promise<string> {
-  console.log('[api.ts] getBackendBaseUrl called');
-  // First check environment variable
-  if (process.env.NEXT_PUBLIC_API_URL) {
-    console.log('[api.ts] Using NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL);
-    return process.env.NEXT_PUBLIC_API_URL;
-  }
-
-  // If in browser, attempt to fetch from a port info endpoint
-  if (typeof window !== 'undefined') {
-    try {
-      console.log('[api.ts] Attempting to fetch /api/backend-port');
-      // Try to fetch from our backend discovery endpoint
-      const response = await fetch('/api/backend-port');
-      if (response.ok) {
-        const data = await response.json();
-        if (data.baseUrl) {
-          console.log('[api.ts] Fetched baseUrl from /api/backend-port:', data.baseUrl);
-          return data.baseUrl;
-        }
-      } else {
-        console.log('[api.ts] /api/backend-port call not ok, status:', response.status);
-      }
-    } catch (error) {
-      console.warn('[api.ts] Failed to fetch backend port from /api/backend-port:', error);
-      // Continue to fallback
-    }
-  }
-
-  // Fallback to default port
-  const fallbackUrl = 'http://localhost:3006';
-  console.log('[api.ts] Falling back to default baseURL:', fallbackUrl);
-  return fallbackUrl;
-}
-
-// Create the axios instance with default config
-console.log('[api.ts] Creating axios instance (api constant)');
-export const api = axios.create({
-  baseURL: 'http://localhost:3006', // This will be dynamically updated
+// Create axios instance with base configuration
+const api = axios.create({
+  baseURL: 'http://localhost:3000', // Directly connect to port 3000
+  timeout: 15000,
   headers: {
     'Content-Type': 'application/json',
   },
 });
+
+// Debug the initial configuration
+console.log('[api.ts] Creating axios instance (api constant)');
 console.log('[api.ts] Initial api.defaults.baseURL:', api.defaults.baseURL);
 
-// Initialize the API with the correct base URL
+// Define function for initializing the API with the correct backend port
 async function initializeApi(): Promise<void> {
   console.log('[api.ts] initializeApi function started');
+  
+  // We're now using a fixed port 3006 so we don't need to fetch it dynamically
+  
+  // Set authorization header for initial requests
+  const token = getAuthToken();
+  if (token) {
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  }
+  
+  console.log('[api.ts] API initialized with baseURL (api.defaults.baseURL):', api.defaults.baseURL);
+}
+
+// Create a promise that indicates when the API is initialized
+console.log('[api.ts] Creating and exporting apiInitializationPromise');
+const apiInitializationPromise = initializeApi();
+console.log('[api.ts] apiInitializationPromise created. Other modules can now import and await it.');
+
+// Add request interceptor
+api.interceptors.request.use(
+  (config) => {
+    // Add auth token to headers for each request
+    const token = getAuthToken();
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    // Handle request error
+    console.error('API request error:', error);
+    return Promise.reject(error);
+  }
+);
+
+// Add response interceptor
+api.interceptors.response.use(
+  (response) => {
+    // Process successful responses
+    return response;
+  },
+  (error: AxiosError) => {
+    // Handle unauthorized errors
+    if (error.response?.status === 401) {
+      // Clear tokens on auth error
+      clearAuthTokens();
+      
+      // If not on login or auth pages, redirect to login
+      if (typeof window !== 'undefined' && 
+          !window.location.pathname.includes('/login') && 
+          !window.location.pathname.includes('/reset-password')) {
+        window.location.href = '/login';
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
+// Helper function for making API requests with proper initialization
+export async function fetchApi<T = unknown>(
+  url: string,
+  options: AxiosRequestConfig = {}
+): Promise<T> {
+  // Wait for API to be initialized before making requests
+  await apiInitializationPromise;
+  
   try {
-    const baseURL = await getBackendBaseUrl();
-    console.log('[api.ts] initializeApi: Before setting api.defaults.baseURL. Current value:', api.defaults.baseURL, 'Will set to:', baseURL);
-    api.defaults.baseURL = baseURL;
-    console.log(`[api.ts] API initialized with baseURL (api.defaults.baseURL): ${api.defaults.baseURL}`);
+    const response: AxiosResponse<T> = await api.request({
+      url,
+      ...options,
+    });
+    return response.data;
   } catch (error) {
-    console.error('[api.ts] Failed to initialize API with dynamic baseURL:', error);
-    console.log('[api.ts] API will use the hardcoded default baseURL:', api.defaults.baseURL);
-    // Keep the default baseURL
+    if (axios.isAxiosError(error) && error.response) {
+      // Extract error details from response
+      const errorMessage = error.response.data?.message || error.message;
+      throw new Error(errorMessage);
+    }
+    throw error;
   }
 }
 
-// DO NOT self-invoke here anymore.
-// console.log('[api.ts] Calling initializeApi()');
-// initializeApi();
-// console.log('[api.ts] initializeApi() call initiated. Note: it is async.');
-
-// Instead, invoke it and export the promise so other modules can await it.
-console.log('[api.ts] Creating and exporting apiInitializationPromise');
-export const apiInitializationPromise = initializeApi();
-console.log('[api.ts] apiInitializationPromise created. Other modules can now import and await it.');
-
-// Export the interceptor setup function
-export function setupApiInterceptors(
-  onUnauthorized: () => void,
-  getAuthToken: () => string | null
-): void {
-  // Request interceptor
-  api.interceptors.request.use(
-    (config) => {
-      const token = getAuthToken();
-      if (token) {
-        config.headers['Authorization'] = `Bearer ${token}`;
-      }
-      return config;
-    },
-    (error) => {
-      return Promise.reject(error);
-    }
-  );
-
-  // Response interceptor
-  api.interceptors.response.use(
-    (response) => response,
-    (error) => {
-      if (error.response?.status === 401) {
-        // Call the onUnauthorized callback
-        onUnauthorized();
-      }
-      return Promise.reject(error);
-    }
-  );
-}
-
-export default api;
+export { api, apiInitializationPromise };

@@ -136,5 +136,49 @@
   "navbar_signup_button": "Sign Up",
   "login": "Log in",
   "error_api_invalid_credentials": "Invalid credentials. Please check your email and password.",
-  "forgot_password_link": "Forgot password?"
+  "forgot_password_link": "Forgot password?",
+
+  "dashboard": "Dashboard",
+  "events": "Events",
+  "administration": "Administration",
+  "user_management": "User Management",
+  "settings": "Settings",
+  "unknown_user": "User",
+  "view_profile": "View profile",
+
+  "profile_management": "Profile Management",
+  "member_since": "Member since:",
+  "tab_integrations": "Integrations",
+  "tab_notifications": "Notifications",
+  "tab_security": "Security",
+  "tab_activity": "Activity",
+
+  "integrations_title": "External Integrations",
+  "integrations_coming_soon": "Integrations with external services will be available soon.",
+  "google_calendar": "Google Calendar",
+  "google_calendar_description": "Sync your events with Google Calendar",
+  "outlook_calendar": "Outlook Calendar",
+  "outlook_calendar_description": "Sync your events with Outlook Calendar",
+  "connect": "Connect",
+
+  "notification_preferences": "Notification Preferences",
+  "email_notifications": "Email Notifications",
+  "event_notifications": "Event Notifications",
+  "system_notifications": "System Notifications",
+  "save_notification_settings": "Save Notification Settings",
+
+  "security_settings": "Security Settings",
+  "two_factor_auth": "Two-factor Authentication",
+  "login_alerts": "Login Alerts",
+  "save_security_settings": "Save Security Settings",
+
+  "account_activity": "Account Activity",
+  "action": "Action",
+  "date": "Date",
+  "ip_address": "IP Address",
+  "activity_login": "Login",
+  "activity_password_change": "Password Changed",
+  "activity_profile_update": "Profile Updated",
+
+  "feature_coming_soon": "This feature is coming soon!"
 } 

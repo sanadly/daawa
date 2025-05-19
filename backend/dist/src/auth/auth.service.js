@@ -249,10 +249,11 @@ let AuthService = AuthService_1 = class AuthService {
             const existingUser = await this.usersService.findOneByEmail('user@example.com');
             if (!existingUser) {
                 this.logger.log('Creating test user: user@example.com');
+                const hashedUserPassword = await bcrypt.hash('password123', 10);
                 await this.usersService.create({
                     email: 'user@example.com',
                     name: 'Test User',
-                    password: 'password123',
+                    password: hashedUserPassword,
                     isEmailVerified: true
                 });
             }
@@ -262,10 +263,11 @@ let AuthService = AuthService_1 = class AuthService {
             const existingAdmin = await this.usersService.findOneByEmail('admin@example.com');
             if (!existingAdmin) {
                 this.logger.log('Creating test admin: admin@example.com');
+                const hashedAdminPassword = await bcrypt.hash('admin123', 10);
                 await this.usersService.create({
                     email: 'admin@example.com',
                     name: 'Test Admin',
-                    password: 'admin123',
+                    password: hashedAdminPassword,
                     isEmailVerified: true
                 });
                 const adminUser = await this.usersService.findOneByEmail('admin@example.com');

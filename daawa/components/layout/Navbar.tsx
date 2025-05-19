@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'; // Added useState, useEffect
 import Link from 'next/link'; // Import Link for navigation
-import { useAuth } from '@/contexts/AuthContext'; // Import useAuth
+import { useAuth } from '@/contexts/AuthContext'; // Use the correct path
 import { useRouter } from 'next/navigation'; // For logout redirect
 import { useTranslation } from 'react-i18next'; // Changed from next-i18next
 // If Navbar text needs translation, import useTranslation
@@ -93,7 +93,7 @@ const Navbar: React.FC = () => {
         {isAuthenticated ? (
           <>
             {user && (
-              <span className="text-sm hidden md:inline">{t('welcome', 'Welcome')}, {user.email || user.username}</span>
+              <span className="text-sm hidden md:inline">{t('welcome', 'Welcome')}, {user.name || user.email}</span>
             )}
             <Link href="/dashboard" className="btn btn-ghost btn-sm">
               {t('dashboard_link', 'Dashboard')}

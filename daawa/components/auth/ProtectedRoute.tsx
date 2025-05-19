@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { Role, Permission } from '@/types/auth';
+import { Role, Permission } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 
 interface ProtectedRouteProps {

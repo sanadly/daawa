@@ -7,9 +7,8 @@ import { IBM_Plex_Sans_Arabic, Geist_Mono } from "next/font/google";
 import TranslationsProvider from "@/components/providers/TranslationsProvider";
 import "./globals.css";
 import HtmlLangDirUpdater from "@/components/layout/HtmlLangDirUpdater"; // Import the new component
-import { AuthProvider } from '@/contexts/AuthContext'; // Import AuthProvider
+import { AuthProvider } from '@/contexts/AuthContext'; // Import AuthProvider from the correct path
 import Navbar from '@/components/layout/Navbar'; // Import Navbar
-
 import { getTranslations } from '@/lib/i18n'; // Corrected: Using getTranslations
 import i18nConfig from '../i18n.config'; // Corrected path
 
@@ -32,7 +31,8 @@ export const metadata: Metadata = {
   // This approach primarily handles client-side updates for SPA-like interactions.
 };
 
-function getLocale(params?: { lng?: string }) { // Typed params
+// Add a simple getLocale function inline since we can't find the imported one
+function getLocale(params?: { lng?: string }) {
   return params?.lng || i18nConfig.defaultLocale;
 }
 
@@ -53,19 +53,19 @@ export default async function RootLayout({
       <body
         className={`${ibmPlexSansArabic.variable} ${geistMono.variable} font-sans antialiased`}
       >
-        <TranslationsProvider
-          locale={locale}
-          namespaces={[i18nConfig.defaultNS]}
-          resources={i18n.services.resourceStore.data}
-        >
-          <AuthProvider> {/* Wrap children with AuthProvider */}
+        <AuthProvider>
+          <TranslationsProvider
+            locale={locale}
+            namespaces={[i18nConfig.defaultNS]}
+            resources={i18n.services.resourceStore.data}
+          >
             <HtmlLangDirUpdater /> {/* Add the updater component here */}
-            <React.Suspense fallback={<div style={{fontSize: '40px', color: 'red', background: 'yellow', padding: '20px'}}>LOADING...</div>}> {/* Or a proper spinner component */}
+            <React.Suspense fallback={<div style={{fontSize: '20px', padding: '20px'}}>Loading...</div>}> 
               <Navbar /> {/* Add Navbar here */}
               {children}
             </React.Suspense>
-          </AuthProvider>
-        </TranslationsProvider>
+          </TranslationsProvider>
+        </AuthProvider>
       </body>
     </html>
   );
