@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { User, AuthTokens } from '@/types/auth';
-import { getMyPermissions } from '@/services/apiRoleManagement';
+import { getMyProfile } from '@/services/apiRoleManagement';
 import { apiInitializationPromise } from '@/services/api';
 import { Role } from '@/types/auth';
 
@@ -51,26 +51,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (parsedTokens.refresh_token) {
           setRefreshToken(parsedTokens.refresh_token);
         }
-        // We need to set isAuthenticated to true here BEFORE fetching permissions
-        // so that getMyPermissions uses the new token if the API client inside it relies on AuthContext for the token.
-        // However, getMyPermissions likely gets the token directly or via an interceptor that reads from localStorage or the state.
-        // For now, let's assume getMyPermissions is robust enough.
+        // Set isAuthenticated to true optimistically, it will be confirmed by profile fetch
         setIsAuthenticated(true); 
-        console.log('[AuthContext] Tokens loaded, isAuthenticated set to true. Fetching permissions...');
+        console.log('[AuthContext] Tokens loaded, isAuthenticated tentatively true. Fetching user profile...');
         
         try {
-          const myPermissions = await getMyPermissions();
-          setPermissions(myPermissions);
-          // Assuming getMyPermissions also fetches user details or we can derive user from token if needed
-          // For dev bypass, we might not have full user object, only what inject-auth.js provides
-          // This part might need adjustment if `user` state needs to be populated from token during resync
-          console.log('[AuthContext] Permissions fetched successfully:', myPermissions);
+          const userProfile = await getMyProfile();
+          setUser(userProfile);
+          setIsAuthenticated(true);
+          console.log('[AuthContext] User profile fetched successfully:', userProfile);
+          
+          // For now, clear specific permissions or derive them if needed
+          // If your app uses granular permissions extensively, you'll need a mapping from role to permissions here.
+          // Example: if (userProfile.role === Role.ADMIN) setPermissions(['MANAGE_USERS', ...]);
+          setPermissions([]);
+
         } catch (error) {
-          console.error('[AuthContext] Failed to load user permissions during load/resync', error);
-          // Potentially logout or clear auth state if permissions are critical
-          // For a resync, if permissions fail, we might want to revert isAuthenticated
-          // setIsAuthenticated(false); 
-          // setPermissions([]);
+          console.error('[AuthContext] Failed to load user profile during load/resync', error);
+          // If profile fetch fails, user is not truly authenticated with the backend.
+          setUser(null);
+          setAccessToken(null);
+          setRefreshToken(null);
+          setIsAuthenticated(false); 
+          setPermissions([]);
+          localStorage.removeItem(TOKEN_KEY); // Remove invalid/stale token
         }
       } else {
         console.log('[AuthContext] No tokens found in storage during load/resync. Clearing auth state.');
