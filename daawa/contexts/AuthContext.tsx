@@ -1,9 +1,10 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
+// import { useRouter, usePathname } from 'next/navigation'; // Removed unused imports
 import { User, AuthTokens } from '@/types/auth';
 import { getMyProfile } from '@/services/apiRoleManagement';
-import { apiInitializationPromise } from '@/services/api';
+import { loginUser as apiLoginUser, LoginCredentials } from '@/services/apiAuth'; // Import real login function
 import { Role } from '@/types/auth';
 
 // Key for localStorage
@@ -38,10 +39,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   // Define loadUserFromStorage outside useEffect so it can be reused
   const loadUserFromStorage = useCallback(async () => {
-    console.log('[AuthContext] Attempting to load/resync user from storage. Awaiting API initialization...');
+    console.log('[AuthContext] Attempting to load/resync user from storage.'); // Removed: Awaiting API initialization...
     setIsLoading(true); // Set loading true during resync
-    await apiInitializationPromise;
-    console.log('[AuthContext] API initialization complete. Proceeding to load/resync user from storage.');
+    // await apiInitializationPromise; // Removed: API is now initialized synchronously
+    // console.log('[AuthContext] API initialization complete. Proceeding to load/resync user from storage.');
 
     try {
       const storedTokens = localStorage.getItem(TOKEN_KEY);
@@ -103,125 +104,66 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [loadUserFromStorage]); // useEffect now depends on the memoized loadUserFromStorage
 
   const login = async (email: string, password: string, bypassAuth = false) => {
-    console.log('[AuthContext] login called. Awaiting API initialization...');
+    console.log('[AuthContext] login called.');
     setIsLoading(true);
     
     try {
-      await apiInitializationPromise;
-      console.log('[AuthContext] API initialization complete. Proceeding with login.');
-
       if (bypassAuth && process.env.NODE_ENV === 'development') {
         // Development bypass - mock successful login
         console.log('[AuthContext] Using development bypass login');
         
-        // Create mock user and token
         const mockUser: User = {
           id: 1,
           email: email,
           role: Role.ADMIN,
           username: email.split('@')[0]
         };
-        
-        // Create mock tokens
         const mockTokens: AuthTokens = {
           access_token: 'dev-mock-token-' + Date.now(),
           refresh_token: 'dev-mock-refresh-token-' + Date.now()
         };
         
-        // Set auth state
         setUser(mockUser);
         setAccessToken(mockTokens.access_token);
         setRefreshToken(mockTokens.refresh_token);
         setIsAuthenticated(true);
-        
-        // Save tokens for persistence
         localStorage.setItem(TOKEN_KEY, JSON.stringify(mockTokens));
-        
-        // Set mock permissions
-        setPermissions([
-          'VIEW_DASHBOARD', 
-          'MANAGE_USERS', 
-          'MANAGE_ROLES', 
-          'MANAGE_EVENTS',
-          'ADMIN_ACCESS'
-        ]);
+        setPermissions(['VIEW_DASHBOARD', 'MANAGE_USERS', 'MANAGE_ROLES', 'MANAGE_EVENTS', 'ADMIN_ACCESS']);
+        console.log('[AuthContext] Dev bypass login successful.');
       } else {
-        // Real authentication logic
-        // For now, validate the credentials with some basic checks
+        // Real authentication logic using apiLoginUser
         if (!email || !password) {
           throw new Error('Email and password are required');
         }
         
-        if (email.trim() === '' || password.trim() === '') {
-          throw new Error('Email and password cannot be empty');
-        }
+        console.log(`[AuthContext] Attempting real login for ${email}`);
+        const loginCredentials: LoginCredentials = { email, password };
+        const { tokens: realTokens, user: realUser } = await apiLoginUser(loginCredentials);
         
-        // Here you would normally make an API call to authenticate
-        // For example:
-        // const response = await apiAuth.login(email, password);
+        setUser(realUser);
+        setAccessToken(realTokens.access_token);
+        setRefreshToken(realTokens.refresh_token);
+        setIsAuthenticated(true);
+        localStorage.setItem(TOKEN_KEY, JSON.stringify(realTokens));
         
-        // For now, we'll simulate a failed login unless it matches test credentials
-        if (email === 'admin@example.com' && password === 'admin123') {
-          // Mock successful login for the admin user
-          const mockUser: User = {
-            id: 1,
-            email: email,
-            role: Role.ADMIN,
-            username: email.split('@')[0]
-          };
-          
-          const mockTokens: AuthTokens = {
-            access_token: 'real-mock-token-' + Date.now(),
-            refresh_token: 'real-mock-refresh-token-' + Date.now()
-          };
-          
-          setUser(mockUser);
-          setAccessToken(mockTokens.access_token);
-          setRefreshToken(mockTokens.refresh_token);
-          setIsAuthenticated(true);
-          localStorage.setItem(TOKEN_KEY, JSON.stringify(mockTokens));
-          
-          // Mock permissions based on the user role
-          setPermissions(['VIEW_DASHBOARD', 'MANAGE_USERS', 'ADMIN_ACCESS']);
-        } else if (email === 'user@example.com' && password === 'user123') {
-          // Mock successful login for a regular user
-          const mockUser: User = {
-            id: 2,
-            email: email,
-            role: Role.USER,
-            username: email.split('@')[0]
-          };
-          
-          const mockTokens: AuthTokens = {
-            access_token: 'user-mock-token-' + Date.now(),
-            refresh_token: 'user-mock-refresh-token-' + Date.now()
-          };
-          
-          setUser(mockUser);
-          setAccessToken(mockTokens.access_token);
-          setRefreshToken(mockTokens.refresh_token);
-          setIsAuthenticated(true);
-          localStorage.setItem(TOKEN_KEY, JSON.stringify(mockTokens));
-          
-          // Regular user has fewer permissions
-          setPermissions(['VIEW_DASHBOARD']);
+        // TODO: Fetch actual permissions for the user based on their role from the backend
+        // For now, setting basic permissions or deriving from role if simple
+        if (realUser.role === Role.ADMIN) {
+          setPermissions(['VIEW_DASHBOARD', 'MANAGE_USERS', 'MANAGE_ROLES', 'MANAGE_EVENTS', 'ADMIN_ACCESS']);
         } else {
-          // Credentials don't match any test users
-          throw new Error('Invalid email or password');
+          setPermissions(['VIEW_DASHBOARD']); // Basic permissions for other roles
         }
-        
-        console.log('[AuthContext] Login successful');
+        console.log('[AuthContext] Real login successful for user:', realUser);
       }
     } catch (error) {
       console.error('[AuthContext] Login failed:', error);
-      // Clear any partial auth state
       setUser(null);
       setAccessToken(null);
       setRefreshToken(null);
       setIsAuthenticated(false);
       setPermissions([]);
       localStorage.removeItem(TOKEN_KEY);
-      throw error; // Re-throw to let the component handle the error
+      throw error;
     } finally {
       setIsLoading(false);
     }

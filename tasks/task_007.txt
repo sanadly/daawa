@@ -1,0 +1,31 @@
+# Task ID: 7
+# Title: Create guest portal and self-registration flow
+# Status: pending
+# Dependencies: 6
+# Priority: medium
+# Description: Build the guest-facing portal for self-registration and accessing digital passes.
+# Details:
+Develop guest portal UI using Next.js and Daisy UI. Create self-registration form with +N guest capability. Implement form validation and error handling. Build pass display and download interface. Develop event details view with location, date, and other information. Create guest authentication mechanism via unique links. Implement pass wallet integration buttons. Build responsive layouts optimized for mobile. Ensure all guest interfaces support both English and Arabic with language detection. Implement SEO optimization for guest portal pages.
+
+# Test Strategy:
+Test self-registration flow with various +N guest scenarios. Verify form validations and error handling. Test pass display and download functionality. Confirm wallet integration buttons work correctly. Validate responsive layouts on various devices. Test language switching and RTL layout. Ensure SEO metadata is correctly generated.
+
+# Subtasks:
+## 1. Develop Guest Self-Registration Form [pending]
+### Dependencies: None
+### Description: Create a user-friendly self-registration form with +N capability allowing primary guests to add additional attendees
+### Details:
+Implement form validation, mobile responsiveness, and internationalization support. Include fields for contact information, event details, and relationship to primary guest. Ensure the +N functionality allows adding multiple guests with appropriate validation and clear UI for adding/removing additional attendees.
+
+## 2. Create Pass Display and Download Interface [pending]
+### Dependencies: 7.1
+### Description: Develop interface for displaying and downloading guest passes after successful registration
+### Details:
+Design mobile-optimized pass display with QR codes, guest information, and event details. Implement download functionality supporting multiple formats (PDF, wallet pass, etc.). Include email delivery option and ensure passes are printer-friendly with appropriate styling.
+
+## 3. Implement Guest Authentication System [pending]
+### Dependencies: 7.1, 7.2
+### Description: Build authentication system using unique links for guests to access their passes and registration information
+### Details:
+Generate secure, unique URLs for each registration. Implement link validation, expiration handling, and security measures to prevent unauthorized access. Create a recovery mechanism for lost links and integrate with existing authentication systems if applicable. Test thoroughly across different devices and browsers.
+

@@ -28,7 +28,16 @@ export default function UsersManagementPage() {
       setLoading(true);
       setError(null);
       const fetchedUsers = await getUsers();
-      setUsers(fetchedUsers);
+      if (Array.isArray(fetchedUsers)) {
+        setUsers(fetchedUsers);
+      } else {
+        // If fetchedUsers is not an array (e.g., undefined due to an error caught by getUsers or API returned non-array)
+        // Log this situation and set users to an empty array to prevent .map error
+        console.error('Fetched users is not an array:', fetchedUsers);
+        setUsers([]); // Ensure users is always an array
+        // Optionally, set a more specific error message for the UI
+        setError(t('users_load_format_error', 'Failed to load users: Data format error.'));
+      }
     } catch (err) {
       console.error('Failed to load users:', err);
       setError(t('users_load_error', 'Failed to load users. Please try again.'));

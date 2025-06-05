@@ -1,0 +1,37 @@
+# Task ID: 8
+# Title: Implement check-in web module
+# Status: pending
+# Dependencies: 6
+# Priority: high
+# Description: Develop the mobile-responsive web-based check-in module for event day operations.
+# Details:
+Create check-in module UI using Next.js and Daisy UI optimized for mobile. Implement camera API integration for QR scanning. Develop QR code parsing and validation. Build check-in staff authentication. Create manual guest lookup functionality. Implement check-in recording API. Develop UI for displaying primary guest and +N guests with checkboxes. Create check-in confirmation and error states. Implement online-only check-in logic. Build check-in history view. Ensure module works on various mobile browsers. Support both English and Arabic interfaces.
+
+# Test Strategy:
+Test QR scanning on various mobile devices and browsers. Verify manual lookup functionality. Test check-in recording for primary and +N guests. Validate authentication for check-in staff. Confirm check-in history displays correctly. Test offline behavior (should show error for MVP). Ensure RTL layout works correctly on check-in screens. Test performance on slower mobile connections.
+
+# Subtasks:
+## 1. Develop Mobile-Optimized UI for Check-in Module [pending]
+### Dependencies: None
+### Description: Create a responsive, mobile-friendly user interface for the check-in process that works across different device sizes and orientations.
+### Details:
+Design and implement UI components including check-in screens, confirmation dialogs, and error states. Ensure the interface is touch-friendly with appropriately sized buttons and inputs. Test on various mobile devices and browsers to ensure compatibility. Include loading states and visual feedback for user actions.
+
+## 2. Implement QR Code Scanning Integration [pending]
+### Dependencies: 8.1
+### Description: Integrate camera access and QR code scanning functionality that works reliably across mobile browsers.
+### Details:
+Research and select appropriate QR scanning libraries compatible with mobile browsers. Implement camera permission requests and fallback options. Handle various QR code formats and error scenarios. Optimize scanning for speed and accuracy in different lighting conditions. Include manual entry option as fallback.
+
+## 3. Develop Check-in Processing Logic [pending]
+### Dependencies: 8.2
+### Description: Create the backend logic to process check-ins for primary guests and their +N additional guests with appropriate validation.
+### Details:
+Implement API endpoints for validating QR codes against registered attendees. Create logic for handling primary guest check-ins and their additional guests. Develop validation rules to prevent duplicate check-ins. Implement real-time updates to attendance status. Handle edge cases like partial group check-ins and late arrivals.
+
+## 4. Implement Staff Authentication and History Tracking [pending]
+### Dependencies: 8.3
+### Description: Create secure authentication for check-in staff and comprehensive logging of all check-in activities.
+### Details:
+Develop role-based authentication for check-in staff with appropriate permissions. Implement session management for staff accounts. Create a detailed audit log of all check-in activities including timestamps, staff member, and check-in status changes. Build a searchable history view for administrators to review check-in data. Include reporting functionality for attendance metrics.
+

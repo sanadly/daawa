@@ -1,0 +1,37 @@
+# Task ID: 2
+# Title: Implement authentication and user management
+# Status: done
+# Dependencies: 1
+# Priority: high
+# Description: Create authentication system for organizers, guests, and administrators with appropriate role-based access control.
+# Details:
+Develop authentication API endpoints in NestJS (signup, login, password reset). Implement JWT-based authentication with refresh tokens. Create user entity in PostgreSQL with appropriate fields. Build authentication UI components in Next.js using Daisy UI (login, signup, forgot password forms). Implement role-based access control (organizer, admin, guest, check-in staff). Create protected routes in frontend. Develop user profile management for organizers. Implement session management and logout functionality. Ensure all authentication flows work in both English and Arabic.
+
+# Test Strategy:
+Test user registration, login, and logout flows. Verify password reset functionality. Confirm role-based access restrictions work correctly. Test authentication persistence across page refreshes. Validate form validations and error handling. Ensure RTL layout works correctly on authentication screens.
+
+# Subtasks:
+## 1. Backend Authentication API Development [done]
+### Dependencies: None
+### Description: Implement secure authentication endpoints for user registration, login, logout, and token refresh
+### Details:
+Create RESTful API endpoints for user authentication including registration with email verification, login with JWT token generation, secure logout mechanism, and refresh token implementation. Include password hashing, rate limiting for security, and proper error handling for authentication failures.
+
+## 2. Frontend Authentication UI Components [done]
+### Dependencies: 2.1
+### Description: Develop responsive UI components for authentication flows with internationalization support
+### Details:
+Create reusable React components for login, registration, password reset, and email verification forms. Implement form validation, error handling, and loading states. Ensure all components support internationalization and are accessible. Integrate with the authentication API endpoints.
+
+## 3. Role-Based Access Control Implementation [done]
+### Dependencies: 2.1
+### Description: Develop a comprehensive RBAC system for managing user permissions across the application
+### Details:
+Design and implement a role-based access control system that supports multiple user roles (e.g., admin, manager, user). Create middleware for route protection based on roles, implement permission checks for API endpoints, and develop a role management interface for administrators.
+
+## 4. User Profile Management System [done]
+### Dependencies: 2.1, 2.2, 2.3
+### Description: Create functionality for users to view and update their profile information
+### Details:
+Implement backend endpoints for retrieving and updating user profile data. Develop frontend components for profile viewing and editing, including avatar uploads, personal information management, and account settings. Ensure proper validation and authorization checks for profile updates.
+

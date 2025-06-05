@@ -1,0 +1,37 @@
+# Task ID: 5
+# Title: Build guest management and invitation system
+# Status: pending
+# Dependencies: 3
+# Priority: high
+# Description: Develop the guest list management interface and implement invitation methods for active events.
+# Details:
+Create guest entity in PostgreSQL with relationship to events. Implement API endpoints for guest CRUD operations. Build guest list management UI with Daisy UI tables and filters. Develop manual guest addition form with +N specification. Create bulk import functionality via CSV. Implement self-registration link generation. Build email invitation system using templates. Create guest counting logic respecting event capacity limits. Implement duplicate detection. Develop guest status tracking (invited, registered, checked-in). Ensure all interfaces support both LTR and RTL layouts.
+
+# Test Strategy:
+Test manual guest addition with +N guests. Verify bulk import functionality with various CSV formats. Test self-registration link generation and usage. Confirm email invitations are sent correctly. Validate capacity enforcement with +N guests. Test guest listing, filtering, and searching. Ensure RTL layout works correctly on all guest management screens.
+
+# Subtasks:
+## 1. Guest Entity and API Development [pending]
+### Dependencies: None
+### Description: Create the guest data model and RESTful API endpoints for CRUD operations
+### Details:
+Design and implement the guest entity with fields for contact information, status, invitation type, RSVP details, and +N guest allowance. Develop API endpoints for creating, retrieving, updating, and deleting guest records with proper validation and error handling. Include authentication and authorization mechanisms for API security.
+
+## 2. Guest List UI with Filtering and Sorting [pending]
+### Dependencies: 5.1
+### Description: Develop the user interface for managing the guest list with advanced filtering capabilities
+### Details:
+Create a responsive UI for viewing and managing guests with sorting options, search functionality, and filters for status, invitation type, and RSVP status. Implement pagination for handling large guest lists efficiently. Add visual indicators for different guest statuses and include quick-action buttons for common operations.
+
+## 3. Multiple Invitation Methods Implementation [pending]
+### Dependencies: 5.1
+### Description: Implement various methods for adding guests including manual entry, bulk import, and self-registration
+### Details:
+Develop manual guest entry forms with validation. Create CSV/Excel import functionality with template generation, validation, and duplicate detection. Implement a self-registration system with unique links or codes. Add email integration for sending invitations and confirmation messages. Include duplicate detection across all invitation methods.
+
+## 4. Guest Status Tracking and Management [pending]
+### Dependencies: 5.1, 5.2, 5.3
+### Description: Implement comprehensive guest status tracking from invitation to attendance
+### Details:
+Develop a status tracking system covering invited, RSVP pending, confirmed, declined, and attended states. Implement +N guest management with capacity tracking. Create dashboards showing invitation statistics and attendance metrics. Add functionality for managing guest changes, cancellations, and special requirements. Include reporting features for guest list exports and attendance summaries.
+

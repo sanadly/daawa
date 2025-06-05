@@ -1,0 +1,515 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Set up project infrastructure and architecture",
+      "description": "Initialize the frontend and backend projects with the required technologies and establish the basic architecture.",
+      "status": "done",
+      "dependencies": [],
+      "priority": "high",
+      "details": "Create a Next.js project with TypeScript support. Configure Tailwind CSS and integrate Daisy UI component library. Set up internationalization with next-i18next supporting English and Arabic. Initialize NestJS backend with TypeScript. Configure PostgreSQL database connection. Implement basic folder structure for both projects following modular architecture. Set up API-first approach with Swagger documentation. Configure Docker for development environment. Implement basic CI/CD pipeline.",
+      "testStrategy": "Verify successful project initialization by running both frontend and backend locally. Confirm Tailwind CSS and Daisy UI are working by creating a test component. Test database connection. Validate internationalization setup by switching between English and Arabic. Ensure API documentation is generated correctly.",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Initialize Next.js frontend with TypeScript, Tailwind CSS, and DaisyUI",
+          "description": "Set up the frontend project with Next.js, TypeScript, styling libraries, and internationalization support",
+          "dependencies": [],
+          "details": "1. Create a new Next.js project with TypeScript support using `npx create-next-app@latest --typescript`\n2. Install and configure Tailwind CSS following the official documentation\n3. Add DaisyUI as a Tailwind plugin by installing it with `npm install daisyui`\n4. Configure DaisyUI in the tailwind.config.js file\n5. Set up next-i18next for internationalization:\n   - Install with `npm install next-i18next`\n   - Create locales folder with en and ar translation files\n   - Configure next-i18next.config.js\n   - Modify _app.tsx to use the appWithTranslation HOC\n6. Create a basic folder structure following modular architecture:\n   - components/ (shared UI components)\n   - features/ (feature-specific components)\n   - pages/ (Next.js pages)\n   - styles/ (global styles)\n   - utils/ (utility functions)\n   - hooks/ (custom React hooks)\n   - types/ (TypeScript type definitions)\n7. Test the setup by creating a simple page with internationalized content and DaisyUI components\n<info added on 2025-05-12T17:26:19.509Z>\n## Implementation Plan\n\n1. Create a new Next.js project with TypeScript support:\n   - Run `npx create-next-app@latest --typescript my-project`\n   - Navigate to project directory: `cd my-project`\n   - Initialize Git repository if not already done: `git init`\n\n2. Install and configure Tailwind CSS:\n   - Install required packages: `npm install -D tailwindcss postcss autoprefixer`\n   - Generate configuration files: `npx tailwindcss init -p`\n   - Update tailwind.config.js with content paths:\n     ```js\n     module.exports = {\n       content: [\n         \"./pages/**/*.{js,ts,jsx,tsx}\",\n         \"./components/**/*.{js,ts,jsx,tsx}\",\n         \"./features/**/*.{js,ts,jsx,tsx}\"\n       ],\n       theme: {\n         extend: {},\n       },\n       plugins: [],\n     }\n     ```\n   - Add Tailwind directives to globals.css:\n     ```css\n     @tailwind base;\n     @tailwind components;\n     @tailwind utilities;\n     ```\n\n3. Add DaisyUI as a Tailwind plugin:\n   - Install DaisyUI: `npm install daisyui`\n   - Update tailwind.config.js to include DaisyUI:\n     ```js\n     module.exports = {\n       // ... existing config\n       plugins: [require(\"daisyui\")],\n       daisyui: {\n         themes: [\"light\", \"dark\"],\n       },\n     }\n     ```\n\n4. Set up next-i18next for internationalization:\n   - Install required packages: `npm install next-i18next react-i18next i18next`\n   - Create locales folder structure:\n     ```\n     /public\n       /locales\n         /en\n           common.json\n         /ar\n           common.json\n     ```\n   - Add sample translations to common.json files\n   - Create next-i18next.config.js in root:\n     ```js\n     module.exports = {\n       i18n: {\n         defaultLocale: 'en',\n         locales: ['en', 'ar'],\n         localeDetection: true,\n       },\n     }\n     ```\n   - Update next.config.js to use i18n config:\n     ```js\n     const { i18n } = require('./next-i18next.config')\n     \n     module.exports = {\n       i18n,\n       reactStrictMode: true,\n     }\n     ```\n   - Modify _app.tsx to use appWithTranslation:\n     ```tsx\n     import { appWithTranslation } from 'next-i18next'\n     import type { AppProps } from 'next/app'\n     import '../styles/globals.css'\n     \n     function MyApp({ Component, pageProps }: AppProps) {\n       return <Component {...pageProps} />\n     }\n     \n     export default appWithTranslation(MyApp)\n     ```\n\n5. Create modular folder structure:\n   - components/ (shared UI components)\n     - ui/ (basic UI elements)\n     - layout/ (layout components)\n   - features/ (feature-specific components)\n   - pages/ (Next.js pages)\n   - styles/ (global styles)\n   - utils/ (utility functions)\n   - hooks/ (custom React hooks)\n   - types/ (TypeScript type definitions)\n   - lib/ (third-party library configurations)\n\n6. Create sample components to test the setup:\n   - Create a Button component in components/ui/\n   - Create a Layout component in components/layout/\n   - Update index.tsx to use i18n and DaisyUI components:\n     ```tsx\n     import { useTranslation } from 'next-i18next'\n     import { serverSideTranslations } from 'next-i18next/serverSideTranslations'\n     \n     export default function Home() {\n       const { t } = useTranslation('common')\n       \n       return (\n         <div className=\"container mx-auto p-4\">\n           <h1 className=\"text-3xl font-bold\">{t('welcome')}</h1>\n           <button className=\"btn btn-primary mt-4\">{t('click_me')}</button>\n         </div>\n       )\n     }\n     \n     export async function getStaticProps({ locale }) {\n       return {\n         props: {\n           ...(await serverSideTranslations(locale, ['common'])),\n         },\n       }\n     }\n     ```\n\n7. Test the complete setup:\n   - Run the development server: `npm run dev`\n   - Verify that:\n     - Tailwind CSS styles are applied\n     - DaisyUI components render correctly\n     - Internationalization works when switching languages\n     - TypeScript type checking works properly\n</info added on 2025-05-12T17:26:19.509Z>",
+          "status": "done",
+          "parentTaskId": 1
+        },
+        {
+          "id": 2,
+          "title": "Set up NestJS backend with TypeScript and PostgreSQL",
+          "description": "Initialize the backend project with NestJS, configure PostgreSQL connection, and implement API documentation",
+          "dependencies": [],
+          "details": "1. Create a new NestJS project using `nest new backend --package-manager npm`\n2. Configure TypeScript settings in tsconfig.json for strict type checking\n3. Install and set up PostgreSQL dependencies:\n   - Install TypeORM and PostgreSQL driver: `npm install @nestjs/typeorm typeorm pg`\n   - Create a database configuration module\n   - Configure database connection in app.module.ts\n4. Set up environment variables management with @nestjs/config\n5. Implement a modular folder structure:\n   - modules/ (feature modules)\n   - common/ (shared utilities, guards, filters)\n   - config/ (configuration files)\n   - interfaces/ (TypeScript interfaces)\n   - entities/ (TypeORM entities)\n6. Configure Swagger for API documentation:\n   - Install Swagger packages: `npm install @nestjs/swagger swagger-ui-express`\n   - Set up Swagger in main.ts\n   - Create a basic health check endpoint and document it with Swagger decorators\n7. Test the database connection and API documentation by running the application",
+          "status": "done",
+          "parentTaskId": 1
+        },
+        {
+          "id": 3,
+          "title": "Configure Docker and CI/CD pipeline",
+          "description": "Set up Docker for development environment and implement a basic CI/CD pipeline",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "1. Create Dockerfiles for both frontend and backend:\n   - Frontend Dockerfile with Node.js and Next.js configuration\n   - Backend Dockerfile with Node.js and NestJS configuration\n2. Create a docker-compose.yml file that includes:\n   - Frontend service\n   - Backend service\n   - PostgreSQL database service\n   - Volume configurations for persistent data\n   - Environment variables configuration\n3. Configure networking between services\n4. Set up development-specific Docker configurations:\n   - Hot reloading for both frontend and backend\n   - Debug configurations\n5. Create .dockerignore files for both projects\n6. Implement a basic CI/CD pipeline using GitHub Actions or similar:\n   - Create workflow YAML files for CI/CD\n   - Configure linting and testing steps\n   - Set up build process for Docker images\n   - Configure deployment steps (can be placeholder for now)\n7. Document the Docker setup and CI/CD process in README.md\n8. Test the complete setup by building and running the application with Docker Compose",
+          "status": "done",
+          "parentTaskId": 1
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Implement authentication and user management",
+      "description": "Create authentication system for organizers, guests, and administrators with appropriate role-based access control.",
+      "status": "done",
+      "dependencies": [
+        1
+      ],
+      "priority": "high",
+      "details": "Develop authentication API endpoints in NestJS (signup, login, password reset). Implement JWT-based authentication with refresh tokens. Create user entity in PostgreSQL with appropriate fields. Build authentication UI components in Next.js using Daisy UI (login, signup, forgot password forms). Implement role-based access control (organizer, admin, guest, check-in staff). Create protected routes in frontend. Develop user profile management for organizers. Implement session management and logout functionality. Ensure all authentication flows work in both English and Arabic.",
+      "testStrategy": "Test user registration, login, and logout flows. Verify password reset functionality. Confirm role-based access restrictions work correctly. Test authentication persistence across page refreshes. Validate form validations and error handling. Ensure RTL layout works correctly on authentication screens.",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Backend Authentication API Development",
+          "description": "Implement secure authentication endpoints for user registration, login, logout, and token refresh",
+          "dependencies": [],
+          "details": "Create RESTful API endpoints for user authentication including registration with email verification, login with JWT token generation, secure logout mechanism, and refresh token implementation. Include password hashing, rate limiting for security, and proper error handling for authentication failures.",
+          "status": "done"
+        },
+        {
+          "id": 2,
+          "title": "Frontend Authentication UI Components",
+          "description": "Develop responsive UI components for authentication flows with internationalization support",
+          "dependencies": [
+            1
+          ],
+          "details": "Create reusable React components for login, registration, password reset, and email verification forms. Implement form validation, error handling, and loading states. Ensure all components support internationalization and are accessible. Integrate with the authentication API endpoints.",
+          "status": "done"
+        },
+        {
+          "id": 3,
+          "title": "Role-Based Access Control Implementation",
+          "description": "Develop a comprehensive RBAC system for managing user permissions across the application",
+          "dependencies": [
+            1
+          ],
+          "details": "Design and implement a role-based access control system that supports multiple user roles (e.g., admin, manager, user). Create middleware for route protection based on roles, implement permission checks for API endpoints, and develop a role management interface for administrators.",
+          "status": "done"
+        },
+        {
+          "id": 4,
+          "title": "User Profile Management System",
+          "description": "Create functionality for users to view and update their profile information",
+          "dependencies": [
+            1,
+            2,
+            3
+          ],
+          "details": "Implement backend endpoints for retrieving and updating user profile data. Develop frontend components for profile viewing and editing, including avatar uploads, personal information management, and account settings. Ensure proper validation and authorization checks for profile updates.",
+          "status": "done"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Develop event creation and draft state functionality",
+      "description": "Build the event creation flow and implement the 'Draft' state where organizers can explore setup options.",
+      "status": "pending",
+      "dependencies": [
+        2
+      ],
+      "priority": "high",
+      "details": "Create event entity in PostgreSQL with appropriate fields including state (Draft/Pending/Active). Implement API endpoints for event CRUD operations. Build event creation form in Next.js using Daisy UI components with multi-step wizard. Develop event setup configuration including default +N guest settings. Create event dashboard showing events by state. Implement draft state functionality allowing full exploration without activation. Build event preview capability. Create event submission flow for requesting activation. Implement form validation and error handling. Ensure all interfaces support both LTR and RTL layouts.",
+      "testStrategy": "Test complete event creation flow. Verify all form fields save correctly to database. Confirm draft state allows full exploration without restrictions. Test event listing and filtering by state. Validate form validations and error handling. Ensure multi-step wizard works correctly in both directions. Test RTL layout for all event creation screens.",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Develop backend event entity and API endpoints",
+          "description": "Create the event data model and implement CRUD API endpoints for event management",
+          "dependencies": [],
+          "details": "Design and implement the event entity with all necessary fields (title, description, date, location, etc.). Create RESTful API endpoints for creating, reading, updating, and deleting events. Implement validation logic for event data. Add support for draft state in the data model. Include proper error handling and response formatting.",
+          "status": "done"
+        },
+        {
+          "id": 2,
+          "title": "Implement frontend multi-step creation wizard",
+          "description": "Develop a user-friendly, multi-step form wizard for event creation",
+          "dependencies": [
+            1
+          ],
+          "details": "Design and implement a multi-step form with clear navigation between steps. Include form sections for basic info, date/time selection, location details, and additional options. Implement client-side validation for each step. Create a progress indicator to show users their position in the workflow. Ensure responsive design works across device sizes.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Implement draft state and preview functionality",
+          "description": "Add ability to save events as drafts and preview them before publishing",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Implement auto-save functionality to preserve user input as drafts. Create a drafts management interface for users to view and continue editing. Develop a preview mode that shows how the event will appear to attendees. Add publish/unpublish functionality to change event status. Ensure proper handling of draft vs published events throughout the application.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Implement admin interface and manual activation flow",
+      "description": "Create the admin portal for reviewing and manually activating events submitted by organizers.",
+      "status": "pending",
+      "dependencies": [
+        3
+      ],
+      "priority": "medium",
+      "details": "Develop admin dashboard UI using Next.js and Daisy UI. Create API endpoints for admin operations. Implement pending events queue with filtering and sorting. Build event review interface showing all event details. Create manual activation workflow with confirmation. Implement email notifications for activation status changes. Develop basic user lookup and management for admins. Add event state transition logic in backend. Create admin-only routes with proper authorization. Ensure all admin interfaces support both English and Arabic.",
+      "testStrategy": "Test admin login and authorization. Verify pending events appear correctly in queue. Test manual activation process end-to-end. Confirm email notifications are sent correctly. Validate user lookup functionality. Test event state transitions. Ensure RTL layout works correctly on admin screens.",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Develop Admin Dashboard UI",
+          "description": "Create the user interface components for the admin dashboard",
+          "dependencies": [],
+          "details": "Design and implement the admin dashboard UI with navigation, overview statistics, and user management sections. Include responsive layouts, data visualization components for metrics, and filtering/sorting capabilities for event and user lists. Use the existing design system for consistency while adding admin-specific UI elements.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Implement Event Review and Activation Workflow",
+          "description": "Build the functionality for admins to review and activate submitted events",
+          "dependencies": [
+            1
+          ],
+          "details": "Create interfaces for admins to review event submissions, approve/reject events with comments, and activate events for public visibility. Implement email notification system to inform event creators about status changes. Include batch operations for handling multiple events and audit logging of admin actions.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Develop Admin-specific API Endpoints with Authorization",
+          "description": "Create backend API endpoints for admin operations with proper role-based access control",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Implement API endpoints for admin-only operations including user management, event moderation, and system configuration. Add middleware for role-based access control to restrict these endpoints to admin users only. Include comprehensive error handling, input validation, and security measures to protect sensitive admin operations.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Build guest management and invitation system",
+      "description": "Develop the guest list management interface and implement invitation methods for active events.",
+      "status": "pending",
+      "dependencies": [
+        3
+      ],
+      "priority": "high",
+      "details": "Create guest entity in PostgreSQL with relationship to events. Implement API endpoints for guest CRUD operations. Build guest list management UI with Daisy UI tables and filters. Develop manual guest addition form with +N specification. Create bulk import functionality via CSV. Implement self-registration link generation. Build email invitation system using templates. Create guest counting logic respecting event capacity limits. Implement duplicate detection. Develop guest status tracking (invited, registered, checked-in). Ensure all interfaces support both LTR and RTL layouts.",
+      "testStrategy": "Test manual guest addition with +N guests. Verify bulk import functionality with various CSV formats. Test self-registration link generation and usage. Confirm email invitations are sent correctly. Validate capacity enforcement with +N guests. Test guest listing, filtering, and searching. Ensure RTL layout works correctly on all guest management screens.",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Guest Entity and API Development",
+          "description": "Create the guest data model and RESTful API endpoints for CRUD operations",
+          "dependencies": [],
+          "details": "Design and implement the guest entity with fields for contact information, status, invitation type, RSVP details, and +N guest allowance. Develop API endpoints for creating, retrieving, updating, and deleting guest records with proper validation and error handling. Include authentication and authorization mechanisms for API security.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Guest List UI with Filtering and Sorting",
+          "description": "Develop the user interface for managing the guest list with advanced filtering capabilities",
+          "dependencies": [
+            1
+          ],
+          "details": "Create a responsive UI for viewing and managing guests with sorting options, search functionality, and filters for status, invitation type, and RSVP status. Implement pagination for handling large guest lists efficiently. Add visual indicators for different guest statuses and include quick-action buttons for common operations.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Multiple Invitation Methods Implementation",
+          "description": "Implement various methods for adding guests including manual entry, bulk import, and self-registration",
+          "dependencies": [
+            1
+          ],
+          "details": "Develop manual guest entry forms with validation. Create CSV/Excel import functionality with template generation, validation, and duplicate detection. Implement a self-registration system with unique links or codes. Add email integration for sending invitations and confirmation messages. Include duplicate detection across all invitation methods.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Guest Status Tracking and Management",
+          "description": "Implement comprehensive guest status tracking from invitation to attendance",
+          "dependencies": [
+            1,
+            2,
+            3
+          ],
+          "details": "Develop a status tracking system covering invited, RSVP pending, confirmed, declined, and attended states. Implement +N guest management with capacity tracking. Create dashboards showing invitation statistics and attendance metrics. Add functionality for managing guest changes, cancellations, and special requirements. Include reporting features for guest list exports and attendance summaries.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Develop digital pass generation system",
+      "description": "Implement the unified customization and generation of digital passes (PDF, Apple Wallet, Google Wallet) with QR codes.",
+      "status": "pending",
+      "dependencies": [
+        5
+      ],
+      "priority": "high",
+      "details": "Create pass entity in PostgreSQL with relationship to guests. Implement unified pass customization interface using Daisy UI components. Develop PDF pass generation using Puppeteer. Integrate Apple Wallet pass generation using passkit-generator. Implement Google Wallet pass integration using Google Pay API. Create QR code generation service with unique identifiers. Build pass preview functionality. Implement pass delivery system via email. Develop pass storage and retrieval API. Ensure pass designs support both English and Arabic content. Handle certificate management for wallet passes.",
+      "testStrategy": "Test pass customization interface. Verify PDF generation with various designs. Confirm Apple Wallet and Google Wallet pass generation. Test QR code generation and validation. Validate pass delivery via email. Test pass retrieval API. Ensure passes display correctly with both English and Arabic content. Verify passes work on actual devices.",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Design Pass Customization Interface",
+          "description": "Create a user interface for customizing digital passes with branding, colors, and content fields",
+          "dependencies": [],
+          "details": "Develop a responsive UI that allows users to customize pass appearance including logo placement, color schemes, text fields, and layout options. Include preview functionality to show real-time changes. Design should accommodate different pass types (event, loyalty, etc.) with appropriate field options for each type.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Implement PDF Pass Generation",
+          "description": "Create backend service to generate PDF versions of digital passes based on user customizations",
+          "dependencies": [
+            1
+          ],
+          "details": "Build a service that converts pass designs into high-quality PDFs. Implement proper handling of images, fonts, and layout. Ensure generated PDFs are mobile-friendly and include all necessary information. Add security features like digital signatures or watermarks if required.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Develop Apple Wallet Integration",
+          "description": "Implement Apple Wallet pass generation and distribution system",
+          "dependencies": [
+            1
+          ],
+          "details": "Set up Apple Developer account and certificates for pass signing. Create .pkpass file generation that follows Apple's PassKit specifications. Implement pass distribution via email, direct download, and website. Test on multiple iOS devices and versions to ensure compatibility.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Develop Google Wallet Integration",
+          "description": "Implement Google Wallet pass generation and distribution system",
+          "dependencies": [
+            1
+          ],
+          "details": "Set up Google Pay API for Passes. Implement JWT-based pass creation following Google's specifications. Create distribution methods compatible with Android devices. Test on various Android devices and OS versions to ensure proper display and functionality.",
+          "status": "pending"
+        },
+        {
+          "id": 5,
+          "title": "Implement QR Code Generation and Delivery System",
+          "description": "Create system for generating unique QR codes for passes and delivering them to users",
+          "dependencies": [
+            2,
+            3,
+            4
+          ],
+          "details": "Develop backend service to generate unique, secure QR codes for each pass. Implement validation system to verify QR codes at point of use. Create delivery mechanisms for QR codes via email, SMS, and download. Build analytics to track QR code usage and scanning events.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Create guest portal and self-registration flow",
+      "description": "Build the guest-facing portal for self-registration and accessing digital passes.",
+      "status": "pending",
+      "dependencies": [
+        6
+      ],
+      "priority": "medium",
+      "details": "Develop guest portal UI using Next.js and Daisy UI. Create self-registration form with +N guest capability. Implement form validation and error handling. Build pass display and download interface. Develop event details view with location, date, and other information. Create guest authentication mechanism via unique links. Implement pass wallet integration buttons. Build responsive layouts optimized for mobile. Ensure all guest interfaces support both English and Arabic with language detection. Implement SEO optimization for guest portal pages.",
+      "testStrategy": "Test self-registration flow with various +N guest scenarios. Verify form validations and error handling. Test pass display and download functionality. Confirm wallet integration buttons work correctly. Validate responsive layouts on various devices. Test language switching and RTL layout. Ensure SEO metadata is correctly generated.",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Develop Guest Self-Registration Form",
+          "description": "Create a user-friendly self-registration form with +N capability allowing primary guests to add additional attendees",
+          "dependencies": [],
+          "details": "Implement form validation, mobile responsiveness, and internationalization support. Include fields for contact information, event details, and relationship to primary guest. Ensure the +N functionality allows adding multiple guests with appropriate validation and clear UI for adding/removing additional attendees.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Create Pass Display and Download Interface",
+          "description": "Develop interface for displaying and downloading guest passes after successful registration",
+          "dependencies": [
+            1
+          ],
+          "details": "Design mobile-optimized pass display with QR codes, guest information, and event details. Implement download functionality supporting multiple formats (PDF, wallet pass, etc.). Include email delivery option and ensure passes are printer-friendly with appropriate styling.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Implement Guest Authentication System",
+          "description": "Build authentication system using unique links for guests to access their passes and registration information",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Generate secure, unique URLs for each registration. Implement link validation, expiration handling, and security measures to prevent unauthorized access. Create a recovery mechanism for lost links and integrate with existing authentication systems if applicable. Test thoroughly across different devices and browsers.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Implement check-in web module",
+      "description": "Develop the mobile-responsive web-based check-in module for event day operations.",
+      "status": "pending",
+      "dependencies": [
+        6
+      ],
+      "priority": "high",
+      "details": "Create check-in module UI using Next.js and Daisy UI optimized for mobile. Implement camera API integration for QR scanning. Develop QR code parsing and validation. Build check-in staff authentication. Create manual guest lookup functionality. Implement check-in recording API. Develop UI for displaying primary guest and +N guests with checkboxes. Create check-in confirmation and error states. Implement online-only check-in logic. Build check-in history view. Ensure module works on various mobile browsers. Support both English and Arabic interfaces.",
+      "testStrategy": "Test QR scanning on various mobile devices and browsers. Verify manual lookup functionality. Test check-in recording for primary and +N guests. Validate authentication for check-in staff. Confirm check-in history displays correctly. Test offline behavior (should show error for MVP). Ensure RTL layout works correctly on check-in screens. Test performance on slower mobile connections.",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Develop Mobile-Optimized UI for Check-in Module",
+          "description": "Create a responsive, mobile-friendly user interface for the check-in process that works across different device sizes and orientations.",
+          "dependencies": [],
+          "details": "Design and implement UI components including check-in screens, confirmation dialogs, and error states. Ensure the interface is touch-friendly with appropriately sized buttons and inputs. Test on various mobile devices and browsers to ensure compatibility. Include loading states and visual feedback for user actions.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Implement QR Code Scanning Integration",
+          "description": "Integrate camera access and QR code scanning functionality that works reliably across mobile browsers.",
+          "dependencies": [
+            1
+          ],
+          "details": "Research and select appropriate QR scanning libraries compatible with mobile browsers. Implement camera permission requests and fallback options. Handle various QR code formats and error scenarios. Optimize scanning for speed and accuracy in different lighting conditions. Include manual entry option as fallback.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Develop Check-in Processing Logic",
+          "description": "Create the backend logic to process check-ins for primary guests and their +N additional guests with appropriate validation.",
+          "dependencies": [
+            2
+          ],
+          "details": "Implement API endpoints for validating QR codes against registered attendees. Create logic for handling primary guest check-ins and their additional guests. Develop validation rules to prevent duplicate check-ins. Implement real-time updates to attendance status. Handle edge cases like partial group check-ins and late arrivals.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Implement Staff Authentication and History Tracking",
+          "description": "Create secure authentication for check-in staff and comprehensive logging of all check-in activities.",
+          "dependencies": [
+            3
+          ],
+          "details": "Develop role-based authentication for check-in staff with appropriate permissions. Implement session management for staff accounts. Create a detailed audit log of all check-in activities including timestamps, staff member, and check-in status changes. Build a searchable history view for administrators to review check-in data. Include reporting functionality for attendance metrics.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "Develop reporting and analytics",
+      "description": "Implement reporting and analytics features for organizers to track event performance.",
+      "status": "pending",
+      "dependencies": [
+        5,
+        8
+      ],
+      "priority": "medium",
+      "details": "Create analytics data models in PostgreSQL. Implement API endpoints for retrieving analytics data. Build dashboard widgets using Daisy UI components. Develop guest status overview (invited, registered, checked-in). Create time-based check-in analytics. Implement exportable reports (CSV, PDF). Build visual charts and graphs for key metrics. Develop real-time check-in monitoring for active events. Create custom report builder. Ensure all reporting interfaces support both English and Arabic.",
+      "testStrategy": "Test dashboard widget data accuracy. Verify export functionality for reports. Validate visual charts render correctly. Test real-time updates during check-in operations. Confirm custom report generation. Ensure RTL layout works correctly on reporting screens. Test performance with large datasets.",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Design analytics data models and API endpoints",
+          "description": "Create the data models and API endpoints needed for the reporting system",
+          "dependencies": [],
+          "details": "Define the database schema for storing analytics data, implement data aggregation logic, create RESTful API endpoints for retrieving various metrics and statistics, implement caching mechanisms for performance optimization, and document the API for frontend consumption.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Develop dashboard widgets and visualizations",
+          "description": "Create interactive dashboard components to display analytics data",
+          "dependencies": [
+            1
+          ],
+          "details": "Design and implement reusable chart components (line charts, bar charts, pie charts), create dashboard widgets for key metrics, implement real-time data updates using WebSockets or polling, add filtering capabilities, and ensure responsive design for different screen sizes.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Implement exportable report generation",
+          "description": "Create functionality to generate and export reports in various formats",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Develop report templates for different types of data, implement export functionality for PDF, CSV, and Excel formats, create a scheduling system for automated report generation, add email delivery options, and implement report customization features.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "title": "Implement account management and finalize system",
+      "description": "Complete account management features, perform system-wide testing, and prepare for deployment.",
+      "status": "pending",
+      "dependencies": [
+        9
+      ],
+      "priority": "medium",
+      "details": "Develop account settings interface using Daisy UI components. Implement organization profile management. Create billing status display (for manual payments in MVP). Build notification preferences management. Implement system-wide error handling and logging. Create comprehensive API documentation. Develop user guides for organizers, guests, and admins. Perform cross-browser testing. Optimize performance and loading times. Implement final security measures. Prepare deployment scripts and configurations. Ensure complete internationalization coverage for English and Arabic.",
+      "testStrategy": "Test account settings functionality. Verify organization profile updates. Validate billing status display. Test notification preferences. Perform end-to-end testing of all user flows. Conduct cross-browser testing on target browsers. Validate mobile responsiveness across devices. Test RTL layout throughout the application. Perform security testing. Verify deployment process in staging environment.",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Implement Account Settings and Organization Profile Management",
+          "description": "Develop and finalize the account settings and organization profile management functionality",
+          "dependencies": [],
+          "details": "Create user interface for account settings including password management, notification preferences, and personal information updates. Implement organization profile management with logo uploads, team member management, and organization-wide settings. Ensure proper validation and error handling for all form submissions. Test with various user roles and permission levels.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Establish System-wide Error Handling and Logging",
+          "description": "Implement comprehensive error handling mechanisms and logging systems",
+          "dependencies": [
+            1
+          ],
+          "details": "Create a centralized error handling system that gracefully manages exceptions. Implement detailed logging with appropriate severity levels. Set up monitoring alerts for critical errors. Ensure proper error messages are displayed to users while sensitive information is hidden. Create an error reporting mechanism for users to submit feedback when encountering issues.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Create Documentation and User Guides",
+          "description": "Develop comprehensive documentation and user guides for the system",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Create administrator documentation covering system configuration and maintenance. Develop end-user guides with step-by-step instructions for common tasks. Include troubleshooting sections for known issues. Create video tutorials for complex workflows. Ensure documentation is accessible and searchable. Include a glossary of terms and FAQ section.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Conduct Final Testing and Deployment Preparation",
+          "description": "Perform comprehensive testing and prepare for system deployment",
+          "dependencies": [
+            1,
+            2,
+            3
+          ],
+          "details": "Execute full regression testing across all system components. Perform load testing to verify system performance under expected user loads. Conduct security audits and penetration testing. Prepare deployment scripts and rollback procedures. Create a detailed deployment checklist. Verify internationalization and accessibility compliance. Finalize the production environment configuration.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "title": "Task #11: Fix i18n Key Duplication in Frontend Components",
+      "description": "Investigate and resolve the issue where internationalization (i18n) keys and their translated text are both appearing simultaneously on pages, particularly in components with asynchronous translation loading.",
+      "details": "This task requires a systematic approach to debugging the i18n implementation:\n\n1. Identify affected components:\n   - Create an inventory of all components displaying the duplication issue\n   - Document the specific patterns of duplication (e.g., key format, affected languages)\n   - Determine if the issue is limited to specific routes or global\n\n2. Code investigation:\n   - Review the i18n initialization process and configuration\n   - Examine how translation keys are registered and loaded\n   - Check for race conditions in asynchronous translation loading\n   - Investigate component lifecycle methods that might trigger premature rendering\n   - Look for missing fallback mechanisms when translations aren't yet available\n\n3. Potential solutions:\n   - Implement proper loading states for translations\n   - Add conditional rendering to prevent displaying raw keys\n   - Ensure translation hooks/components properly handle async loading\n   - Consider implementing a global translation loading state\n   - Review and refactor the i18n provider implementation if necessary\n\n4. Implementation:\n   - Create a fix that addresses the root cause rather than symptoms\n   - Ensure backward compatibility with existing components\n   - Document any API changes or new patterns for the team\n   - Update relevant documentation on i18n usage\n\n5. Performance considerations:\n   - Measure and minimize any impact on initial page load time\n   - Consider implementing translation caching if not already present\n   - Evaluate bundle size impact of any new i18n libraries or code",
+      "testStrategy": "Testing should be comprehensive to ensure the issue is fully resolved:\n\n1. Manual testing:\n   - Create a test matrix covering all supported languages\n   - Test on all affected pages and components\n   - Verify proper rendering during page load, navigation, and dynamic content updates\n   - Test with network throttling to simulate slow translation loading\n   - Verify behavior when switching languages dynamically\n\n2. Automated testing:\n   - Create or update unit tests for the i18n utility functions\n   - Implement component tests that verify proper rendering with async translations\n   - Add integration tests that simulate the full translation loading process\n   - Create snapshot tests to catch unexpected rendering changes\n\n3. Regression testing:\n   - Verify that all previously working i18n features still function correctly\n   - Check that no new duplicate keys appear in other components\n   - Ensure performance metrics remain within acceptable thresholds\n\n4. Edge case testing:\n   - Test with missing translations\n   - Test with very long translated strings\n   - Test with RTL languages if supported\n   - Test with browser language preferences set to various options\n\n5. Documentation validation:\n   - Verify that any updated i18n usage patterns are clearly documented\n   - Create examples for the team showing proper implementation",
+      "status": "done",
+      "dependencies": [],
+      "priority": "medium",
+      "subtasks": []
+    }
+  ],
+  "metadata": {
+    "projectName": "PRD Implementation",
+    "totalTasks": 10,
+    "sourceFile": "scripts/prd.txt",
+    "generatedAt": "2023-11-07"
+  }
+}

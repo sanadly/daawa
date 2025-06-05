@@ -80,12 +80,14 @@ export async function fetchApi(endpoint: string, options: RequestInit = {}) {
       data: errorData
     };
     
-    console.error('API Error:', {
-      endpoint,
+    console.error('API Request Failed:', {
+      message: 'A more detailed error log from fetchApi',
+      endpoint: endpoint,
+      urlCalled: urlToFetch,
       status: response.status,
       statusText: response.statusText,
-      errorData,
-      urlCalled: urlToFetch // Log the actual URL called
+      errorResponseData: errorData,
+      fullErrorObject: error // Log the full error object as well
     });
     
     throw error;
@@ -119,8 +121,8 @@ export const loginUser = async (credentials: LoginCredentials): Promise<{ tokens
       },
       user: responseData.user,
     };
-  } catch (_error) {
-    // console.log('Regular login failed, trying direct login endpoint...', _error);
+  } catch (error) {
+    // console.log('Regular login failed, trying direct login endpoint...', error);
     
     try {
       const responseData = await fetchApi('/auth/login-direct', {

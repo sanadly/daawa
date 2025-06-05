@@ -27,7 +27,9 @@ export interface UserUpdateData {
  * @returns Promise resolving to array of users
  */
 export const getUsers = async (): Promise<User[]> => {
-  const response = await api.get('/admin/users');
+  const response = await api.get('/role-management/users');
+  console.log('[apiUserManagement.ts] Response from /role-management/users:', response);
+  console.log('[apiUserManagement.ts] Data from /role-management/users:', response.data);
   return response.data;
 };
 

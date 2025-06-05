@@ -1,0 +1,31 @@
+# Task ID: 4
+# Title: Implement admin interface and manual activation flow
+# Status: pending
+# Dependencies: 3
+# Priority: medium
+# Description: Create the admin portal for reviewing and manually activating events submitted by organizers.
+# Details:
+Develop admin dashboard UI using Next.js and Daisy UI. Create API endpoints for admin operations. Implement pending events queue with filtering and sorting. Build event review interface showing all event details. Create manual activation workflow with confirmation. Implement email notifications for activation status changes. Develop basic user lookup and management for admins. Add event state transition logic in backend. Create admin-only routes with proper authorization. Ensure all admin interfaces support both English and Arabic.
+
+# Test Strategy:
+Test admin login and authorization. Verify pending events appear correctly in queue. Test manual activation process end-to-end. Confirm email notifications are sent correctly. Validate user lookup functionality. Test event state transitions. Ensure RTL layout works correctly on admin screens.
+
+# Subtasks:
+## 1. Develop Admin Dashboard UI [pending]
+### Dependencies: None
+### Description: Create the user interface components for the admin dashboard
+### Details:
+Design and implement the admin dashboard UI with navigation, overview statistics, and user management sections. Include responsive layouts, data visualization components for metrics, and filtering/sorting capabilities for event and user lists. Use the existing design system for consistency while adding admin-specific UI elements.
+
+## 2. Implement Event Review and Activation Workflow [pending]
+### Dependencies: 4.1
+### Description: Build the functionality for admins to review and activate submitted events
+### Details:
+Create interfaces for admins to review event submissions, approve/reject events with comments, and activate events for public visibility. Implement email notification system to inform event creators about status changes. Include batch operations for handling multiple events and audit logging of admin actions.
+
+## 3. Develop Admin-specific API Endpoints with Authorization [pending]
+### Dependencies: 4.1, 4.2
+### Description: Create backend API endpoints for admin operations with proper role-based access control
+### Details:
+Implement API endpoints for admin-only operations including user management, event moderation, and system configuration. Add middleware for role-based access control to restrict these endpoints to admin users only. Include comprehensive error handling, input validation, and security measures to protect sensitive admin operations.
+

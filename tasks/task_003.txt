@@ -1,0 +1,31 @@
+# Task ID: 3
+# Title: Develop event creation and draft state functionality
+# Status: pending
+# Dependencies: 2
+# Priority: high
+# Description: Build the event creation flow and implement the 'Draft' state where organizers can explore setup options.
+# Details:
+Create event entity in PostgreSQL with appropriate fields including state (Draft/Pending/Active). Implement API endpoints for event CRUD operations. Build event creation form in Next.js using Daisy UI components with multi-step wizard. Develop event setup configuration including default +N guest settings. Create event dashboard showing events by state. Implement draft state functionality allowing full exploration without activation. Build event preview capability. Create event submission flow for requesting activation. Implement form validation and error handling. Ensure all interfaces support both LTR and RTL layouts.
+
+# Test Strategy:
+Test complete event creation flow. Verify all form fields save correctly to database. Confirm draft state allows full exploration without restrictions. Test event listing and filtering by state. Validate form validations and error handling. Ensure multi-step wizard works correctly in both directions. Test RTL layout for all event creation screens.
+
+# Subtasks:
+## 1. Develop backend event entity and API endpoints [done]
+### Dependencies: None
+### Description: Create the event data model and implement CRUD API endpoints for event management
+### Details:
+Design and implement the event entity with all necessary fields (title, description, date, location, etc.). Create RESTful API endpoints for creating, reading, updating, and deleting events. Implement validation logic for event data. Add support for draft state in the data model. Include proper error handling and response formatting.
+
+## 2. Implement frontend multi-step creation wizard [pending]
+### Dependencies: 3.1
+### Description: Develop a user-friendly, multi-step form wizard for event creation
+### Details:
+Design and implement a multi-step form with clear navigation between steps. Include form sections for basic info, date/time selection, location details, and additional options. Implement client-side validation for each step. Create a progress indicator to show users their position in the workflow. Ensure responsive design works across device sizes.
+
+## 3. Implement draft state and preview functionality [pending]
+### Dependencies: 3.1, 3.2
+### Description: Add ability to save events as drafts and preview them before publishing
+### Details:
+Implement auto-save functionality to preserve user input as drafts. Create a drafts management interface for users to view and continue editing. Develop a preview mode that shows how the event will appear to attendees. Add publish/unpublish functionality to change event status. Ensure proper handling of draft vs published events throughout the application.
+
