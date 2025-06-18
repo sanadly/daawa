@@ -1,0 +1,58 @@
+# Task ID: 21
+# Title: Implement Multilingual Support - Arabic with RTL
+# Status: pending
+# Dependencies: 20
+# Priority: medium
+# Description: Implement Arabic language support with Right-to-Left (RTL) layout across all frontend components and backend messages.
+# Details:
+1. Create Arabic translation files for all UI components
+2. Implement RTL layout support using Tailwind CSS
+3. Add Arabic translations for all error messages
+4. Create Arabic email templates with RTL support
+5. Implement Arabic font support for all components
+6. Add Arabic translations for PDF passes with RTL layout
+7. Implement Arabic translations for Apple and Google Wallet passes
+8. Test and fix RTL layout issues
+9. Add Arabic language detection
+10. Ensure all components adapt correctly to RTL layout
+
+# Test Strategy:
+Verify all UI components display correctly in Arabic with RTL layout. Test language switching between English and Arabic. Verify all error messages and emails are correctly translated and formatted.
+
+# Subtasks:
+## 1. Update Translation Files for Arabic [pending]
+### Dependencies: None
+### Description: Extract all user-facing text and create/expand translation files to include Arabic translations, ensuring proper locale codes (e.g., ar, ar-EG).
+### Details:
+Ensure all static and dynamic content is covered. Use professional translation or validated sources for accuracy.
+
+## 2. Implement RTL Layout Support [pending]
+### Dependencies: 21.1
+### Description: Adapt the application's layout to support right-to-left (RTL) direction when Arabic is selected, including setting dir="rtl" and flipping UI components as needed.
+### Details:
+Apply dir="rtl" at the root level, adjust CSS for RTL, and ensure icons and navigation are mirrored appropriately. Test with various browsers and devices.
+
+## 3. Integrate Arabic Font and Typography Support [pending]
+### Dependencies: 21.2
+### Description: Ensure the application uses web-safe or embedded fonts that support Arabic script and proper rendering of Arabic characters.
+### Details:
+Select fonts optimized for Arabic readability. Adjust font sizes and line heights for Arabic script as needed.
+
+## 4. Localize Email Templates for Arabic and RTL [pending]
+### Dependencies: 21.1, 21.3
+### Description: Translate and adapt all email templates to Arabic, ensuring RTL layout and proper font support in email clients.
+### Details:
+Test email rendering in major clients (Gmail, Outlook, mobile). Ensure text direction, alignment, and fonts are correct.
+
+## 5. Conduct RTL Testing and Fix UI/UX Issues [pending]
+### Dependencies: 21.2, 21.3, 21.4
+### Description: Perform thorough testing of the application in Arabic/RTL mode, identifying and fixing layout, alignment, and usability issues.
+### Details:
+Use both manual and automated testing. Validate date, time, and number localization. Address any flipped icons, misaligned elements, or broken layouts.
+
+## 6. Implement and Test Language Detection [pending]
+### Dependencies: 21.1, 21.2, 21.3, 21.4, 21.5
+### Description: Add logic to detect user language preferences and automatically switch to Arabic/RTL layout when appropriate.
+### Details:
+Support browser language detection and user profile settings. Ensure seamless switching between LTR and RTL languages.
+

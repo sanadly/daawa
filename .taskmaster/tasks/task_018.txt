@@ -1,0 +1,58 @@
+# Task ID: 18
+# Title: Develop Web-Based Check-in Module Frontend
+# Status: pending
+# Dependencies: 17
+# Priority: high
+# Description: Create the frontend components for event staff to check in guests using QR code scanning or manual lookup.
+# Details:
+1. Create staff login page for check-in module
+2. Implement QR code scanning using device camera
+3. Create manual guest lookup interface
+4. Implement check-in result display with guest details
+5. Add support for checking in +N additional guests
+6. Create basic check-in statistics view
+7. Implement offline mode with local storage
+8. Add support for RTL layout for Arabic content
+9. Create language switcher for multilingual support
+10. Implement responsive design optimized for mobile devices
+
+# Test Strategy:
+Test check-in module with various devices and browsers. Verify QR code scanning works correctly. Test manual lookup with different search criteria. Verify offline mode works when connection is lost.
+
+# Subtasks:
+## 1. Implement Login Functionality [pending]
+### Dependencies: None
+### Description: Develop the user authentication interface and logic, including input validation, error handling, and integration with backend authentication APIs.
+### Details:
+Ensure secure handling of credentials, provide feedback for failed logins, and maintain session state for authenticated users.
+
+## 2. Develop QR Scanning Feature [pending]
+### Dependencies: 18.1
+### Description: Create the UI and logic for real-time QR code scanning, including camera access, QR code parsing, and error handling for invalid or unreadable codes.
+### Details:
+Integrate with device camera APIs, provide user guidance for scanning, and ensure smooth performance across devices.
+
+## 3. Build Manual Lookup Interface [pending]
+### Dependencies: 18.1
+### Description: Design and implement a manual search and lookup form for users to find check-in records by entering details such as name or ID.
+### Details:
+Include input validation, search suggestions, and clear feedback for no or multiple results.
+
+## 4. Display Check-in Result [pending]
+### Dependencies: 18.2, 18.3
+### Description: Develop the UI to show check-in results, including success, failure, or duplicate check-in messages, and handle edge cases gracefully.
+### Details:
+Ensure clear visual feedback, accessibility, and support for both QR and manual check-in flows.
+
+## 5. Implement Offline Mode Support [pending]
+### Dependencies: 18.2, 18.3, 18.4
+### Description: Enable the frontend to function without network connectivity, including local data caching, queuing check-ins, and syncing when online.
+### Details:
+Use service workers or similar technologies to cache assets and data, and provide user feedback about offline status and sync progress.
+
+## 6. Add RTL and Multilingual Support [pending]
+### Dependencies: 18.1, 18.2, 18.3, 18.4, 18.5
+### Description: Integrate right-to-left (RTL) layout and multilingual UI support, allowing users to switch languages and ensuring proper layout for RTL scripts.
+### Details:
+Utilize internationalization libraries, provide translations for all UI text, and test layout in both LTR and RTL languages.
+

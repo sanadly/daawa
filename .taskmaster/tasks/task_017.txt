@@ -1,0 +1,64 @@
+# Task ID: 17
+# Title: Implement Check-in Backend APIs
+# Status: pending
+# Dependencies: 11
+# Priority: high
+# Description: Develop the backend APIs for event check-in, including QR code validation and check-in recording.
+# Details:
+1. Create API for validating QR codes
+2. Implement API for recording check-ins for primary guests
+3. Add support for recording check-ins for +N additional guests
+4. Create API for retrieving check-in status and history
+5. Implement manual guest lookup API for check-in
+6. Add support for offline check-in data synchronization
+7. Create database queries and repositories for check-in operations
+8. Implement validation for check-in data
+9. Add logging for all check-in-related actions
+10. Create API for check-in statistics
+
+# Test Strategy:
+Write unit tests for all check-in APIs. Test QR code validation. Verify check-in recording works correctly for primary and +N guests. Test offline synchronization.
+
+# Subtasks:
+## 1. Implement QR Code Validation Logic [pending]
+### Dependencies: None
+### Description: Develop backend logic to validate QR codes presented at check-in, ensuring authenticity and preventing reuse or forgery.
+### Details:
+This includes decoding QR codes, verifying their association with valid tickets or attendees, and handling invalid or duplicate codes.
+
+## 2. Develop Check-in Recording Mechanism [pending]
+### Dependencies: 17.1
+### Description: Create backend endpoints and database logic to record successful check-ins, capturing attendee, timestamp, and event details.
+### Details:
+Ensure atomicity and idempotency to prevent double check-ins and support real-time updates to the event management system.
+
+## 3. Add +N Guest Support [pending]
+### Dependencies: 17.2
+### Description: Extend check-in logic to support attendees with additional guests, including validation and recording of group check-ins.
+### Details:
+Allow QR codes to encode guest counts, update check-in records for all guests, and enforce guest limits per ticket.
+
+## 4. Design Status and History APIs [pending]
+### Dependencies: 17.2, 17.3
+### Description: Build APIs to retrieve current check-in status and historical check-in data for attendees and guests.
+### Details:
+Endpoints should support queries by attendee, event, and time range, and return comprehensive check-in histories.
+
+## 5. Implement Offline Sync Mechanism [pending]
+### Dependencies: 17.2, 17.3
+### Description: Enable check-in operations to function offline and synchronize data with the backend when connectivity is restored.
+### Details:
+Design local storage for offline check-ins, conflict resolution strategies, and robust sync endpoints.
+
+## 6. Integrate Validation and Error Handling [pending]
+### Dependencies: 17.1, 17.2, 17.3, 17.5
+### Description: Add comprehensive validation and error handling throughout the check-in process, including user feedback for failed operations.
+### Details:
+Handle edge cases such as invalid QR codes, exceeded guest limits, duplicate check-ins, and sync conflicts.
+
+## 7. Implement Logging and Audit Trail [pending]
+### Dependencies: 17.2, 17.4, 17.5, 17.6
+### Description: Develop a logging system to track all check-in attempts, status changes, and sync operations for auditing and troubleshooting.
+### Details:
+Logs should include timestamps, user IDs, operation types, and error details, and support export or integration with monitoring tools.
+

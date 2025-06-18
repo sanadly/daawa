@@ -1,0 +1,58 @@
+# Task ID: 19
+# Title: Develop Guest Portal Frontend
+# Status: pending
+# Dependencies: 13, 14
+# Priority: medium
+# Description: Create the frontend components for guests to view event details and access their digital passes after registration.
+# Details:
+1. Create guest portal home page
+2. Implement event details display
+3. Add pass access and download options
+4. Create guest information display including +N guests
+5. Implement RSVP functionality (if applicable)
+6. Add support for RTL layout for Arabic content
+7. Create language switcher for multilingual support
+8. Implement responsive design for all components
+9. Add loading states and error handling
+10. Implement accessibility features (WCAG 2.1 AA)
+
+# Test Strategy:
+Test guest portal with various event configurations. Verify pass access works correctly. Test with both English and Arabic content. Verify responsive design on different screen sizes.
+
+# Subtasks:
+## 1. Design and Implement Home Page [pending]
+### Dependencies: None
+### Description: Create the main landing page for the guest portal, providing navigation to event details, pass access, RSVP, and guest information sections.
+### Details:
+Ensure the home page is visually clear, intuitive, and provides quick access to all major features of the portal.
+
+## 2. Develop Event Details Section [pending]
+### Dependencies: 19.1
+### Description: Build a section where guests can view comprehensive event information, including schedules, venue details, and updates.
+### Details:
+Display all relevant event data in a clear format and ensure real-time updates are reflected for guests.
+
+## 3. Implement Pass Access Functionality [pending]
+### Dependencies: 19.1
+### Description: Enable guests to view, download, or manage their event passes or tickets within the portal.
+### Details:
+Integrate secure access to digital passes and ensure compatibility with mobile devices for easy entry.
+
+## 4. Display Guest Information [pending]
+### Dependencies: 19.1
+### Description: Provide a section for guests to view and, if permitted, update their personal and RSVP information.
+### Details:
+Show guest-specific details such as name, contact info, dietary preferences, and any special accommodations.
+
+## 5. RSVP Management and Feedback [pending]
+### Dependencies: 19.2, 19.4
+### Description: Allow guests to RSVP to events, update their attendance status, and submit feedback or special requests.
+### Details:
+Include options for confirming attendance, specifying preferences, and leaving comments or feedback.
+
+## 6. Accessibility and Multilingual Support [pending]
+### Dependencies: 19.1, 19.2, 19.3, 19.4, 19.5
+### Description: Ensure the portal is accessible to users with disabilities and supports multiple languages for a diverse guest base.
+### Details:
+Implement WCAG-compliant accessibility features and provide language selection with accurate translations throughout the portal.
+

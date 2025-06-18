@@ -1,0 +1,64 @@
+# Task ID: 4
+# Title: Implement Core Event Management APIs
+# Status: pending
+# Dependencies: 2, 3
+# Priority: high
+# Description: Develop the backend APIs for creating and managing events in Draft state, including event details, tier selection, and configuration storage.
+# Details:
+1. Implement API for creating a new event in Draft state
+2. Implement API for updating event details (name, date, venue, etc.)
+3. Implement API for selecting a tier and updating capacity limit
+4. Implement API for storing form configuration (fields, default +N)
+5. Implement API for storing design configuration (colors, logo, background)
+6. Implement API for submitting an event for activation (changing status to 'Pending')
+7. Implement API for retrieving event details
+8. Implement validation for all event-related data
+9. Create database queries and repositories for event operations
+10. Implement event status transition logic
+
+# Test Strategy:
+Write unit tests for all event management APIs. Test event creation, updating, and status transitions. Verify validation works correctly. Test with various event configurations.
+
+# Subtasks:
+## 1. Design Event Creation API [pending]
+### Dependencies: None
+### Description: Define and implement the API endpoint for creating new events, including required fields, request/response formats, and error handling.
+### Details:
+Specify HTTP method (POST), endpoint naming, payload structure, and initial validation rules for event creation.
+
+## 2. Implement Event Update API [pending]
+### Dependencies: 4.1
+### Description: Develop the API endpoint for updating existing event details, supporting partial and full updates as needed.
+### Details:
+Use appropriate HTTP methods (PUT/PATCH), ensure idempotency, and handle update-specific validation.
+
+## 3. Develop Tier Selection Logic [pending]
+### Dependencies: 4.1
+### Description: Create logic and endpoints for selecting and managing event tiers (e.g., ticket types, access levels).
+### Details:
+Define tier models, endpoints for tier selection, and ensure integration with event creation and update flows.
+
+## 4. Implement Configuration Storage [pending]
+### Dependencies: 4.1, 4.3
+### Description: Design and implement mechanisms to persist event configurations, including tier and status information.
+### Details:
+Choose appropriate storage solutions, define data models, and ensure secure and efficient data access.
+
+## 5. Handle Status Transitions [pending]
+### Dependencies: 4.1, 4.4
+### Description: Implement logic and endpoints to manage event status transitions (e.g., draft, published, cancelled).
+### Details:
+Define allowed status states, transition rules, and enforce business logic for valid transitions.
+
+## 6. Implement Validation Logic [pending]
+### Dependencies: 4.1, 4.2, 4.3, 4.5
+### Description: Develop comprehensive validation for event data, tier selection, configuration, and status transitions.
+### Details:
+Ensure all API inputs are validated according to business rules and provide meaningful error responses.
+
+## 7. Repository and Query Implementation [pending]
+### Dependencies: 4.4, 4.6
+### Description: Create repository classes and query methods for event data persistence and retrieval.
+### Details:
+Implement data access layers, optimize queries for performance, and ensure consistency with API contracts.
+

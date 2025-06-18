@@ -1,0 +1,64 @@
+# Task ID: 12
+# Title: Develop Guest Self-Registration Backend
+# Status: pending
+# Dependencies: 7, 11
+# Priority: high
+# Description: Implement the backend services for guest self-registration, including form submission processing and validation.
+# Details:
+1. Create API for processing self-registration form submissions
+2. Implement validation based on event form configuration
+3. Add support for +N additional guests in registration
+4. Implement capacity validation and enforcement
+5. Create unique identifiers for registered guests
+6. Implement email confirmation for successful registration
+7. Add support for custom fields defined in event form configuration
+8. Create database queries and repositories for registration operations
+9. Implement error handling for registration failures
+10. Add logging for all registration-related actions
+
+# Test Strategy:
+Test self-registration with various form configurations. Verify validation works correctly. Test capacity enforcement. Verify email confirmations are sent correctly.
+
+# Subtasks:
+## 1. Design and Implement Form API Endpoint [pending]
+### Dependencies: None
+### Description: Create a backend API endpoint to receive and process self-registration form submissions, supporting dynamic fields and +N guest data.
+### Details:
+Define the API contract, request/response structure, and ensure it can handle custom fields and multiple guests per registration.
+
+## 2. Develop Validation Logic [pending]
+### Dependencies: 12.1
+### Description: Implement backend validation for all form fields, including custom fields and guest data, ensuring data integrity and required constraints.
+### Details:
+Include checks for required fields, field formats, and cross-field dependencies. Ensure validation is extensible for custom fields.
+
+## 3. Implement +N Guest Support [pending]
+### Dependencies: 12.1, 12.2
+### Description: Extend backend logic to support registration of the main user plus an arbitrary number of guests, each with their own data and validation.
+### Details:
+Design data models and API payloads to accommodate multiple guests, and ensure validation and storage logic handle guest entries.
+
+## 4. Add Capacity Checks [pending]
+### Dependencies: 12.1, 12.2, 12.3
+### Description: Integrate logic to enforce registration capacity limits, preventing overbooking and handling concurrent submissions safely.
+### Details:
+Check available capacity before accepting registrations, including guests, and handle race conditions or transactional integrity.
+
+## 5. Integrate Email Confirmation Workflow [pending]
+### Dependencies: 12.1, 12.2, 12.3, 12.4
+### Description: Implement transactional email confirmation, sending unique confirmation links and updating registration status upon confirmation.
+### Details:
+Generate secure tokens, send confirmation emails, and handle confirmation callbacks to activate registrations.
+
+## 6. Support Custom Fields [pending]
+### Dependencies: 12.1, 12.2, 12.3, 12.4
+### Description: Enable dynamic addition and processing of custom fields in the registration form, ensuring backend flexibility and validation.
+### Details:
+Allow admin-configurable fields, store custom field data, and ensure validation and API responses reflect customizations.
+
+## 7. Implement Robust Error Handling and Reporting [pending]
+### Dependencies: 12.1, 12.2, 12.3, 12.4, 12.5, 12.6
+### Description: Develop comprehensive error handling for all registration scenarios, providing clear feedback for validation, capacity, and system errors.
+### Details:
+Return structured error responses, log errors for monitoring, and ensure user-facing messages are actionable and secure.
+

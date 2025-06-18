@@ -1,0 +1,64 @@
+# Task ID: 7
+# Title: Implement Event Activation Logic and Post-Activation Services
+# Status: pending
+# Dependencies: 4, 6
+# Priority: high
+# Description: Develop the backend logic for event activation, including capacity enforcement, registration link generation, and notification services.
+# Details:
+1. Implement API to change event status to 'Active'
+2. Create logic to enforce capacity based on tier (Primary + All +N guests)
+3. Implement registration link generation with unique identifiers
+4. Create notification service for sending activation emails to organizers
+5. Implement event status transition validation
+6. Create database triggers or hooks for post-activation actions
+7. Implement capacity tracking and validation
+8. Create API for retrieving registration link and status
+9. Add logging for all activation-related actions
+10. Implement error handling for activation failures
+
+# Test Strategy:
+Write unit tests for activation logic and capacity enforcement. Test registration link generation. Verify notification emails are sent correctly. Test with various event configurations and edge cases.
+
+# Subtasks:
+## 1. Change Event Status via API [pending]
+### Dependencies: None
+### Description: Implement the logic to update the event's status to 'active' using the status change API, ensuring transactional integrity.
+### Details:
+This subtask involves validating the event's current state, performing the status update, and handling any transactional requirements to ensure data consistency.
+
+## 2. Enforce Event Capacity Constraints [pending]
+### Dependencies: 7.1
+### Description: Validate and enforce event capacity limits during activation to prevent overbooking.
+### Details:
+Check the event's maximum allowed capacity and ensure that activation does not violate this constraint. If the capacity is exceeded, abort activation and return an appropriate error.
+
+## 3. Generate Registration Link [pending]
+### Dependencies: 7.1, 7.2
+### Description: Create and store a unique registration link for the activated event.
+### Details:
+Upon successful activation and capacity validation, generate a secure registration link and associate it with the event record.
+
+## 4. Send Notifications [pending]
+### Dependencies: 7.3
+### Description: Trigger notifications to relevant users or systems about the event activation.
+### Details:
+Notify stakeholders (e.g., event organizers, attendees, or integrated systems) via email, push, or webhook about the event's activation and provide the registration link.
+
+## 5. Execute Post-Activation Hooks [pending]
+### Dependencies: 7.4
+### Description: Run any configured post-activation hooks or integrations.
+### Details:
+Invoke custom business logic, third-party integrations, or workflows that should occur after event activation and notification.
+
+## 6. Log Activation Process [pending]
+### Dependencies: 7.1, 7.2, 7.3, 7.4, 7.5
+### Description: Log all steps and outcomes of the activation process for auditing and troubleshooting.
+### Details:
+Record status changes, capacity checks, link generation, notifications, and hook executions in a centralized logging system.
+
+## 7. Handle Errors and Rollback [pending]
+### Dependencies: 7.1, 7.2, 7.3, 7.4, 7.5, 7.6
+### Description: Implement error handling and rollback mechanisms for failed activation steps.
+### Details:
+Detect errors at any stage, log them, and ensure that partial activations are rolled back to maintain system integrity. Return meaningful error responses to API clients.
+

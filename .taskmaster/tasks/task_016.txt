@@ -1,0 +1,58 @@
+# Task ID: 16
+# Title: Implement Direct Email Invitation System
+# Status: pending
+# Dependencies: 8, 9, 10, 11, 15
+# Priority: medium
+# Description: Develop the backend and frontend components for sending direct email invitations to guests with pass links.
+# Details:
+1. Create email template for invitations
+2. Implement API for sending email invitations
+3. Add support for personalization in email templates
+4. Create frontend interface for selecting guests and sending invitations
+5. Implement batch sending for multiple guests
+6. Add support for RTL layout in email templates for Arabic content
+7. Create tracking for email delivery and opens
+8. Implement retry mechanism for failed email deliveries
+9. Add logging for all email-related actions
+10. Create API for retrieving email status
+
+# Test Strategy:
+Test email invitation system with various configurations. Verify emails are correctly formatted and delivered. Test with both English and Arabic content. Verify tracking works correctly.
+
+# Subtasks:
+## 1. Design and Create Email Templates [pending]
+### Dependencies: None
+### Description: Develop responsive and visually appealing email templates that support personalization and are compatible across devices and email clients.
+### Details:
+Use wireframing and prototyping tools to design templates. Ensure templates include placeholders for personalized content and links. Test for mobile and desktop compatibility.
+
+## 2. Develop Email Invitation API [pending]
+### Dependencies: 16.1
+### Description: Implement a backend API to handle sending email invitations, integrating with the email service provider and supporting batch operations.
+### Details:
+API should accept template data, recipient information, and personalization parameters. Ensure secure handling of tokens and links. Integrate with SMTP or third-party email services.
+
+## 3. Implement Personalization Logic [pending]
+### Dependencies: 16.1, 16.2
+### Description: Build logic to inject personalized content into email templates based on recipient data and invitation context.
+### Details:
+Support dynamic fields such as recipient name, organization, and unique invite links. Ensure data privacy and correct mapping of personalized content.
+
+## 4. Develop Frontend Invitation Interface [pending]
+### Dependencies: 16.1, 16.2, 16.3
+### Description: Create a user-friendly frontend interface for admins or users to trigger invitations, select templates, and review personalization options.
+### Details:
+Interface should allow batch uploads, preview of personalized emails, and status feedback. Integrate with the backend API for sending invitations.
+
+## 5. Implement Email Tracking and Analytics [pending]
+### Dependencies: 16.2, 16.3, 16.4
+### Description: Set up tracking for email delivery, opens, clicks, and bounces to monitor invitation effectiveness and troubleshoot issues.
+### Details:
+Integrate tracking pixels and unique links. Store and display analytics in the frontend. Handle privacy and compliance requirements.
+
+## 6. Add Robust Error Handling and Reporting [pending]
+### Dependencies: 16.2, 16.3, 16.4, 16.5
+### Description: Implement comprehensive error handling for all stages of the invitation process, including API failures, delivery issues, and template errors.
+### Details:
+Provide clear error messages to users, log errors for diagnostics, and implement retry mechanisms for transient failures.
+

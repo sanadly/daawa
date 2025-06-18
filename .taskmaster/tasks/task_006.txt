@@ -1,0 +1,70 @@
+# Task ID: 6
+# Title: Implement Admin Portal for Event Activation
+# Status: pending
+# Dependencies: 3, 4
+# Priority: high
+# Description: Develop the admin interface for reviewing pending events and activating them after payment confirmation.
+# Details:
+1. Create admin dashboard component with filters for event status
+2. Implement list view of 'Pending Approval' events with key details
+3. Create event detail view with all configured information
+4. Implement 'Mark as Paid & Activate' button and confirmation dialog
+5. Create API for changing event status to 'Active'
+6. Implement notification system to alert organizer of activation
+7. Add admin notes field for internal comments
+8. Implement basic search and filtering functionality
+9. Add pagination for event lists
+10. Create audit log for admin actions
+
+# Test Strategy:
+Test the admin portal with different event statuses. Verify activation process works correctly. Test notification system. Verify search and filtering functionality works as expected.
+
+# Subtasks:
+## 1. Design and Implement Dashboard [pending]
+### Dependencies: None
+### Description: Create the main dashboard interface that provides an overview of key metrics, recent activity, and quick access to major admin functions.
+### Details:
+This includes layout planning, widget/component selection, and integration with backend data sources.
+
+## 2. Develop Event List View [pending]
+### Dependencies: 6.1
+### Description: Build the event list page to display all events in a tabular or card format, supporting bulk actions and status indicators.
+### Details:
+Ensure the list is performant and can handle large datasets, with clear visual cues for event states.
+
+## 3. Implement Event Detail View [pending]
+### Dependencies: 6.2
+### Description: Create a detailed view for individual events, showing all relevant information and available admin actions.
+### Details:
+Include sections for metadata, participants, attachments, and related actions.
+
+## 4. Build Activation Flow [pending]
+### Dependencies: 6.3
+### Description: Develop the workflow for activating, deactivating, or approving events, including necessary validations and user confirmations.
+### Details:
+Ensure auditability and proper state management throughout the activation process.
+
+## 5. Integrate Notifications System [pending]
+### Dependencies: 6.1
+### Description: Set up a notifications system to alert admins of important events, errors, or required actions within the portal.
+### Details:
+Support both in-app and email notifications, with customizable triggers and delivery settings.
+
+## 6. Add Notes Functionality [pending]
+### Dependencies: 6.3
+### Description: Enable admins to add, edit, and view notes related to events or users for internal collaboration and record-keeping.
+### Details:
+Ensure notes are securely stored and properly associated with relevant entities.
+
+## 7. Implement Search and Filtering [pending]
+### Dependencies: 6.2
+### Description: Develop robust search and filtering capabilities for event lists and other data-heavy views.
+### Details:
+Support multi-criteria filtering, keyword search, and advanced query options for efficient data retrieval.
+
+## 8. Add Pagination and Audit Logging [pending]
+### Dependencies: 6.2, 6.4, 6.5, 6.6, 6.7
+### Description: Implement pagination for large datasets and comprehensive audit logging for all critical admin actions.
+### Details:
+Ensure pagination is performant and audit logs are immutable, searchable, and exportable for compliance.
+

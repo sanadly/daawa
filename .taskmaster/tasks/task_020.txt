@@ -1,0 +1,52 @@
+# Task ID: 20
+# Title: Implement Multilingual Support - English
+# Status: pending
+# Dependencies: 5, 13, 15, 18, 19
+# Priority: medium
+# Description: Implement English language support across all frontend components and backend messages.
+# Details:
+1. Set up i18n library in frontend (Next.js)
+2. Create English translation files for all UI components
+3. Implement language detection and selection
+4. Add English translations for all error messages
+5. Create English email templates
+6. Implement English as default language
+7. Add language preference to user settings
+8. Create language switcher component
+9. Implement English translations for PDF passes
+10. Add English translations for Apple and Google Wallet passes
+
+# Test Strategy:
+Verify all UI components display correctly in English. Test language switching. Verify all error messages and emails are correctly translated.
+
+# Subtasks:
+## 1. Set Up i18n Framework with English Default [pending]
+### Dependencies: None
+### Description: Integrate an internationalization (i18n) library or framework into the project, configuring English as the default language and ensuring the application is ready for future language additions.
+### Details:
+Choose an appropriate i18n library (e.g., i18next for React, built-in i18n for Next.js, or Spring Boot i18n for Java). Configure the default locale to 'en' and ensure the app loads English translations by default.
+
+## 2. Create and Organize English Translation Files [pending]
+### Dependencies: 20.1
+### Description: Develop structured translation files for English, storing all user-facing strings as key-value pairs to support easy updates and future language additions.
+### Details:
+Create a directory (e.g., 'locales') and add an 'en.json' (or equivalent) file containing all English strings. Ensure consistency in key naming and coverage of all UI text.
+
+## 3. Implement Language Detection Logic [pending]
+### Dependencies: 20.1
+### Description: Add logic to detect the user's preferred language, defaulting to English if no preference is found or if the detected language is unsupported.
+### Details:
+Use browser settings, local storage, or user profile settings to detect language. Configure fallback to English. Ensure detection logic is integrated with the i18n framework.
+
+## 4. Internationalize Email Templates in English [pending]
+### Dependencies: 20.2
+### Description: Refactor all email templates to use the i18n system, ensuring all dynamic and static content is sourced from English translation files.
+### Details:
+Update email templates to reference translation keys instead of hardcoded strings. Ensure templates render correctly in English and are ready for future localization.
+
+## 5. Develop Language Switcher Component [pending]
+### Dependencies: 20.1, 20.2, 20.3
+### Description: Create a UI component that allows users to switch languages, defaulting to English and updating the interface accordingly.
+### Details:
+Build a language switcher (dropdown, toggle, etc.) that interacts with the i18n framework. Ensure switching updates the UI and persists user preference.
+

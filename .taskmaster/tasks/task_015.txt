@@ -1,0 +1,58 @@
+# Task ID: 15
+# Title: Develop Organizer Portal - Active Event Management UI
+# Status: pending
+# Dependencies: 5, 7, 11
+# Priority: medium
+# Description: Create the frontend components for organizers to manage active events, including guest list management and registration link sharing.
+# Details:
+1. Update dashboard to show active events
+2. Create active event detail view
+3. Implement registration link display with copy button
+4. Create guest list view with filtering and pagination
+5. Implement manual guest addition form
+6. Add CSV import functionality for bulk guest addition
+7. Create direct email invitation sending interface
+8. Implement guest editing and deletion
+9. Add basic event statistics display
+10. Implement responsive design for all components
+
+# Test Strategy:
+Test active event management with various event configurations. Verify guest list management works correctly. Test CSV import with different file formats. Verify email invitations are sent correctly.
+
+# Subtasks:
+## 1. Update Dashboard for Active Events [pending]
+### Dependencies: None
+### Description: Enhance the dashboard UI to display a list of active events with key metrics and quick actions.
+### Details:
+Include event status, upcoming dates, and summary statistics. Ensure real-time updates and responsive design.
+
+## 2. Implement Event Detail View [pending]
+### Dependencies: 15.1
+### Description: Create a detailed view for each event, showing event information, schedule, and management options.
+### Details:
+Allow navigation from the dashboard to the event detail page. Display event description, location, time, and organizer info.
+
+## 3. Develop Guest List Management UI [pending]
+### Dependencies: 15.2
+### Description: Build an interface to view, search, filter, and manage the guest list for each event.
+### Details:
+Enable sorting, searching, and status indicators (e.g., RSVP, checked-in). Support bulk actions for guest management.
+
+## 4. Enable Manual and CSV Guest Addition [pending]
+### Dependencies: 15.3
+### Description: Add functionality to manually add guests or import guest lists via CSV upload.
+### Details:
+Provide forms for single guest entry and a CSV upload tool with validation and error handling.
+
+## 5. Integrate Email Invitation System [pending]
+### Dependencies: 15.4
+### Description: Implement a system to send email invitations to guests, individually or in bulk.
+### Details:
+Allow selection of guests and sending of customizable email invitations. Track delivery and RSVP status.
+
+## 6. Display Event Statistics and Analytics [pending]
+### Dependencies: 15.2, 15.3, 15.5
+### Description: Show real-time statistics and analytics for each event, including attendance, RSVP rates, and guest engagement.
+### Details:
+Use interactive charts and summary widgets to visualize key metrics. Ensure data is updated dynamically.
+

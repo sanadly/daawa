@@ -1,0 +1,66 @@
+# Task ID: 5
+# Title: Develop Organizer Portal - Draft Event Creation UI
+# Status: pending
+# Dependencies: 3, 4
+# Priority: high
+# Description: Create the frontend components for organizers to create and configure events in Draft state, including event details, tier selection, form configuration, and card design.
+# Details:
+1. Create dashboard component with event list and 'Create New Event' button
+2. Implement multi-step event creation flow with the following steps:
+   - Event details (name, date, venue, type)
+   - Tier selection with capacity and pricing information
+   - Form configuration (define fields, set default +N)
+   - Card design (logo upload, background selection, color picker, font selection)
+3. Implement preview functionality for the card design
+4. Create 'Submit for Activation' button and confirmation dialog
+5. Implement form validation for all steps
+6. Add save draft functionality throughout the flow
+7. Implement responsive design for all components
+8. Add loading states and error handling
+
+# Test Strategy:
+Test the complete event creation flow. Verify all form validations work correctly. Test responsive design on different screen sizes. Verify draft saving functionality works throughout the flow.
+
+# Subtasks:
+## 1. Dashboard Layout and Navigation [pending]
+### Dependencies: None
+### Description: Design and implement the main dashboard interface, including navigation elements for accessing the multi-step form and other dashboard features.
+### Details:
+Establish a consistent layout, sidebar or top navigation, and clear entry points to the multi-step form. Ensure the dashboard supports future extensibility.
+
+## 2. Multi-Step Form Structure and Flow [pending]
+### Dependencies: 5.1
+### Description: Define and build the multi-step form structure, including step sequencing, logical grouping of fields, and state management for user progress.
+### Details:
+Map out each step, group related questions, and implement logic for progressing between steps. Integrate progress indicators and ensure data persists across steps.
+
+## 3. Tier Selection Component [pending]
+### Dependencies: 5.2
+### Description: Develop the tier selection UI within the form, allowing users to choose between different product or service tiers.
+### Details:
+Design visually distinct tier cards or selectors, handle selection state, and ensure the choice influences subsequent form steps as needed.
+
+## 4. Form Field Configuration [pending]
+### Dependencies: 5.2, 5.3
+### Description: Configure all form fields for each step, including input types, labels, placeholders, and conditional logic based on previous answers or tier selection.
+### Details:
+Ensure fields are clearly labeled, grouped logically, and dynamically rendered when necessary. Support both required and optional fields.
+
+## 5. Card Design and Visual Consistency [pending]
+### Dependencies: 5.3, 5.4
+### Description: Design reusable card components for tier selection, form steps, and summary/preview, maintaining a consistent visual style throughout the UI.
+### Details:
+Apply consistent color schemes, typography, and spacing. Ensure cards are visually appealing and accessible.
+
+## 6. Preview and Summary Step [pending]
+### Dependencies: 5.4, 5.5
+### Description: Implement a preview step that summarizes user selections and form inputs before final submission, allowing users to review and edit their entries.
+### Details:
+Display all relevant information in a clear, organized manner. Provide edit links or navigation to previous steps for corrections.
+
+## 7. Validation and Responsive Design [pending]
+### Dependencies: 5.4, 5.5, 5.6
+### Description: Add real-time validation for all form fields and ensure the entire UI is fully responsive across devices and screen sizes.
+### Details:
+Implement immediate field validation with clear error messages. Test and optimize the UI for mobile, tablet, and desktop, ensuring usability and accessibility.
+

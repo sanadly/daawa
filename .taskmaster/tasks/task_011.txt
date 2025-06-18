@@ -1,0 +1,64 @@
+# Task ID: 11
+# Title: Implement Core Guest Management APIs
+# Status: pending
+# Dependencies: 4, 7
+# Priority: high
+# Description: Develop the backend APIs for managing guests, including adding, updating, and listing guests with support for +N additional guests.
+# Details:
+1. Implement API for adding a primary guest
+2. Implement API for adding +N additional guests linked to a primary guest
+3. Create API for updating guest information
+4. Implement API for listing guests with filtering and pagination
+5. Create API for retrieving guest details including +N guests
+6. Implement validation for guest data
+7. Create database queries and repositories for guest operations
+8. Add support for custom fields defined in event form configuration
+9. Implement capacity validation when adding guests
+10. Add logging for all guest-related actions
+
+# Test Strategy:
+Write unit tests for all guest management APIs. Test adding primary and +N guests. Verify validation works correctly. Test with various guest configurations and custom fields.
+
+# Subtasks:
+## 1. Design Primary Guest API [pending]
+### Dependencies: None
+### Description: Define and implement the core API endpoints for managing the primary guest, including create, read, update, and delete operations.
+### Details:
+Specify RESTful endpoints, request/response schemas, and authentication requirements for the primary guest resource.
+
+## 2. Implement +N Guest Support [pending]
+### Dependencies: 11.1
+### Description: Extend the guest management system to support additional guests (+N logic) associated with a primary guest.
+### Details:
+Design data models and API endpoints to handle multiple guests per primary guest, ensuring scalability and clear relationships.
+
+## 3. Develop Update and List APIs [pending]
+### Dependencies: 11.1, 11.2
+### Description: Create endpoints for updating guest details and listing all guests (primary and +N) for a given context.
+### Details:
+Ensure APIs support pagination, filtering, and efficient data retrieval for both individual and bulk guest operations.
+
+## 4. Implement Data Validation [pending]
+### Dependencies: 11.1, 11.2, 11.3
+### Description: Add robust validation logic for all guest-related API requests to ensure data integrity and prevent invalid input.
+### Details:
+Define validation rules for required fields, data types, custom constraints, and error handling strategies.
+
+## 5. Support Custom Fields for Guests [pending]
+### Dependencies: 11.1, 11.2, 11.3, 11.4
+### Description: Enable the addition and management of custom fields for guests, allowing flexibility for different use cases.
+### Details:
+Design a schema and API mechanisms for dynamic custom fields, including validation and storage strategies.
+
+## 6. Implement Capacity Checks [pending]
+### Dependencies: 11.1, 11.2, 11.3, 11.4, 11.5
+### Description: Add logic to enforce capacity limits for guests, ensuring that the number of guests does not exceed allowed thresholds.
+### Details:
+Integrate capacity checks into guest creation and update flows, returning appropriate errors when limits are reached.
+
+## 7. Add Logging and Auditing [pending]
+### Dependencies: 11.1, 11.2, 11.3, 11.4, 11.5, 11.6
+### Description: Implement comprehensive logging and auditing for all guest management operations to support monitoring and troubleshooting.
+### Details:
+Log API requests, responses, validation errors, and capacity violations, ensuring compliance and traceability.
+

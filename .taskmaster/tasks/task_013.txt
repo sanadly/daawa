@@ -1,0 +1,58 @@
+# Task ID: 13
+# Title: Develop Guest Self-Registration Frontend
+# Status: pending
+# Dependencies: 12
+# Priority: high
+# Description: Create the frontend components for guest self-registration, including dynamic form generation based on event configuration.
+# Details:
+1. Create responsive registration form page
+2. Implement dynamic form generation based on event configuration
+3. Add support for +N additional guests with dynamic field addition
+4. Implement client-side form validation
+5. Create loading states and error handling
+6. Add confirmation page with success message
+7. Implement responsive design for all components
+8. Add support for RTL layout for Arabic content
+9. Create language switcher for multilingual support
+10. Implement accessibility features (WCAG 2.1 AA)
+
+# Test Strategy:
+Test registration form with various configurations. Verify dynamic +N fields work correctly. Test form validation. Verify responsive design on different screen sizes. Test with both English and Arabic content.
+
+# Subtasks:
+## 1. Implement Dynamic Form Rendering [pending]
+### Dependencies: None
+### Description: Develop the frontend logic to render forms dynamically based on configuration data, allowing for flexible field types and layouts.
+### Details:
+Utilize a component-based approach to render form fields according to a configuration object or schema. Ensure the form can adapt to different field types and structures as defined by backend or static configuration.
+
+## 2. Add Support for +N Guest Fields [pending]
+### Dependencies: 13.1
+### Description: Enable users to dynamically add or remove guest fields within the form, supporting an arbitrary number of guests.
+### Details:
+Implement UI controls (such as 'Add Guest' and 'Remove Guest' buttons) that allow users to append or remove guest input sections. Ensure the form state updates accordingly and integrates with the dynamic rendering logic.
+
+## 3. Integrate Form Validation [pending]
+### Dependencies: 13.1, 13.2
+### Description: Implement validation logic for all form fields, including dynamically added guest fields, ensuring data integrity before submission.
+### Details:
+Apply both synchronous and asynchronous validation rules (e.g., required fields, email format, unique constraints) and provide real-time feedback to users. Ensure validation scales with dynamically generated fields.
+
+## 4. Develop Confirmation Page [pending]
+### Dependencies: 13.3
+### Description: Create a confirmation page that summarizes all user inputs for review before final submission.
+### Details:
+After successful validation, display a summary of all form data, including guest information, in a clear and accessible format. Provide options to edit or confirm the submission.
+
+## 5. Implement RTL and Multilingual Support [pending]
+### Dependencies: 13.1
+### Description: Ensure the form UI supports right-to-left (RTL) languages and can be easily localized for multiple languages.
+### Details:
+Integrate internationalization (i18n) libraries and apply RTL-compatible styles. Ensure all text, labels, and UI elements adapt to the selected language and direction.
+
+## 6. Enhance Accessibility (a11y) [pending]
+### Dependencies: 13.1, 13.2, 13.3, 13.4, 13.5
+### Description: Ensure the dynamic form and all related pages are accessible to users with disabilities, following WCAG guidelines.
+### Details:
+Implement semantic HTML, ARIA attributes, keyboard navigation, and screen reader compatibility. Test with accessibility tools to verify compliance.
+
