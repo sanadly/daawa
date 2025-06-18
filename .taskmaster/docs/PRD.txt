@@ -1,0 +1,357 @@
+Okay, I will reformat the existing PRD information into this new structure. This will involve some summarization and re-categorization.
+
+<context>
+
+Overview
+
+Daawa is a Software-as-a-Service (SaaS) platform designed to simplify event invitation, guest management, and check-in processes for a diverse range of event organizers. It solves the problem of inefficient, manual, and often costly traditional event management by providing a centralized digital solution. Daawa is for individuals planning personal events (weddings, parties), organizations (mosques, non-profits, schools), and businesses (workshops, corporate events) who need a modern, streamlined way to manage their attendees. Its value lies in offering flexible guest acquisition (self-registration links, direct invites), customizable digital passes (PDF, Apple/Google Wallet), integrated check-in, and full support for English and Arabic (RTL) users, all under a usage-based pricing model. A key feature is the ability for organizers to explore and set up their event in a "Draft" state before committing to payment and activation.
+
+Core Features
+
+Event Creation & Management (Draft & Active States):
+
+What it does: Allows organizers to define event details (name, date, venue, etc.), select a guest capacity tier, configure a self-registration form, and design a digital pass template. Organizers can fully set up their event in a "Draft" state. Upon submission and manual admin activation (after payment), the event becomes "Active," unlocking guest-facing features.
+
+Why it's important: Provides a risk-free way for organizers to explore the platform. Clearly defines event parameters and pricing. Enables core event setup.
+
+How it works: Organizer fills out forms in the portal. Data is saved via API. Admin interface allows activation.
+
+Guest Acquisition (+N Guest Management):
+
+What it does: Supports two primary methods:
+
+Self-Registration Link: Generates a unique link to an online form where guests can register themselves and their additional "+N" guests (number specified by organizer).
+
+Direct Email Invites: Allows organizers to manually add/import guests and send personalized email invitations containing a link to their digital pass. Organizers can specify "+N" for these invites too. All primary and "+N" guests count towards the event's paid capacity.
+
+Why it's important: Offers flexibility for different event types (open vs. invite-only). Manages group invitations efficiently.
+
+How it works: Backend generates unique links. Form submissions and manual entries are processed via API, adding guests to the event list, respecting capacity and "+N" limits.
+
+Digital Pass Generation (Unified Design):
+
+What it does: Organizers design a single template (background, logo, accent color, PDF font). The system then generates personalized digital passes for each primary guest in PDF, Apple Wallet, and Google Wallet formats. Passes include event details, a unique QR code, and names of accompanying "+N" guests.
+
+Why it's important: Provides guests with a convenient, modern way to access event info and their entry credential. Ensures consistent branding.
+
+How it works: Design configuration saved via API. Backend services (using Puppeteer, passkit-generator, Google Pay API) generate passes on demand using the template and guest data.
+
+Web-Based Check-in Module:
+
+What it does: A mobile-responsive web page accessible by event staff. Allows staff to scan guest QR codes (via device camera) or manually look up guests. Displays guest details, expected "+N" guests, and allows staff to mark primary and specific "+N" guests as checked-in.
+
+Why it's important: Facilitates smooth and efficient event entry. Provides real-time attendance tracking for organizers. No native app installation required for staff for MVP.
+
+How it works: Web module interacts with check-in APIs. Camera access via browser getUserMedia. Scanned data sent to API for validation and recording check-ins.
+
+Multilingual Support (English & Arabic with RTL):
+
+What it does: All user interfaces (Organizer Portal, Guest Portal, Check-in Module, Admin Interface) and communications are available in both English and Arabic, with full Right-to-Left (RTL) layout support for Arabic.
+
+Why it's important: Caters to a key target market, enhancing usability and accessibility.
+
+How it works: Frontend uses i18n libraries. Backend APIs support locale information. UI styling (Tailwind/Daisy UI) handles RTL.
+
+User Experience
+
+User Personas:
+
+Event Organizer: Varies in tech-savviness. Needs efficiency, control, and a professional output. Uses portal for setup and management.
+
+Guest: Wide range of tech comfort. Needs clear information and easy interaction (registration, accessing pass).
+
+Check-in Staff: Needs a fast, simple tool for entry management on event day, used on mobile devices.
+
+Platform Administrator: Needs clear tools for event activation and basic oversight.
+
+Key User Flows:
+
+Organizer Onboarding & Event Creation (Draft): Register -> Login -> Create Event -> Fill Details -> Select Tier -> Design Card -> Configure Form -> Save Draft.
+
+Event Activation: Organizer Submits Draft -> Admin Reviews -> Admin Marks Paid & Activates -> Organizer Notified.
+
+Guest Self-Registration: Organizer Shares Link -> Guest Clicks Link -> Fills Form (incl. +N) -> Submits -> Receives Confirmation & Pass Download Options.
+
+Direct Invitation: Organizer Adds Guest Manually (incl. +N) -> Sends Email Invite -> Guest Receives Email -> Clicks Link to Access Pass/Portal.
+
+Event Check-in: Staff Logs into Web Module -> Scans Guest QR (or Manual Lookup) -> Views Guest/+N Info -> Marks Present Guests -> Guest Enters.
+
+UI/UX Considerations:
+
+UI Stack: React/Next.js with Tailwind CSS and Daisy UI for consistent, responsive, and maintainable interfaces.
+
+Simplicity & Clarity: Prioritized in all interfaces. Minimize cognitive load.
+
+Visual Feedback: Clear indicators for actions, statuses, errors (using Daisy UI components).
+
+Mobile-First: For Guest Portal and Check-in Module. Organizer portal is responsive.
+
+Accessibility (A11y): Strive for WCAG 2.1 AA (color contrast, keyboard nav).
+
+RTL: All UI elements and layouts must adapt correctly for Arabic.
+
+Card Designer: Unified, simple visual editor with previews for PDF/Wallet.
+
+Check-in Module: Optimized for speed and ease of use on mobile browsers.
+
+</context>
+
+<PRD>
+
+Technical Architecture
+
+System Components:
+
+Frontend Web Application (Daawa Portal): (React/Next.js, Tailwind CSS, Daisy UI) Serves Organizer Portal, Guest Portal, Admin Interface, and Web-Based Check-in Module.
+
+Backend API Server (Daawa API): (NestJS, Node.js) Exposes RESTful APIs for all platform functionalities. Modular design (Auth, Events, Guests, Passes, Check-in, Notifications, Admin).
+
+Database: (PostgreSQL) Stores all persistent data (users, events, guests, configurations, etc.).
+
+Pass Generation Service: (Integrated within NestJS Backend) Uses Puppeteer (for PDF), passkit-generator (for Apple Wallet), and Google Pay API Client to create digital passes.
+
+Notification Service: (Integrated within NestJS Backend) Handles sending emails (initially). Hooks for future SMS/WhatsApp.
+
+Cloud Storage: (e.g., AWS S3, Google Cloud Storage) For storing user-uploaded assets (logos, background images for cards) after processing.
+
+Content Delivery Network (CDN): For serving static assets (frontend bundles, processed images) globally.
+
+Data Models (Core - PostgreSQL):
+
+Users (id, name, email, password_hash, role [Organizer, Admin, Staff], preferred_language)
+
+Events (id, organizer_id, name, status [Draft, Pending, Active, Archived], tier_id, capacity_limit, primary_language, default_plus_n, design_config [JSONB], form_config [JSONB], event_details [JSONB: type, dates, venue])
+
+Tiers (id, name, guest_limit, price, currency)
+
+Guests (id, event_id, primary_guest_id [FK to self, NULL if primary], name, email, phone, invite_status, rsvp_status, checkin_status, checkin_timestamp, checked_in_by_user_id, allowed_plus_n_override, custom_field_answers [JSONB], is_primary)
+
+CheckinRecords (id, guest_id [FK to Guests, Primary Guest], event_id, checkin_timestamp, checked_in_by_user_id, present_additional_guest_ids [JSONB/Array])
+
+APIs and Integrations:
+
+Internal RESTful APIs: Between Frontend and Backend (as detailed in prior PRD v1.8, Section 4.12). All functionalities exposed via these APIs. Documented with Swagger/OpenAPI.
+
+External APIs (Consumed by Backend):
+
+Google Pay API for Passes (for Google Wallet pass generation).
+
+(Future) SMS Gateway API (e.g., Twilio).
+
+(Future) WhatsApp Business API.
+
+(Future) Payment Gateway APIs (for automated activation).
+
+Infrastructure Requirements:
+
+Cloud hosting platform (e.g., AWS, GCP, Azure).
+
+Scalable application servers (e.g., EC2, App Engine, Kubernetes).
+
+Managed PostgreSQL database service.
+
+Load balancers.
+
+CDN service.
+
+Cloud storage service.
+
+Secure environment for secrets management (API keys, certificates).
+
+Logging and monitoring solution.
+
+CI/CD pipeline for automated builds and deployments.
+
+Apple Developer Program membership (for Wallet pass certificates).
+
+Development Roadmap
+
+Phase 1: MVP - Foundation & Core Organizer/Guest/Admin Workflow (Manual Activation)
+
+Backend Core Services (API-First):
+
+User Authentication (Organizer, Admin, Staff roles) & Account Management APIs.
+
+Core Event Management APIs (Create Draft, Select Tier, Store Details, Form Config, Design Config).
+
+Core Guest Management APIs (Add Guest, +N basic structure, List Guests).
+
+Database schema for Users, Events, Tiers, Guests.
+
+Frontend - Organizer Portal (Draft State):
+
+Login/Registration.
+
+Dashboard (view events, "Create New Event" button).
+
+Event Creation flow: Details, Tier Selection, Basic Form Configuration (define fields, default +N), Card Design (unified UI, previews, save config). All in "Draft" state.
+
+Submit for Activation button (triggers 'Pending Approval' status).
+
+Frontend - Admin Portal (Basic Activation):
+
+Admin Login.
+
+List "Pending Approval" events.
+
+"Mark as Paid & Activate" button -> Triggers API to change event status.
+
+Backend - Event Activation Logic & Post-Activation Services:
+
+API to change event status to "Active".
+
+Logic to enforce capacity based on tier (Primary + All +N guests).
+
+Registration Link Generation API.
+
+Pass Generation Service APIs (PDF, Apple Wallet, Google Wallet - using saved design config & guest data).
+
+Basic Notification Service API (Email: confirmation, activation).
+
+Frontend - Organizer Portal (Active State):
+
+View active Registration Link & "Copy" button.
+
+Guest List View (display imported/registered guests, statuses).
+
+Manual Add Guest (with +N specification). Import Guests (CSV).
+
+Direct Email Invitation sending flow (select guests, use template, send via API).
+
+Frontend - Guest-Facing Workflow:
+
+Self-Registration Form page (dynamic +N fields based on event config). Submit to API.
+
+Confirmation page with Pass Download links (PDF, Wallet).
+
+Guest Portal (view event details, access pass if link revisited).
+
+Frontend - Web-Based Check-in Module (Online-Only):
+
+Staff Login page (event-specific).
+
+QR Code Scanning UI (using device camera via browser API).
+
+Scan Result Display (Primary Guest, expected +N list).
+
+Manual Lookup UI.
+
+Check-in UI (checkboxes for +N present, submit to API).
+
+Basic Check-in Stats view.
+
+Multilingual Support (EN/AR + RTL): Implemented iteratively across all frontend components as they are built.
+
+Deployment & Testing: Basic CI/CD, hosting setup, core NFRs met.
+
+Phase 2: MVP+ Enhancements & Early Adopter Feedback Integration
+
+Refined Admin Tools: More detailed user/event lookup, basic reporting.
+
+Organizer Portal Enhancements: Better dashboard insights, improved guest list filtering/tagging, communication tools (broadcast emails).
+
+RSVP Tracking: Implement RSVP status in guest model and update flows.
+
+Security Hardening & Performance Optimization: Based on initial usage.
+
+Advanced Form Configuration: More field types, basic validation rules.
+
+Basic Event Analytics: For organizers (registration numbers, check-in rates).
+
+Phase 3: Scaling & Feature Expansion (Post-MVP)
+
+Automated Payment Gateway Integration: For specific local gateways.
+
+SMS/WhatsApp Integration: For invites and notifications.
+
+Native Scanner App: For robust offline check-in and better performance.
+
+Team Roles & Collaboration: For organizer accounts.
+
+Advanced Reporting & Analytics.
+
+Guest Self-Update Portal Features.
+
+Waitlist Management.
+
+Printable Guest List.
+
+(Further out) Public API, More Languages, Advanced Design Studio, Sub-Events.
+
+Logical Dependency Chain
+
+Foundation Backend & Auth: User model, basic event model, auth APIs, Admin login. (Needed for anything else).
+
+Admin Event Activation UI: Ability for Admin to see something and activate it. (Gets us to a "paid" state manually).
+
+Organizer Draft Event Creation UI: Allow organizer to define an event, design pass, configure form. (No live functionality yet, but creates the event entity).
+
+Backend Pass Generation Services (PDF/Wallet): The core mechanism to create the "deliverable". (Needs event design config and guest data structure).
+
+Guest Self-Registration Backend & Frontend: Live form, API to create guests, link generation post-activation. (First way to get real guests).
+
+Guest Pass Delivery Frontend: Confirmation page showing download links. (Guest gets the pass).
+
+Organizer Direct Invite Backend & Frontend: Manual add guest, email sending mechanism. (Second way to get guests and deliver passes).
+
+Check-in Backend APIs: Validate QR, record check-in. (Core of event day).
+
+Check-in Web Module Frontend: Staff interface to use the check-in APIs. (Makes event day functional).
+
+Guest Portal Frontend: Basic view of event details. (Guest can re-access info).
+
+Organizer Dashboard & Active Event Management UI: View stats, manage active event. (Organizer oversight).
+
+Iterative Multilingual Implementation: Apply EN/AR translations and RTL styling to components as they are built or in dedicated passes.
+
+Getting to something usable/visible front end that works:
+The goal is to quickly enable an admin to activate a basic event, allowing an organizer to then get a live registration link, have a guest register, and that guest receive a basic (even unstyled initially) pass. Then layer on design, +N, and check-in.
+
+Pacing and scoping each feature:
+Each point above can be broken down. E.g., "Card Design" starts with just saving colors/logo URL, then add BG image, then font. "Guest Management" starts with just adding primary name/email, then add +N, then add custom fields. Backend APIs should support the current frontend need and anticipate slightly more complex data for the next small step.
+
+Risks and Mitigations
+
+Technical Challenges:
+
+Cross-Browser Camera Access (Web Check-in): Ensuring consistent getUserMedia behavior. Mitigation: Thorough testing on target mobile browsers, provide clear user guidance if permissions are tricky.
+
+Wallet Pass Generation Complexity (Apple/Google): Specific requirements, certificate management. Mitigation: Allocate dedicated time for setup and testing, follow documentation meticulously. Use recommended libraries.
+
+PDF Generation from HTML/CSS (Puppeteer): Performance, font rendering, complex layouts. Mitigation: Start with simple PDF templates, optimize server-side rendering, thorough testing of EN/AR fonts.
+
+RTL Implementation: Ensuring all Daisy UI components and custom layouts adapt correctly. Mitigation: Continuous RTL testing throughout development, use Tailwind's RTL utilities.
+
+Figuring out the MVP that we can build upon:
+
+Scope Creep: Tendency to add "just one more thing." Mitigation: Strict adherence to the defined MVP features in Phase 1. Defer non-essentials.
+
+Balancing Simplicity vs. "Enough" Customization: Especially for card design. Mitigation: Launch with simple options (BG, logo, accent, PDF font). Gather user feedback quickly to inform Phase 2 enhancements.
+
+Resource Constraints:
+
+Development Time/Budget: Building all features to a high quality takes time. Mitigation: Prioritize MVP ruthlessly. Modular backend helps if different parts can be developed somewhat in parallel (if team size allows). Clear task breakdown from the roadmap.
+
+Specialized Skills (e.g., NestJS, Pass Generation): Mitigation: Ensure team has or can acquire necessary skills, or allocate budget for expert consultation if needed.
+
+Appendix
+
+Research Findings: (Placeholder - would include market analysis, competitor features, user survey results if available).
+
+Technical Specifications:
+
+UI Library: Daisy UI (Latest stable version), Tailwind CSS (Latest stable version).
+
+Frontend Framework: Next.js (Latest stable version), React (Latest stable version).
+
+Backend Framework: NestJS (Latest stable version).
+
+Database: PostgreSQL (Version 14+ recommended).
+
+PDF Font Examples (For consideration): Noto Sans, Noto Kufi Arabic, Tajawal, Open Sans.
+
+Image Optimization Target: WebP for supported browsers, optimized JPG/PNG as fallbacks. Aim for <200KB for typical card assets.
+
+API Documentation Standard: OpenAPI 3.x (Swagger).
+
+</PRD>

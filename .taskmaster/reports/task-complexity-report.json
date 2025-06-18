@@ -1,0 +1,213 @@
+{
+	"meta": {
+		"generatedAt": "2025-06-18T19:04:35.888Z",
+		"tasksAnalyzed": 25,
+		"totalTasks": 25,
+		"analysisCount": 25,
+		"thresholdScore": 5,
+		"projectName": "Taskmaster",
+		"usedResearch": true
+	},
+	"complexityAnalysis": [
+		{
+			"taskId": 1,
+			"taskTitle": "Setup Project Repository and Infrastructure",
+			"complexityScore": 9,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "Break down the setup of the project repository and infrastructure into subtasks for each major area: monorepo structure, Next.js frontend, NestJS backend, linting and formatting, CI/CD pipeline, environment setup, secrets management, and logging/monitoring.",
+			"reasoning": "This task covers multiple foundational areas (repo structure, two frameworks, CI/CD, environments, secrets, logging) that each require specialized setup and integration, making it highly complex and best managed by splitting into focused subtasks."
+		},
+		{
+			"taskId": 2,
+			"taskTitle": "Design and Implement Database Schema",
+			"complexityScore": 8,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Expand this task into subtasks for schema design, migration setup, index/constraint implementation, relationship mapping, seed data creation, and performance testing.",
+			"reasoning": "Designing a relational schema with multiple interrelated tables, migrations, constraints, and performance considerations is a moderately high-complexity backend task that benefits from clear separation of concerns."
+		},
+		{
+			"taskId": 3,
+			"taskTitle": "Implement User Authentication System",
+			"complexityScore": 9,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "Divide the authentication system into subtasks for registration, login, password reset, role-based access, account management, password hashing, token management, and frontend integration.",
+			"reasoning": "Authentication involves security, multiple user flows, backend and frontend integration, and role management, all of which are critical and complex areas requiring granular attention."
+		},
+		{
+			"taskId": 4,
+			"taskTitle": "Implement Core Event Management APIs",
+			"complexityScore": 8,
+			"recommendedSubtasks": 7,
+			"expansionPrompt": "Break down the event management APIs into subtasks for event creation, updating, tier selection, configuration storage, status transitions, validation, and repository/query implementation.",
+			"reasoning": "This task involves designing and implementing multiple API endpoints with business logic, validation, and data persistence, making it complex and suitable for further decomposition."
+		},
+		{
+			"taskId": 5,
+			"taskTitle": "Develop Organizer Portal - Draft Event Creation UI",
+			"complexityScore": 8,
+			"recommendedSubtasks": 7,
+			"expansionPrompt": "Expand this UI task into subtasks for dashboard, multi-step form, tier selection, form configuration, card design, preview, validation, and responsive design.",
+			"reasoning": "The UI involves a multi-step, dynamic form with design preview, validation, and state management, which increases complexity and warrants detailed subtasks."
+		},
+		{
+			"taskId": 6,
+			"taskTitle": "Implement Admin Portal for Event Activation",
+			"complexityScore": 8,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "Divide the admin portal into subtasks for dashboard, event list, detail view, activation flow, notifications, notes, search/filtering, pagination, and audit logging.",
+			"reasoning": "Admin portals require robust data handling, workflow management, and auditability, each of which is a significant area of work."
+		},
+		{
+			"taskId": 7,
+			"taskTitle": "Implement Event Activation Logic and Post-Activation Services",
+			"complexityScore": 8,
+			"recommendedSubtasks": 7,
+			"expansionPrompt": "Break down event activation into subtasks for status change API, capacity enforcement, registration link generation, notifications, post-activation hooks, logging, and error handling.",
+			"reasoning": "This backend logic involves transactional updates, notifications, and validation, all of which are complex and interdependent."
+		},
+		{
+			"taskId": 8,
+			"taskTitle": "Develop Pass Generation Service - PDF",
+			"complexityScore": 7,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Expand PDF pass generation into subtasks for template setup, dynamic data insertion, QR code generation, RTL support, performance optimization, and API integration.",
+			"reasoning": "PDF generation with dynamic content, QR codes, and multilingual/RTL support is moderately complex, especially with performance and integration requirements."
+		},
+		{
+			"taskId": 9,
+			"taskTitle": "Develop Pass Generation Service - Apple Wallet",
+			"complexityScore": 7,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Break down Apple Wallet pass generation into subtasks for certificate setup, template creation, dynamic data, QR code, API, and pass updates.",
+			"reasoning": "Apple Wallet integration requires certificate management, dynamic content, and API work, which is moderately complex."
+		},
+		{
+			"taskId": 10,
+			"taskTitle": "Develop Pass Generation Service - Google Wallet",
+			"complexityScore": 7,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Expand Google Wallet pass generation into subtasks for API client setup, credential configuration, template creation, dynamic data, QR code, and pass updates.",
+			"reasoning": "Google Wallet integration is similar in complexity to Apple Wallet, involving external APIs, dynamic data, and security."
+		},
+		{
+			"taskId": 11,
+			"taskTitle": "Implement Core Guest Management APIs",
+			"complexityScore": 8,
+			"recommendedSubtasks": 7,
+			"expansionPrompt": "Divide guest management into subtasks for primary guest API, +N guest support, update/list APIs, validation, custom fields, capacity checks, and logging.",
+			"reasoning": "Managing guests with +N logic, validation, and custom fields is complex and requires careful API and data design."
+		},
+		{
+			"taskId": 12,
+			"taskTitle": "Develop Guest Self-Registration Backend",
+			"complexityScore": 8,
+			"recommendedSubtasks": 7,
+			"expansionPrompt": "Break down self-registration backend into subtasks for form API, validation, +N guest support, capacity checks, email confirmation, custom fields, and error handling.",
+			"reasoning": "Self-registration involves dynamic validation, capacity enforcement, and transactional email, making it a complex backend task."
+		},
+		{
+			"taskId": 13,
+			"taskTitle": "Develop Guest Self-Registration Frontend",
+			"complexityScore": 7,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Expand the frontend into subtasks for dynamic form generation, +N guest fields, validation, confirmation page, RTL/multilingual support, and accessibility.",
+			"reasoning": "Dynamic forms with multilingual and accessibility requirements add moderate complexity to the frontend."
+		},
+		{
+			"taskId": 14,
+			"taskTitle": "Implement Guest Pass Delivery Frontend",
+			"complexityScore": 7,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Break down pass delivery into subtasks for confirmation page, download buttons for each pass type, pass preview, email delivery, RTL/multilingual support, and error handling.",
+			"reasoning": "Integrating multiple pass types and delivery methods with multilingual support is moderately complex."
+		},
+		{
+			"taskId": 15,
+			"taskTitle": "Develop Organizer Portal - Active Event Management UI",
+			"complexityScore": 7,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Expand active event management UI into subtasks for dashboard updates, event detail view, guest list, manual/CSV guest addition, email invitations, and statistics.",
+			"reasoning": "Managing active events with guest operations and statistics is moderately complex, especially with bulk operations."
+		},
+		{
+			"taskId": 16,
+			"taskTitle": "Implement Direct Email Invitation System",
+			"complexityScore": 7,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Break down the email invitation system into subtasks for template creation, API, personalization, frontend interface, tracking, and error handling.",
+			"reasoning": "Email systems with personalization, tracking, and batch operations are moderately complex and require careful handling."
+		},
+		{
+			"taskId": 17,
+			"taskTitle": "Implement Check-in Backend APIs",
+			"complexityScore": 8,
+			"recommendedSubtasks": 7,
+			"expansionPrompt": "Expand check-in backend into subtasks for QR validation, check-in recording, +N guest support, status/history APIs, offline sync, validation, and logging.",
+			"reasoning": "Check-in logic with QR codes, offline sync, and +N guest support is complex and critical for event operations."
+		},
+		{
+			"taskId": 18,
+			"taskTitle": "Develop Web-Based Check-in Module Frontend",
+			"complexityScore": 7,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Break down the check-in frontend into subtasks for login, QR scanning, manual lookup, check-in result display, offline mode, and RTL/multilingual support.",
+			"reasoning": "Real-time QR scanning, offline support, and multilingual UI add moderate complexity to the frontend."
+		},
+		{
+			"taskId": 19,
+			"taskTitle": "Develop Guest Portal Frontend",
+			"complexityScore": 7,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Expand the guest portal into subtasks for home page, event details, pass access, guest info display, RSVP, and accessibility/multilingual support.",
+			"reasoning": "Guest-facing portals with pass access, multilingual, and accessibility requirements are moderately complex."
+		},
+		{
+			"taskId": 20,
+			"taskTitle": "Implement Multilingual Support - English",
+			"complexityScore": 6,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Break down English support into subtasks for i18n setup, translation files, language detection, email templates, and language switcher.",
+			"reasoning": "Implementing English as the default language with i18n setup is less complex than full multilingual/RTL support but still requires coordination across frontend and backend."
+		},
+		{
+			"taskId": 21,
+			"taskTitle": "Implement Multilingual Support - Arabic with RTL",
+			"complexityScore": 7,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Expand Arabic/RTL support into subtasks for translation files, RTL layout, font support, email templates, RTL testing/fixes, and language detection.",
+			"reasoning": "Arabic support with RTL layout introduces additional complexity in UI/UX and requires thorough testing and adaptation."
+		},
+		{
+			"taskId": 22,
+			"taskTitle": "Implement Cloud Storage for User Assets",
+			"complexityScore": 7,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Break down cloud storage into subtasks for service setup, upload API, image processing, CDN integration, secure URLs, and cleanup.",
+			"reasoning": "Cloud storage with processing, CDN, and security is moderately complex and involves both backend and infrastructure work."
+		},
+		{
+			"taskId": 23,
+			"taskTitle": "Implement Basic Analytics and Reporting",
+			"complexityScore": 7,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Expand analytics/reporting into subtasks for data aggregation, registration/check-in APIs, dashboard widgets, export functionality, real-time updates, and scheduled reports.",
+			"reasoning": "Analytics and reporting require data aggregation, visualization, and export, which are moderately complex and cross-cutting."
+		},
+		{
+			"taskId": 24,
+			"taskTitle": "Implement System Monitoring and Logging",
+			"complexityScore": 7,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Break down monitoring/logging into subtasks for centralized logging, error tracking, performance monitoring, alerting, log rotation, and dashboard setup.",
+			"reasoning": "System-wide monitoring and logging involve multiple tools and integrations, making it moderately complex."
+		},
+		{
+			"taskId": 25,
+			"taskTitle": "Perform Security Audit and Hardening",
+			"complexityScore": 9,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "Expand security audit/hardening into subtasks for authentication review, CSRF/XSS/SQLi protection, rate limiting, secure headers, encryption, penetration testing, and incident response planning.",
+			"reasoning": "Comprehensive security auditing and hardening is highly complex, requiring expertise in multiple security domains and thorough testing."
+		}
+	]
+}

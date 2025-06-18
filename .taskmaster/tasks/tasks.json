@@ -1,0 +1,2080 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Setup Project Repository and Infrastructure",
+        "description": "Initialize the project repository with Next.js frontend and NestJS backend, configure CI/CD pipeline, and set up development environments.",
+        "details": "1. Create a monorepo structure with separate packages for frontend and backend\n2. Initialize Next.js project with TypeScript, Tailwind CSS, and Daisy UI\n3. Initialize NestJS project with TypeScript\n4. Set up ESLint, Prettier, and Git hooks\n5. Configure CI/CD pipeline for automated testing and deployment\n6. Set up development, staging, and production environments\n7. Configure secrets management for API keys and certificates\n8. Set up logging and monitoring solution",
+        "testStrategy": "Verify that the repository structure is correct, all dependencies install correctly, and the CI/CD pipeline runs successfully. Test that the development environment can be started and accessed.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Design Monorepo Structure",
+            "description": "Define and implement a logical monorepo folder hierarchy that separates the Next.js frontend, NestJS backend, and any shared libraries or utilities, reflecting team boundaries and project needs.",
+            "dependencies": [],
+            "details": "Establish top-level directories for each major service (e.g., /frontend, /backend, /shared), document the structure, and ensure it supports scalability and maintainability.",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "Set Up Next.js Frontend",
+            "description": "Initialize the Next.js application within the monorepo, configure base routing, and ensure compatibility with the monorepo tooling.",
+            "dependencies": [
+              1
+            ],
+            "details": "Create the frontend app in its designated folder, set up initial pages, and integrate with shared code if applicable.",
+            "status": "pending"
+          },
+          {
+            "id": 3,
+            "title": "Set Up NestJS Backend",
+            "description": "Initialize the NestJS backend service in the monorepo, configure base modules, and ensure it can interact with shared code and the frontend.",
+            "dependencies": [
+              1
+            ],
+            "details": "Create the backend app in its designated folder, set up initial controllers and services, and prepare for API integration.",
+            "status": "pending"
+          },
+          {
+            "id": 4,
+            "title": "Configure Linting and Formatting",
+            "description": "Establish consistent linting and code formatting rules across the monorepo for both frontend and backend codebases.",
+            "dependencies": [
+              2,
+              3
+            ],
+            "details": "Set up ESLint, Prettier, and any language-specific linters, and ensure they are enforced via pre-commit hooks or CI.",
+            "status": "pending"
+          },
+          {
+            "id": 5,
+            "title": "Implement CI/CD Pipeline",
+            "description": "Design and configure a CI/CD pipeline that supports selective builds, automated testing, and deployments for both frontend and backend within the monorepo.",
+            "dependencies": [
+              4
+            ],
+            "details": "Use a CI/CD tool (e.g., GitHub Actions, CircleCI) to automate builds, tests, and deployments, leveraging monorepo best practices like selective builds and trunk-based development.",
+            "status": "pending"
+          },
+          {
+            "id": 6,
+            "title": "Establish Environment Setup",
+            "description": "Define and document environment configuration for local development, staging, and production for both frontend and backend.",
+            "dependencies": [
+              2,
+              3
+            ],
+            "details": "Create .env files, set up environment variable management, and provide setup scripts or documentation for onboarding.",
+            "status": "pending"
+          },
+          {
+            "id": 7,
+            "title": "Set Up Secrets Management",
+            "description": "Implement a secure secrets management solution for storing and accessing sensitive configuration values in all environments.",
+            "dependencies": [],
+            "details": "Integrate with a secrets manager (e.g., Vault, AWS Secrets Manager) or use encrypted environment files, and update CI/CD to access secrets securely.",
+            "status": "pending"
+          },
+          {
+            "id": 8,
+            "title": "Configure Logging and Monitoring",
+            "description": "Set up centralized logging and monitoring for both frontend and backend services to track errors, performance, and operational metrics.",
+            "dependencies": [
+              5,
+              7
+            ],
+            "details": "Integrate with logging (e.g., Winston, LogRocket) and monitoring tools (e.g., Prometheus, Sentry), and ensure logs are accessible and actionable.",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "Design and Implement Database Schema",
+        "description": "Design and implement the PostgreSQL database schema for the core data models including Users, Events, Tiers, Guests, and CheckinRecords.",
+        "details": "1. Create PostgreSQL database schema with the following tables:\n   - Users (id, name, email, password_hash, role, preferred_language)\n   - Events (id, organizer_id, name, status, tier_id, capacity_limit, primary_language, default_plus_n, design_config, form_config, event_details)\n   - Tiers (id, name, guest_limit, price, currency)\n   - Guests (id, event_id, primary_guest_id, name, email, phone, invite_status, rsvp_status, checkin_status, checkin_timestamp, checked_in_by_user_id, allowed_plus_n_override, custom_field_answers, is_primary)\n   - CheckinRecords (id, guest_id, event_id, checkin_timestamp, checked_in_by_user_id, present_additional_guest_ids)\n2. Implement database migrations using TypeORM or similar\n3. Set up database indexes for performance optimization\n4. Implement database constraints and relationships\n5. Create seed data for development and testing",
+        "testStrategy": "Write unit tests for database models and relationships. Test migrations up and down. Verify constraints work correctly. Test performance with sample data.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Relational Schema Design",
+            "description": "Design the relational database schema by identifying entities, defining tables, specifying fields, and outlining relationships based on business requirements. Ensure normalization, clear naming conventions, and appropriate data types.",
+            "dependencies": [],
+            "details": "Use ERD tools to visualize entities and relationships. Document table structures and field purposes. Apply normalization principles to minimize redundancy and improve data integrity.",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "Migration Setup",
+            "description": "Set up database migration scripts to create the schema in the target database system. Ensure migrations are version-controlled and repeatable.",
+            "dependencies": [
+              1
+            ],
+            "details": "Implement migration files for table creation, field definitions, and initial schema structure. Use a migration tool compatible with the chosen database.",
+            "status": "pending"
+          },
+          {
+            "id": 3,
+            "title": "Index and Constraint Implementation",
+            "description": "Define and implement indexes and constraints to enforce data integrity and optimize query performance.",
+            "dependencies": [
+              2
+            ],
+            "details": "Add primary keys, foreign keys, unique constraints, and relevant indexes to the migration scripts. Ensure constraints prevent invalid data and support efficient lookups.",
+            "status": "pending"
+          },
+          {
+            "id": 4,
+            "title": "Relationship Mapping",
+            "description": "Map relationships between tables, such as one-to-many and many-to-many, using foreign keys and join tables where necessary.",
+            "dependencies": [
+              3
+            ],
+            "details": "Explicitly define foreign key relationships in the schema and migrations. Document relationship cardinality and ensure referential integrity.",
+            "status": "pending"
+          },
+          {
+            "id": 5,
+            "title": "Seed Data Creation",
+            "description": "Develop scripts or files to populate the database with initial seed data for development and testing purposes.",
+            "dependencies": [
+              4
+            ],
+            "details": "Create representative sample data for each table, ensuring relationships are respected. Use the seed data to validate schema correctness and support early development.",
+            "status": "pending"
+          },
+          {
+            "id": 6,
+            "title": "Performance Testing",
+            "description": "Conduct performance testing on the schema using realistic queries and data volumes to identify bottlenecks and validate index effectiveness.",
+            "dependencies": [
+              5
+            ],
+            "details": "Run benchmark queries, analyze execution plans, and adjust indexes or schema design as needed to achieve optimal performance.",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Implement User Authentication System",
+        "description": "Develop the authentication system for Organizer, Admin, and Staff roles with registration, login, and account management functionality.",
+        "details": "1. Implement user registration API with email verification\n2. Implement login API with JWT token generation\n3. Implement password reset functionality\n4. Create middleware for role-based access control (Organizer, Admin, Staff)\n5. Implement account management APIs (update profile, change password)\n6. Set up secure password hashing using bcrypt\n7. Implement token refresh mechanism\n8. Create frontend components for login, registration, and account management\n9. Implement client-side form validation\n10. Add language preference selection during registration",
+        "testStrategy": "Write unit tests for authentication APIs. Test registration, login, and password reset flows. Verify role-based access control works correctly. Test frontend components with different user roles.",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "User Registration Implementation",
+            "description": "Develop the backend and frontend flows for new user registration, including data validation, storing user details, and sending confirmation emails if required.",
+            "dependencies": [],
+            "details": "Ensure secure handling of user input, prevent duplicate accounts, and integrate with the password hashing subtask for storing credentials securely.",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "User Login Flow",
+            "description": "Create the login endpoint and frontend logic to authenticate users using their credentials, issuing tokens or session cookies upon successful authentication.",
+            "dependencies": [
+              1
+            ],
+            "details": "Integrate with password hashing for credential verification and token management for session handling.",
+            "status": "pending"
+          },
+          {
+            "id": 3,
+            "title": "Password Reset Functionality",
+            "description": "Implement secure password reset mechanisms, including request, token generation, email delivery, and password update flows.",
+            "dependencies": [
+              1
+            ],
+            "details": "Ensure tokens are securely generated, expire after use, and integrate with password hashing for new password storage.",
+            "status": "pending"
+          },
+          {
+            "id": 4,
+            "title": "Role-Based Access Control (RBAC)",
+            "description": "Design and implement a system for assigning roles to users and enforcing access permissions based on roles throughout the application.",
+            "dependencies": [
+              1
+            ],
+            "details": "Integrate with token management to embed role information and with account management for role assignment and updates.",
+            "status": "pending"
+          },
+          {
+            "id": 5,
+            "title": "Account Management Features",
+            "description": "Develop user account management capabilities, such as profile updates, account deactivation, and viewing account activity.",
+            "dependencies": [
+              1
+            ],
+            "details": "Ensure secure update flows and integrate with RBAC for permission checks on sensitive actions.",
+            "status": "pending"
+          },
+          {
+            "id": 6,
+            "title": "Password Hashing and Security",
+            "description": "Implement secure password hashing using industry best practices (e.g., bcrypt, Argon2) for all password storage and verification operations.",
+            "dependencies": [
+              1
+            ],
+            "details": "Ensure all password-related flows (registration, login, reset) use the hashing mechanism and regularly review for vulnerabilities.",
+            "status": "pending"
+          },
+          {
+            "id": 7,
+            "title": "Token Management System",
+            "description": "Design and implement secure token issuance, validation, refresh, and revocation mechanisms for session and authentication management.",
+            "dependencies": [
+              2,
+              4
+            ],
+            "details": "Support JWT or similar tokens, embed user and role information, and ensure secure storage and transmission.",
+            "status": "pending"
+          },
+          {
+            "id": 8,
+            "title": "Frontend Integration",
+            "description": "Integrate all authentication flows (registration, login, password reset, account management) into the frontend, ensuring secure communication and user experience.",
+            "dependencies": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              7
+            ],
+            "details": "Handle token storage, session management, and display appropriate UI based on authentication and authorization state.",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "Implement Core Event Management APIs",
+        "description": "Develop the backend APIs for creating and managing events in Draft state, including event details, tier selection, and configuration storage.",
+        "details": "1. Implement API for creating a new event in Draft state\n2. Implement API for updating event details (name, date, venue, etc.)\n3. Implement API for selecting a tier and updating capacity limit\n4. Implement API for storing form configuration (fields, default +N)\n5. Implement API for storing design configuration (colors, logo, background)\n6. Implement API for submitting an event for activation (changing status to 'Pending')\n7. Implement API for retrieving event details\n8. Implement validation for all event-related data\n9. Create database queries and repositories for event operations\n10. Implement event status transition logic",
+        "testStrategy": "Write unit tests for all event management APIs. Test event creation, updating, and status transitions. Verify validation works correctly. Test with various event configurations.",
+        "priority": "high",
+        "dependencies": [
+          2,
+          3
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Design Event Creation API",
+            "description": "Define and implement the API endpoint for creating new events, including required fields, request/response formats, and error handling.",
+            "dependencies": [],
+            "details": "Specify HTTP method (POST), endpoint naming, payload structure, and initial validation rules for event creation.",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "Implement Event Update API",
+            "description": "Develop the API endpoint for updating existing event details, supporting partial and full updates as needed.",
+            "dependencies": [
+              1
+            ],
+            "details": "Use appropriate HTTP methods (PUT/PATCH), ensure idempotency, and handle update-specific validation.",
+            "status": "pending"
+          },
+          {
+            "id": 3,
+            "title": "Develop Tier Selection Logic",
+            "description": "Create logic and endpoints for selecting and managing event tiers (e.g., ticket types, access levels).",
+            "dependencies": [
+              1
+            ],
+            "details": "Define tier models, endpoints for tier selection, and ensure integration with event creation and update flows.",
+            "status": "pending"
+          },
+          {
+            "id": 4,
+            "title": "Implement Configuration Storage",
+            "description": "Design and implement mechanisms to persist event configurations, including tier and status information.",
+            "dependencies": [
+              1,
+              3
+            ],
+            "details": "Choose appropriate storage solutions, define data models, and ensure secure and efficient data access.",
+            "status": "pending"
+          },
+          {
+            "id": 5,
+            "title": "Handle Status Transitions",
+            "description": "Implement logic and endpoints to manage event status transitions (e.g., draft, published, cancelled).",
+            "dependencies": [
+              1,
+              4
+            ],
+            "details": "Define allowed status states, transition rules, and enforce business logic for valid transitions.",
+            "status": "pending"
+          },
+          {
+            "id": 6,
+            "title": "Implement Validation Logic",
+            "description": "Develop comprehensive validation for event data, tier selection, configuration, and status transitions.",
+            "dependencies": [
+              1,
+              2,
+              3,
+              5
+            ],
+            "details": "Ensure all API inputs are validated according to business rules and provide meaningful error responses.",
+            "status": "pending"
+          },
+          {
+            "id": 7,
+            "title": "Repository and Query Implementation",
+            "description": "Create repository classes and query methods for event data persistence and retrieval.",
+            "dependencies": [
+              4,
+              6
+            ],
+            "details": "Implement data access layers, optimize queries for performance, and ensure consistency with API contracts.",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "Develop Organizer Portal - Draft Event Creation UI",
+        "description": "Create the frontend components for organizers to create and configure events in Draft state, including event details, tier selection, form configuration, and card design.",
+        "details": "1. Create dashboard component with event list and 'Create New Event' button\n2. Implement multi-step event creation flow with the following steps:\n   - Event details (name, date, venue, type)\n   - Tier selection with capacity and pricing information\n   - Form configuration (define fields, set default +N)\n   - Card design (logo upload, background selection, color picker, font selection)\n3. Implement preview functionality for the card design\n4. Create 'Submit for Activation' button and confirmation dialog\n5. Implement form validation for all steps\n6. Add save draft functionality throughout the flow\n7. Implement responsive design for all components\n8. Add loading states and error handling",
+        "testStrategy": "Test the complete event creation flow. Verify all form validations work correctly. Test responsive design on different screen sizes. Verify draft saving functionality works throughout the flow.",
+        "priority": "high",
+        "dependencies": [
+          3,
+          4
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Dashboard Layout and Navigation",
+            "description": "Design and implement the main dashboard interface, including navigation elements for accessing the multi-step form and other dashboard features.",
+            "dependencies": [],
+            "details": "Establish a consistent layout, sidebar or top navigation, and clear entry points to the multi-step form. Ensure the dashboard supports future extensibility.",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "Multi-Step Form Structure and Flow",
+            "description": "Define and build the multi-step form structure, including step sequencing, logical grouping of fields, and state management for user progress.",
+            "dependencies": [
+              1
+            ],
+            "details": "Map out each step, group related questions, and implement logic for progressing between steps. Integrate progress indicators and ensure data persists across steps.",
+            "status": "pending"
+          },
+          {
+            "id": 3,
+            "title": "Tier Selection Component",
+            "description": "Develop the tier selection UI within the form, allowing users to choose between different product or service tiers.",
+            "dependencies": [
+              2
+            ],
+            "details": "Design visually distinct tier cards or selectors, handle selection state, and ensure the choice influences subsequent form steps as needed.",
+            "status": "pending"
+          },
+          {
+            "id": 4,
+            "title": "Form Field Configuration",
+            "description": "Configure all form fields for each step, including input types, labels, placeholders, and conditional logic based on previous answers or tier selection.",
+            "dependencies": [
+              2,
+              3
+            ],
+            "details": "Ensure fields are clearly labeled, grouped logically, and dynamically rendered when necessary. Support both required and optional fields.",
+            "status": "pending"
+          },
+          {
+            "id": 5,
+            "title": "Card Design and Visual Consistency",
+            "description": "Design reusable card components for tier selection, form steps, and summary/preview, maintaining a consistent visual style throughout the UI.",
+            "dependencies": [
+              3,
+              4
+            ],
+            "details": "Apply consistent color schemes, typography, and spacing. Ensure cards are visually appealing and accessible.",
+            "status": "pending"
+          },
+          {
+            "id": 6,
+            "title": "Preview and Summary Step",
+            "description": "Implement a preview step that summarizes user selections and form inputs before final submission, allowing users to review and edit their entries.",
+            "dependencies": [
+              4,
+              5
+            ],
+            "details": "Display all relevant information in a clear, organized manner. Provide edit links or navigation to previous steps for corrections.",
+            "status": "pending"
+          },
+          {
+            "id": 7,
+            "title": "Validation and Responsive Design",
+            "description": "Add real-time validation for all form fields and ensure the entire UI is fully responsive across devices and screen sizes.",
+            "dependencies": [
+              4,
+              5,
+              6
+            ],
+            "details": "Implement immediate field validation with clear error messages. Test and optimize the UI for mobile, tablet, and desktop, ensuring usability and accessibility.",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "Implement Admin Portal for Event Activation",
+        "description": "Develop the admin interface for reviewing pending events and activating them after payment confirmation.",
+        "details": "1. Create admin dashboard component with filters for event status\n2. Implement list view of 'Pending Approval' events with key details\n3. Create event detail view with all configured information\n4. Implement 'Mark as Paid & Activate' button and confirmation dialog\n5. Create API for changing event status to 'Active'\n6. Implement notification system to alert organizer of activation\n7. Add admin notes field for internal comments\n8. Implement basic search and filtering functionality\n9. Add pagination for event lists\n10. Create audit log for admin actions",
+        "testStrategy": "Test the admin portal with different event statuses. Verify activation process works correctly. Test notification system. Verify search and filtering functionality works as expected.",
+        "priority": "high",
+        "dependencies": [
+          3,
+          4
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Design and Implement Dashboard",
+            "description": "Create the main dashboard interface that provides an overview of key metrics, recent activity, and quick access to major admin functions.",
+            "dependencies": [],
+            "details": "This includes layout planning, widget/component selection, and integration with backend data sources.",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "Develop Event List View",
+            "description": "Build the event list page to display all events in a tabular or card format, supporting bulk actions and status indicators.",
+            "dependencies": [
+              1
+            ],
+            "details": "Ensure the list is performant and can handle large datasets, with clear visual cues for event states.",
+            "status": "pending"
+          },
+          {
+            "id": 3,
+            "title": "Implement Event Detail View",
+            "description": "Create a detailed view for individual events, showing all relevant information and available admin actions.",
+            "dependencies": [
+              2
+            ],
+            "details": "Include sections for metadata, participants, attachments, and related actions.",
+            "status": "pending"
+          },
+          {
+            "id": 4,
+            "title": "Build Activation Flow",
+            "description": "Develop the workflow for activating, deactivating, or approving events, including necessary validations and user confirmations.",
+            "dependencies": [
+              3
+            ],
+            "details": "Ensure auditability and proper state management throughout the activation process.",
+            "status": "pending"
+          },
+          {
+            "id": 5,
+            "title": "Integrate Notifications System",
+            "description": "Set up a notifications system to alert admins of important events, errors, or required actions within the portal.",
+            "dependencies": [
+              1
+            ],
+            "details": "Support both in-app and email notifications, with customizable triggers and delivery settings.",
+            "status": "pending"
+          },
+          {
+            "id": 6,
+            "title": "Add Notes Functionality",
+            "description": "Enable admins to add, edit, and view notes related to events or users for internal collaboration and record-keeping.",
+            "dependencies": [
+              3
+            ],
+            "details": "Ensure notes are securely stored and properly associated with relevant entities.",
+            "status": "pending"
+          },
+          {
+            "id": 7,
+            "title": "Implement Search and Filtering",
+            "description": "Develop robust search and filtering capabilities for event lists and other data-heavy views.",
+            "dependencies": [
+              2
+            ],
+            "details": "Support multi-criteria filtering, keyword search, and advanced query options for efficient data retrieval.",
+            "status": "pending"
+          },
+          {
+            "id": 8,
+            "title": "Add Pagination and Audit Logging",
+            "description": "Implement pagination for large datasets and comprehensive audit logging for all critical admin actions.",
+            "dependencies": [
+              2,
+              4,
+              5,
+              6,
+              7
+            ],
+            "details": "Ensure pagination is performant and audit logs are immutable, searchable, and exportable for compliance.",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "title": "Implement Event Activation Logic and Post-Activation Services",
+        "description": "Develop the backend logic for event activation, including capacity enforcement, registration link generation, and notification services.",
+        "details": "1. Implement API to change event status to 'Active'\n2. Create logic to enforce capacity based on tier (Primary + All +N guests)\n3. Implement registration link generation with unique identifiers\n4. Create notification service for sending activation emails to organizers\n5. Implement event status transition validation\n6. Create database triggers or hooks for post-activation actions\n7. Implement capacity tracking and validation\n8. Create API for retrieving registration link and status\n9. Add logging for all activation-related actions\n10. Implement error handling for activation failures",
+        "testStrategy": "Write unit tests for activation logic and capacity enforcement. Test registration link generation. Verify notification emails are sent correctly. Test with various event configurations and edge cases.",
+        "priority": "high",
+        "dependencies": [
+          4,
+          6
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Change Event Status via API",
+            "description": "Implement the logic to update the event's status to 'active' using the status change API, ensuring transactional integrity.",
+            "dependencies": [],
+            "details": "This subtask involves validating the event's current state, performing the status update, and handling any transactional requirements to ensure data consistency.",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "Enforce Event Capacity Constraints",
+            "description": "Validate and enforce event capacity limits during activation to prevent overbooking.",
+            "dependencies": [
+              1
+            ],
+            "details": "Check the event's maximum allowed capacity and ensure that activation does not violate this constraint. If the capacity is exceeded, abort activation and return an appropriate error.",
+            "status": "pending"
+          },
+          {
+            "id": 3,
+            "title": "Generate Registration Link",
+            "description": "Create and store a unique registration link for the activated event.",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "Upon successful activation and capacity validation, generate a secure registration link and associate it with the event record.",
+            "status": "pending"
+          },
+          {
+            "id": 4,
+            "title": "Send Notifications",
+            "description": "Trigger notifications to relevant users or systems about the event activation.",
+            "dependencies": [
+              3
+            ],
+            "details": "Notify stakeholders (e.g., event organizers, attendees, or integrated systems) via email, push, or webhook about the event's activation and provide the registration link.",
+            "status": "pending"
+          },
+          {
+            "id": 5,
+            "title": "Execute Post-Activation Hooks",
+            "description": "Run any configured post-activation hooks or integrations.",
+            "dependencies": [
+              4
+            ],
+            "details": "Invoke custom business logic, third-party integrations, or workflows that should occur after event activation and notification.",
+            "status": "pending"
+          },
+          {
+            "id": 6,
+            "title": "Log Activation Process",
+            "description": "Log all steps and outcomes of the activation process for auditing and troubleshooting.",
+            "dependencies": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            "details": "Record status changes, capacity checks, link generation, notifications, and hook executions in a centralized logging system.",
+            "status": "pending"
+          },
+          {
+            "id": 7,
+            "title": "Handle Errors and Rollback",
+            "description": "Implement error handling and rollback mechanisms for failed activation steps.",
+            "dependencies": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "details": "Detect errors at any stage, log them, and ensure that partial activations are rolled back to maintain system integrity. Return meaningful error responses to API clients.",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "title": "Develop Pass Generation Service - PDF",
+        "description": "Implement the service for generating PDF passes based on event design configuration and guest data.",
+        "details": "1. Set up Puppeteer for server-side rendering\n2. Create HTML/CSS templates for PDF passes\n3. Implement dynamic content insertion based on event and guest data\n4. Add QR code generation with unique identifiers\n5. Implement RTL support for Arabic content\n6. Optimize PDF generation for performance\n7. Add support for custom fonts specified in design configuration\n8. Implement caching mechanism for generated PDFs\n9. Create API for requesting PDF generation\n10. Add error handling and logging",
+        "testStrategy": "Test PDF generation with various event configurations. Verify QR codes are correctly generated and scannable. Test with both English and Arabic content. Verify performance with multiple concurrent requests.",
+        "priority": "medium",
+        "dependencies": [
+          4,
+          7
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "PDF Template Setup",
+            "description": "Design and configure the base PDF template, including layout, fonts, placeholders, and styling for pass generation.",
+            "dependencies": [],
+            "details": "Establish a reusable template structure that supports both static and dynamic content, ensuring compatibility with future enhancements.",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "Dynamic Data Insertion",
+            "description": "Implement logic to insert user-specific or event-specific data into the PDF template at runtime.",
+            "dependencies": [
+              1
+            ],
+            "details": "Map data fields to template placeholders and ensure accurate population of all dynamic content sections.",
+            "status": "pending"
+          },
+          {
+            "id": 3,
+            "title": "QR Code Generation and Embedding",
+            "description": "Generate QR codes based on dynamic data and embed them into the appropriate location within the PDF.",
+            "dependencies": [
+              2
+            ],
+            "details": "Select a QR code library, define encoding standards, and ensure correct placement and sizing within the template.",
+            "status": "pending"
+          },
+          {
+            "id": 4,
+            "title": "RTL (Right-to-Left) Language Support",
+            "description": "Enable and test support for right-to-left languages in the PDF generation process.",
+            "dependencies": [
+              1
+            ],
+            "details": "Adjust template and rendering logic to handle RTL scripts, including text alignment, font selection, and layout mirroring.",
+            "status": "pending"
+          },
+          {
+            "id": 5,
+            "title": "Performance Optimization",
+            "description": "Optimize the PDF generation pipeline for speed and resource efficiency, especially under high load.",
+            "dependencies": [
+              2,
+              3,
+              4
+            ],
+            "details": "Profile the generation process, identify bottlenecks, and implement caching, parallelization, or other improvements as needed.",
+            "status": "pending"
+          },
+          {
+            "id": 6,
+            "title": "API Integration",
+            "description": "Expose the PDF pass generation functionality via a secure and scalable API endpoint.",
+            "dependencies": [
+              5
+            ],
+            "details": "Design API contracts, handle authentication, and ensure robust error handling and logging for integration with external systems.",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": 9,
+        "title": "Develop Pass Generation Service - Apple Wallet",
+        "description": "Implement the service for generating Apple Wallet passes based on event design configuration and guest data.",
+        "details": "1. Set up passkit-generator library\n2. Obtain and configure Apple Developer certificates\n3. Create pass template with dynamic fields\n4. Implement pass personalization based on event and guest data\n5. Add QR code generation with unique identifiers\n6. Implement RTL support for Arabic content\n7. Create API for requesting Apple Wallet pass generation\n8. Implement caching mechanism for generated passes\n9. Add support for pass updates\n10. Add error handling and logging",
+        "testStrategy": "Test Apple Wallet pass generation with various event configurations. Verify passes can be added to Apple Wallet. Test with both English and Arabic content. Verify QR codes are correctly generated and scannable.",
+        "priority": "medium",
+        "dependencies": [
+          4,
+          7
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Set Up Apple Wallet Certificates",
+            "description": "Register a Pass Type Identifier in the Apple Developer portal, request and download the necessary Apple Wallet certificates, and install them on your backend server for signing passes.",
+            "dependencies": [],
+            "details": "This includes creating a pass type identifier, generating a signing certificate, and ensuring the certificates are properly configured for use in your backend environment.",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "Design and Create Pass Template",
+            "description": "Define the pass.json template and required images for the Wallet pass, specifying the layout, fields, and visual assets.",
+            "dependencies": [
+              1
+            ],
+            "details": "Create the pass.json file with essential information and settings, and design images such as logo, icon, and background as required by Apple Wallet specifications.",
+            "status": "pending"
+          },
+          {
+            "id": 3,
+            "title": "Integrate Dynamic Data Population",
+            "description": "Develop logic to populate the pass template with user-specific or event-specific dynamic data at runtime.",
+            "dependencies": [
+              2
+            ],
+            "details": "Implement backend code to inject personalized or real-time data into the pass.json structure before signing and packaging the pass.",
+            "status": "pending"
+          },
+          {
+            "id": 4,
+            "title": "Generate and Embed QR Code",
+            "description": "Create a QR code containing relevant payload (e.g., ticket ID, URL) and embed it into the pass template.",
+            "dependencies": [
+              3
+            ],
+            "details": "Use a QR code generation library to create the image, then reference or embed it in the pass.json and image assets as required by the pass type.",
+            "status": "pending"
+          },
+          {
+            "id": 5,
+            "title": "Develop Pass Generation API",
+            "description": "Build a backend API endpoint that receives pass data, generates and signs the pass, and returns or stores the resulting .pkpass file.",
+            "dependencies": [
+              4
+            ],
+            "details": "The API should handle requests from client apps, assemble the pass package, sign it with the Apple certificate, and provide a download link or direct response.",
+            "status": "pending"
+          },
+          {
+            "id": 6,
+            "title": "Implement Pass Update Mechanism",
+            "description": "Enable the backend to send updates to existing passes, such as status changes or new information, using push notifications or pass update endpoints.",
+            "dependencies": [
+              5
+            ],
+            "details": "Ensure the backend can re-sign and distribute updated passes, and optionally trigger Apple Wallet push notifications to users for real-time updates.",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": 10,
+        "title": "Develop Pass Generation Service - Google Wallet",
+        "description": "Implement the service for generating Google Wallet passes based on event design configuration and guest data.",
+        "details": "1. Set up Google Pay API client\n2. Configure Google Pay API credentials\n3. Create pass template with dynamic fields\n4. Implement pass personalization based on event and guest data\n5. Add QR code generation with unique identifiers\n6. Implement RTL support for Arabic content\n7. Create API for requesting Google Wallet pass generation\n8. Implement caching mechanism for generated passes\n9. Add support for pass updates\n10. Add error handling and logging",
+        "testStrategy": "Test Google Wallet pass generation with various event configurations. Verify passes can be added to Google Wallet. Test with both English and Arabic content. Verify QR codes are correctly generated and scannable.",
+        "priority": "medium",
+        "dependencies": [
+          4,
+          7
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "API Client Setup",
+            "description": "Set up the Google Cloud project and enable the Google Wallet API for your environment.",
+            "dependencies": [],
+            "details": "Create or select a Google Cloud project, enable the Google Wallet API in the Google Cloud Console, and ensure required billing and permissions are configured.",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "Credential Configuration",
+            "description": "Generate and configure authentication credentials for secure API access.",
+            "dependencies": [
+              1
+            ],
+            "details": "Create a Google Cloud service account, generate a service account key (JSON), and securely store it for use in API requests.",
+            "status": "pending"
+          },
+          {
+            "id": 3,
+            "title": "Template (Class) Creation",
+            "description": "Define and create a Google Wallet pass class (template) to specify the structure and appearance of passes.",
+            "dependencies": [
+              2
+            ],
+            "details": "Use the API or Google Wallet Console to create a pass class, specifying fields, branding, and layout for the pass type (e.g., generic, loyalty, event).",
+            "status": "pending"
+          },
+          {
+            "id": 4,
+            "title": "Dynamic Pass Data Generation",
+            "description": "Generate pass objects with dynamic, user-specific data based on the defined template.",
+            "dependencies": [
+              3
+            ],
+            "details": "Implement backend logic to create pass objects using the API, populating them with user-specific or transaction-specific data as required.",
+            "status": "pending"
+          },
+          {
+            "id": 5,
+            "title": "QR Code Integration",
+            "description": "Add QR codes or barcodes to the pass for scanning and validation purposes.",
+            "dependencies": [
+              4
+            ],
+            "details": "Configure the pass object to include a QR code or barcode field, ensuring the data format matches your use case (e.g., ticket validation, membership ID).",
+            "status": "pending"
+          },
+          {
+            "id": 6,
+            "title": "Pass Update Mechanism",
+            "description": "Implement functionality to update existing passes with new or changed data.",
+            "dependencies": [
+              5
+            ],
+            "details": "Use the API to update pass objects as needed (e.g., status changes, balance updates), ensuring users receive real-time updates in their Google Wallet.",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": 11,
+        "title": "Implement Core Guest Management APIs",
+        "description": "Develop the backend APIs for managing guests, including adding, updating, and listing guests with support for +N additional guests.",
+        "details": "1. Implement API for adding a primary guest\n2. Implement API for adding +N additional guests linked to a primary guest\n3. Create API for updating guest information\n4. Implement API for listing guests with filtering and pagination\n5. Create API for retrieving guest details including +N guests\n6. Implement validation for guest data\n7. Create database queries and repositories for guest operations\n8. Add support for custom fields defined in event form configuration\n9. Implement capacity validation when adding guests\n10. Add logging for all guest-related actions",
+        "testStrategy": "Write unit tests for all guest management APIs. Test adding primary and +N guests. Verify validation works correctly. Test with various guest configurations and custom fields.",
+        "priority": "high",
+        "dependencies": [
+          4,
+          7
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Design Primary Guest API",
+            "description": "Define and implement the core API endpoints for managing the primary guest, including create, read, update, and delete operations.",
+            "dependencies": [],
+            "details": "Specify RESTful endpoints, request/response schemas, and authentication requirements for the primary guest resource.",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "Implement +N Guest Support",
+            "description": "Extend the guest management system to support additional guests (+N logic) associated with a primary guest.",
+            "dependencies": [
+              1
+            ],
+            "details": "Design data models and API endpoints to handle multiple guests per primary guest, ensuring scalability and clear relationships.",
+            "status": "pending"
+          },
+          {
+            "id": 3,
+            "title": "Develop Update and List APIs",
+            "description": "Create endpoints for updating guest details and listing all guests (primary and +N) for a given context.",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "Ensure APIs support pagination, filtering, and efficient data retrieval for both individual and bulk guest operations.",
+            "status": "pending"
+          },
+          {
+            "id": 4,
+            "title": "Implement Data Validation",
+            "description": "Add robust validation logic for all guest-related API requests to ensure data integrity and prevent invalid input.",
+            "dependencies": [
+              1,
+              2,
+              3
+            ],
+            "details": "Define validation rules for required fields, data types, custom constraints, and error handling strategies.",
+            "status": "pending"
+          },
+          {
+            "id": 5,
+            "title": "Support Custom Fields for Guests",
+            "description": "Enable the addition and management of custom fields for guests, allowing flexibility for different use cases.",
+            "dependencies": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "details": "Design a schema and API mechanisms for dynamic custom fields, including validation and storage strategies.",
+            "status": "pending"
+          },
+          {
+            "id": 6,
+            "title": "Implement Capacity Checks",
+            "description": "Add logic to enforce capacity limits for guests, ensuring that the number of guests does not exceed allowed thresholds.",
+            "dependencies": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            "details": "Integrate capacity checks into guest creation and update flows, returning appropriate errors when limits are reached.",
+            "status": "pending"
+          },
+          {
+            "id": 7,
+            "title": "Add Logging and Auditing",
+            "description": "Implement comprehensive logging and auditing for all guest management operations to support monitoring and troubleshooting.",
+            "dependencies": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "details": "Log API requests, responses, validation errors, and capacity violations, ensuring compliance and traceability.",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": 12,
+        "title": "Develop Guest Self-Registration Backend",
+        "description": "Implement the backend services for guest self-registration, including form submission processing and validation.",
+        "details": "1. Create API for processing self-registration form submissions\n2. Implement validation based on event form configuration\n3. Add support for +N additional guests in registration\n4. Implement capacity validation and enforcement\n5. Create unique identifiers for registered guests\n6. Implement email confirmation for successful registration\n7. Add support for custom fields defined in event form configuration\n8. Create database queries and repositories for registration operations\n9. Implement error handling for registration failures\n10. Add logging for all registration-related actions",
+        "testStrategy": "Test self-registration with various form configurations. Verify validation works correctly. Test capacity enforcement. Verify email confirmations are sent correctly.",
+        "priority": "high",
+        "dependencies": [
+          7,
+          11
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Design and Implement Form API Endpoint",
+            "description": "Create a backend API endpoint to receive and process self-registration form submissions, supporting dynamic fields and +N guest data.",
+            "dependencies": [],
+            "details": "Define the API contract, request/response structure, and ensure it can handle custom fields and multiple guests per registration.",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "Develop Validation Logic",
+            "description": "Implement backend validation for all form fields, including custom fields and guest data, ensuring data integrity and required constraints.",
+            "dependencies": [
+              1
+            ],
+            "details": "Include checks for required fields, field formats, and cross-field dependencies. Ensure validation is extensible for custom fields.",
+            "status": "pending"
+          },
+          {
+            "id": 3,
+            "title": "Implement +N Guest Support",
+            "description": "Extend backend logic to support registration of the main user plus an arbitrary number of guests, each with their own data and validation.",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "Design data models and API payloads to accommodate multiple guests, and ensure validation and storage logic handle guest entries.",
+            "status": "pending"
+          },
+          {
+            "id": 4,
+            "title": "Add Capacity Checks",
+            "description": "Integrate logic to enforce registration capacity limits, preventing overbooking and handling concurrent submissions safely.",
+            "dependencies": [
+              1,
+              2,
+              3
+            ],
+            "details": "Check available capacity before accepting registrations, including guests, and handle race conditions or transactional integrity.",
+            "status": "pending"
+          },
+          {
+            "id": 5,
+            "title": "Integrate Email Confirmation Workflow",
+            "description": "Implement transactional email confirmation, sending unique confirmation links and updating registration status upon confirmation.",
+            "dependencies": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "details": "Generate secure tokens, send confirmation emails, and handle confirmation callbacks to activate registrations.",
+            "status": "pending"
+          },
+          {
+            "id": 6,
+            "title": "Support Custom Fields",
+            "description": "Enable dynamic addition and processing of custom fields in the registration form, ensuring backend flexibility and validation.",
+            "dependencies": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "details": "Allow admin-configurable fields, store custom field data, and ensure validation and API responses reflect customizations.",
+            "status": "pending"
+          },
+          {
+            "id": 7,
+            "title": "Implement Robust Error Handling and Reporting",
+            "description": "Develop comprehensive error handling for all registration scenarios, providing clear feedback for validation, capacity, and system errors.",
+            "dependencies": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "details": "Return structured error responses, log errors for monitoring, and ensure user-facing messages are actionable and secure.",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": 13,
+        "title": "Develop Guest Self-Registration Frontend",
+        "description": "Create the frontend components for guest self-registration, including dynamic form generation based on event configuration.",
+        "details": "1. Create responsive registration form page\n2. Implement dynamic form generation based on event configuration\n3. Add support for +N additional guests with dynamic field addition\n4. Implement client-side form validation\n5. Create loading states and error handling\n6. Add confirmation page with success message\n7. Implement responsive design for all components\n8. Add support for RTL layout for Arabic content\n9. Create language switcher for multilingual support\n10. Implement accessibility features (WCAG 2.1 AA)",
+        "testStrategy": "Test registration form with various configurations. Verify dynamic +N fields work correctly. Test form validation. Verify responsive design on different screen sizes. Test with both English and Arabic content.",
+        "priority": "high",
+        "dependencies": [
+          12
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement Dynamic Form Rendering",
+            "description": "Develop the frontend logic to render forms dynamically based on configuration data, allowing for flexible field types and layouts.",
+            "dependencies": [],
+            "details": "Utilize a component-based approach to render form fields according to a configuration object or schema. Ensure the form can adapt to different field types and structures as defined by backend or static configuration.",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "Add Support for +N Guest Fields",
+            "description": "Enable users to dynamically add or remove guest fields within the form, supporting an arbitrary number of guests.",
+            "dependencies": [
+              1
+            ],
+            "details": "Implement UI controls (such as 'Add Guest' and 'Remove Guest' buttons) that allow users to append or remove guest input sections. Ensure the form state updates accordingly and integrates with the dynamic rendering logic.",
+            "status": "pending"
+          },
+          {
+            "id": 3,
+            "title": "Integrate Form Validation",
+            "description": "Implement validation logic for all form fields, including dynamically added guest fields, ensuring data integrity before submission.",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "Apply both synchronous and asynchronous validation rules (e.g., required fields, email format, unique constraints) and provide real-time feedback to users. Ensure validation scales with dynamically generated fields.",
+            "status": "pending"
+          },
+          {
+            "id": 4,
+            "title": "Develop Confirmation Page",
+            "description": "Create a confirmation page that summarizes all user inputs for review before final submission.",
+            "dependencies": [
+              3
+            ],
+            "details": "After successful validation, display a summary of all form data, including guest information, in a clear and accessible format. Provide options to edit or confirm the submission.",
+            "status": "pending"
+          },
+          {
+            "id": 5,
+            "title": "Implement RTL and Multilingual Support",
+            "description": "Ensure the form UI supports right-to-left (RTL) languages and can be easily localized for multiple languages.",
+            "dependencies": [
+              1
+            ],
+            "details": "Integrate internationalization (i18n) libraries and apply RTL-compatible styles. Ensure all text, labels, and UI elements adapt to the selected language and direction.",
+            "status": "pending"
+          },
+          {
+            "id": 6,
+            "title": "Enhance Accessibility (a11y)",
+            "description": "Ensure the dynamic form and all related pages are accessible to users with disabilities, following WCAG guidelines.",
+            "dependencies": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            "details": "Implement semantic HTML, ARIA attributes, keyboard navigation, and screen reader compatibility. Test with accessibility tools to verify compliance.",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": 14,
+        "title": "Implement Guest Pass Delivery Frontend",
+        "description": "Create the frontend components for delivering digital passes to guests after registration or invitation.",
+        "details": "1. Create confirmation page with pass download options\n2. Implement PDF pass download button\n3. Add Apple Wallet pass download button\n4. Add Google Wallet pass download button\n5. Create pass preview component\n6. Implement email delivery option\n7. Add support for RTL layout for Arabic content\n8. Create language switcher for multilingual support\n9. Implement responsive design for all components\n10. Add loading states and error handling",
+        "testStrategy": "Test pass delivery with various pass types. Verify downloads work correctly. Test with both English and Arabic content. Verify responsive design on different screen sizes.",
+        "priority": "high",
+        "dependencies": [
+          8,
+          9,
+          10,
+          13
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Design and Implement Confirmation Page",
+            "description": "Create a confirmation page that summarizes the user's pass purchase and provides access to delivery and download options.",
+            "dependencies": [],
+            "details": "The confirmation page should display relevant pass details, purchase summary, and clear calls-to-action for downloading or receiving passes.",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "Develop Download Buttons for Each Pass Type",
+            "description": "Add and configure download buttons for each available pass type (e.g., Apple Wallet, Google Wallet, PDF).",
+            "dependencies": [
+              1
+            ],
+            "details": "Ensure each button triggers the correct download or save action for the selected pass type and is visible only when that pass type is available.",
+            "status": "pending"
+          },
+          {
+            "id": 3,
+            "title": "Implement Pass Preview Functionality",
+            "description": "Enable users to preview their pass before downloading or receiving it via email.",
+            "dependencies": [
+              1
+            ],
+            "details": "Provide a visual preview that accurately reflects the final pass appearance on different devices and formats.",
+            "status": "pending"
+          },
+          {
+            "id": 4,
+            "title": "Set Up Email Delivery System",
+            "description": "Configure backend and frontend to allow users to receive their passes via email, including unique download links or attachments.",
+            "dependencies": [
+              1
+            ],
+            "details": "Ensure emails are sent reliably, include all necessary pass information, and support multiple pass types.",
+            "status": "pending"
+          },
+          {
+            "id": 5,
+            "title": "Integrate RTL and Multilingual Support",
+            "description": "Ensure the confirmation page, download buttons, pass previews, and emails support right-to-left languages and multiple localizations.",
+            "dependencies": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "details": "Implement language selection, translation files, and RTL layout adjustments across all user-facing components.",
+            "status": "pending"
+          },
+          {
+            "id": 6,
+            "title": "Implement Comprehensive Error Handling",
+            "description": "Add robust error handling for all delivery methods, downloads, previews, and localization features.",
+            "dependencies": [
+              2,
+              3,
+              4,
+              5
+            ],
+            "details": "Display user-friendly error messages and fallback options for failed downloads, email issues, or localization errors.",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": 15,
+        "title": "Develop Organizer Portal - Active Event Management UI",
+        "description": "Create the frontend components for organizers to manage active events, including guest list management and registration link sharing.",
+        "details": "1. Update dashboard to show active events\n2. Create active event detail view\n3. Implement registration link display with copy button\n4. Create guest list view with filtering and pagination\n5. Implement manual guest addition form\n6. Add CSV import functionality for bulk guest addition\n7. Create direct email invitation sending interface\n8. Implement guest editing and deletion\n9. Add basic event statistics display\n10. Implement responsive design for all components",
+        "testStrategy": "Test active event management with various event configurations. Verify guest list management works correctly. Test CSV import with different file formats. Verify email invitations are sent correctly.",
+        "priority": "medium",
+        "dependencies": [
+          5,
+          7,
+          11
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Update Dashboard for Active Events",
+            "description": "Enhance the dashboard UI to display a list of active events with key metrics and quick actions.",
+            "dependencies": [],
+            "details": "Include event status, upcoming dates, and summary statistics. Ensure real-time updates and responsive design.",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "Implement Event Detail View",
+            "description": "Create a detailed view for each event, showing event information, schedule, and management options.",
+            "dependencies": [
+              1
+            ],
+            "details": "Allow navigation from the dashboard to the event detail page. Display event description, location, time, and organizer info.",
+            "status": "pending"
+          },
+          {
+            "id": 3,
+            "title": "Develop Guest List Management UI",
+            "description": "Build an interface to view, search, filter, and manage the guest list for each event.",
+            "dependencies": [
+              2
+            ],
+            "details": "Enable sorting, searching, and status indicators (e.g., RSVP, checked-in). Support bulk actions for guest management.",
+            "status": "pending"
+          },
+          {
+            "id": 4,
+            "title": "Enable Manual and CSV Guest Addition",
+            "description": "Add functionality to manually add guests or import guest lists via CSV upload.",
+            "dependencies": [
+              3
+            ],
+            "details": "Provide forms for single guest entry and a CSV upload tool with validation and error handling.",
+            "status": "pending"
+          },
+          {
+            "id": 5,
+            "title": "Integrate Email Invitation System",
+            "description": "Implement a system to send email invitations to guests, individually or in bulk.",
+            "dependencies": [
+              4
+            ],
+            "details": "Allow selection of guests and sending of customizable email invitations. Track delivery and RSVP status.",
+            "status": "pending"
+          },
+          {
+            "id": 6,
+            "title": "Display Event Statistics and Analytics",
+            "description": "Show real-time statistics and analytics for each event, including attendance, RSVP rates, and guest engagement.",
+            "dependencies": [
+              2,
+              3,
+              5
+            ],
+            "details": "Use interactive charts and summary widgets to visualize key metrics. Ensure data is updated dynamically.",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": 16,
+        "title": "Implement Direct Email Invitation System",
+        "description": "Develop the backend and frontend components for sending direct email invitations to guests with pass links.",
+        "details": "1. Create email template for invitations\n2. Implement API for sending email invitations\n3. Add support for personalization in email templates\n4. Create frontend interface for selecting guests and sending invitations\n5. Implement batch sending for multiple guests\n6. Add support for RTL layout in email templates for Arabic content\n7. Create tracking for email delivery and opens\n8. Implement retry mechanism for failed email deliveries\n9. Add logging for all email-related actions\n10. Create API for retrieving email status",
+        "testStrategy": "Test email invitation system with various configurations. Verify emails are correctly formatted and delivered. Test with both English and Arabic content. Verify tracking works correctly.",
+        "priority": "medium",
+        "dependencies": [
+          8,
+          9,
+          10,
+          11,
+          15
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Design and Create Email Templates",
+            "description": "Develop responsive and visually appealing email templates that support personalization and are compatible across devices and email clients.",
+            "dependencies": [],
+            "details": "Use wireframing and prototyping tools to design templates. Ensure templates include placeholders for personalized content and links. Test for mobile and desktop compatibility.",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "Develop Email Invitation API",
+            "description": "Implement a backend API to handle sending email invitations, integrating with the email service provider and supporting batch operations.",
+            "dependencies": [
+              1
+            ],
+            "details": "API should accept template data, recipient information, and personalization parameters. Ensure secure handling of tokens and links. Integrate with SMTP or third-party email services.",
+            "status": "pending"
+          },
+          {
+            "id": 3,
+            "title": "Implement Personalization Logic",
+            "description": "Build logic to inject personalized content into email templates based on recipient data and invitation context.",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "Support dynamic fields such as recipient name, organization, and unique invite links. Ensure data privacy and correct mapping of personalized content.",
+            "status": "pending"
+          },
+          {
+            "id": 4,
+            "title": "Develop Frontend Invitation Interface",
+            "description": "Create a user-friendly frontend interface for admins or users to trigger invitations, select templates, and review personalization options.",
+            "dependencies": [
+              1,
+              2,
+              3
+            ],
+            "details": "Interface should allow batch uploads, preview of personalized emails, and status feedback. Integrate with the backend API for sending invitations.",
+            "status": "pending"
+          },
+          {
+            "id": 5,
+            "title": "Implement Email Tracking and Analytics",
+            "description": "Set up tracking for email delivery, opens, clicks, and bounces to monitor invitation effectiveness and troubleshoot issues.",
+            "dependencies": [
+              2,
+              3,
+              4
+            ],
+            "details": "Integrate tracking pixels and unique links. Store and display analytics in the frontend. Handle privacy and compliance requirements.",
+            "status": "pending"
+          },
+          {
+            "id": 6,
+            "title": "Add Robust Error Handling and Reporting",
+            "description": "Implement comprehensive error handling for all stages of the invitation process, including API failures, delivery issues, and template errors.",
+            "dependencies": [
+              2,
+              3,
+              4,
+              5
+            ],
+            "details": "Provide clear error messages to users, log errors for diagnostics, and implement retry mechanisms for transient failures.",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": 17,
+        "title": "Implement Check-in Backend APIs",
+        "description": "Develop the backend APIs for event check-in, including QR code validation and check-in recording.",
+        "details": "1. Create API for validating QR codes\n2. Implement API for recording check-ins for primary guests\n3. Add support for recording check-ins for +N additional guests\n4. Create API for retrieving check-in status and history\n5. Implement manual guest lookup API for check-in\n6. Add support for offline check-in data synchronization\n7. Create database queries and repositories for check-in operations\n8. Implement validation for check-in data\n9. Add logging for all check-in-related actions\n10. Create API for check-in statistics",
+        "testStrategy": "Write unit tests for all check-in APIs. Test QR code validation. Verify check-in recording works correctly for primary and +N guests. Test offline synchronization.",
+        "priority": "high",
+        "dependencies": [
+          11
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement QR Code Validation Logic",
+            "description": "Develop backend logic to validate QR codes presented at check-in, ensuring authenticity and preventing reuse or forgery.",
+            "dependencies": [],
+            "details": "This includes decoding QR codes, verifying their association with valid tickets or attendees, and handling invalid or duplicate codes.",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "Develop Check-in Recording Mechanism",
+            "description": "Create backend endpoints and database logic to record successful check-ins, capturing attendee, timestamp, and event details.",
+            "dependencies": [
+              1
+            ],
+            "details": "Ensure atomicity and idempotency to prevent double check-ins and support real-time updates to the event management system.",
+            "status": "pending"
+          },
+          {
+            "id": 3,
+            "title": "Add +N Guest Support",
+            "description": "Extend check-in logic to support attendees with additional guests, including validation and recording of group check-ins.",
+            "dependencies": [
+              2
+            ],
+            "details": "Allow QR codes to encode guest counts, update check-in records for all guests, and enforce guest limits per ticket.",
+            "status": "pending"
+          },
+          {
+            "id": 4,
+            "title": "Design Status and History APIs",
+            "description": "Build APIs to retrieve current check-in status and historical check-in data for attendees and guests.",
+            "dependencies": [
+              2,
+              3
+            ],
+            "details": "Endpoints should support queries by attendee, event, and time range, and return comprehensive check-in histories.",
+            "status": "pending"
+          },
+          {
+            "id": 5,
+            "title": "Implement Offline Sync Mechanism",
+            "description": "Enable check-in operations to function offline and synchronize data with the backend when connectivity is restored.",
+            "dependencies": [
+              2,
+              3
+            ],
+            "details": "Design local storage for offline check-ins, conflict resolution strategies, and robust sync endpoints.",
+            "status": "pending"
+          },
+          {
+            "id": 6,
+            "title": "Integrate Validation and Error Handling",
+            "description": "Add comprehensive validation and error handling throughout the check-in process, including user feedback for failed operations.",
+            "dependencies": [
+              1,
+              2,
+              3,
+              5
+            ],
+            "details": "Handle edge cases such as invalid QR codes, exceeded guest limits, duplicate check-ins, and sync conflicts.",
+            "status": "pending"
+          },
+          {
+            "id": 7,
+            "title": "Implement Logging and Audit Trail",
+            "description": "Develop a logging system to track all check-in attempts, status changes, and sync operations for auditing and troubleshooting.",
+            "dependencies": [
+              2,
+              4,
+              5,
+              6
+            ],
+            "details": "Logs should include timestamps, user IDs, operation types, and error details, and support export or integration with monitoring tools.",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": 18,
+        "title": "Develop Web-Based Check-in Module Frontend",
+        "description": "Create the frontend components for event staff to check in guests using QR code scanning or manual lookup.",
+        "details": "1. Create staff login page for check-in module\n2. Implement QR code scanning using device camera\n3. Create manual guest lookup interface\n4. Implement check-in result display with guest details\n5. Add support for checking in +N additional guests\n6. Create basic check-in statistics view\n7. Implement offline mode with local storage\n8. Add support for RTL layout for Arabic content\n9. Create language switcher for multilingual support\n10. Implement responsive design optimized for mobile devices",
+        "testStrategy": "Test check-in module with various devices and browsers. Verify QR code scanning works correctly. Test manual lookup with different search criteria. Verify offline mode works when connection is lost.",
+        "priority": "high",
+        "dependencies": [
+          17
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement Login Functionality",
+            "description": "Develop the user authentication interface and logic, including input validation, error handling, and integration with backend authentication APIs.",
+            "dependencies": [],
+            "details": "Ensure secure handling of credentials, provide feedback for failed logins, and maintain session state for authenticated users.",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "Develop QR Scanning Feature",
+            "description": "Create the UI and logic for real-time QR code scanning, including camera access, QR code parsing, and error handling for invalid or unreadable codes.",
+            "dependencies": [
+              1
+            ],
+            "details": "Integrate with device camera APIs, provide user guidance for scanning, and ensure smooth performance across devices.",
+            "status": "pending"
+          },
+          {
+            "id": 3,
+            "title": "Build Manual Lookup Interface",
+            "description": "Design and implement a manual search and lookup form for users to find check-in records by entering details such as name or ID.",
+            "dependencies": [
+              1
+            ],
+            "details": "Include input validation, search suggestions, and clear feedback for no or multiple results.",
+            "status": "pending"
+          },
+          {
+            "id": 4,
+            "title": "Display Check-in Result",
+            "description": "Develop the UI to show check-in results, including success, failure, or duplicate check-in messages, and handle edge cases gracefully.",
+            "dependencies": [
+              2,
+              3
+            ],
+            "details": "Ensure clear visual feedback, accessibility, and support for both QR and manual check-in flows.",
+            "status": "pending"
+          },
+          {
+            "id": 5,
+            "title": "Implement Offline Mode Support",
+            "description": "Enable the frontend to function without network connectivity, including local data caching, queuing check-ins, and syncing when online.",
+            "dependencies": [
+              2,
+              3,
+              4
+            ],
+            "details": "Use service workers or similar technologies to cache assets and data, and provide user feedback about offline status and sync progress.",
+            "status": "pending"
+          },
+          {
+            "id": 6,
+            "title": "Add RTL and Multilingual Support",
+            "description": "Integrate right-to-left (RTL) layout and multilingual UI support, allowing users to switch languages and ensuring proper layout for RTL scripts.",
+            "dependencies": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            "details": "Utilize internationalization libraries, provide translations for all UI text, and test layout in both LTR and RTL languages.",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": 19,
+        "title": "Develop Guest Portal Frontend",
+        "description": "Create the frontend components for guests to view event details and access their digital passes after registration.",
+        "details": "1. Create guest portal home page\n2. Implement event details display\n3. Add pass access and download options\n4. Create guest information display including +N guests\n5. Implement RSVP functionality (if applicable)\n6. Add support for RTL layout for Arabic content\n7. Create language switcher for multilingual support\n8. Implement responsive design for all components\n9. Add loading states and error handling\n10. Implement accessibility features (WCAG 2.1 AA)",
+        "testStrategy": "Test guest portal with various event configurations. Verify pass access works correctly. Test with both English and Arabic content. Verify responsive design on different screen sizes.",
+        "priority": "medium",
+        "dependencies": [
+          13,
+          14
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Design and Implement Home Page",
+            "description": "Create the main landing page for the guest portal, providing navigation to event details, pass access, RSVP, and guest information sections.",
+            "dependencies": [],
+            "details": "Ensure the home page is visually clear, intuitive, and provides quick access to all major features of the portal.",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "Develop Event Details Section",
+            "description": "Build a section where guests can view comprehensive event information, including schedules, venue details, and updates.",
+            "dependencies": [
+              1
+            ],
+            "details": "Display all relevant event data in a clear format and ensure real-time updates are reflected for guests.",
+            "status": "pending"
+          },
+          {
+            "id": 3,
+            "title": "Implement Pass Access Functionality",
+            "description": "Enable guests to view, download, or manage their event passes or tickets within the portal.",
+            "dependencies": [
+              1
+            ],
+            "details": "Integrate secure access to digital passes and ensure compatibility with mobile devices for easy entry.",
+            "status": "pending"
+          },
+          {
+            "id": 4,
+            "title": "Display Guest Information",
+            "description": "Provide a section for guests to view and, if permitted, update their personal and RSVP information.",
+            "dependencies": [
+              1
+            ],
+            "details": "Show guest-specific details such as name, contact info, dietary preferences, and any special accommodations.",
+            "status": "pending"
+          },
+          {
+            "id": 5,
+            "title": "RSVP Management and Feedback",
+            "description": "Allow guests to RSVP to events, update their attendance status, and submit feedback or special requests.",
+            "dependencies": [
+              2,
+              4
+            ],
+            "details": "Include options for confirming attendance, specifying preferences, and leaving comments or feedback.",
+            "status": "pending"
+          },
+          {
+            "id": 6,
+            "title": "Accessibility and Multilingual Support",
+            "description": "Ensure the portal is accessible to users with disabilities and supports multiple languages for a diverse guest base.",
+            "dependencies": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            "details": "Implement WCAG-compliant accessibility features and provide language selection with accurate translations throughout the portal.",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": 20,
+        "title": "Implement Multilingual Support - English",
+        "description": "Implement English language support across all frontend components and backend messages.",
+        "details": "1. Set up i18n library in frontend (Next.js)\n2. Create English translation files for all UI components\n3. Implement language detection and selection\n4. Add English translations for all error messages\n5. Create English email templates\n6. Implement English as default language\n7. Add language preference to user settings\n8. Create language switcher component\n9. Implement English translations for PDF passes\n10. Add English translations for Apple and Google Wallet passes",
+        "testStrategy": "Verify all UI components display correctly in English. Test language switching. Verify all error messages and emails are correctly translated.",
+        "priority": "medium",
+        "dependencies": [
+          5,
+          13,
+          15,
+          18,
+          19
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Set Up i18n Framework with English Default",
+            "description": "Integrate an internationalization (i18n) library or framework into the project, configuring English as the default language and ensuring the application is ready for future language additions.",
+            "dependencies": [],
+            "details": "Choose an appropriate i18n library (e.g., i18next for React, built-in i18n for Next.js, or Spring Boot i18n for Java). Configure the default locale to 'en' and ensure the app loads English translations by default.",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "Create and Organize English Translation Files",
+            "description": "Develop structured translation files for English, storing all user-facing strings as key-value pairs to support easy updates and future language additions.",
+            "dependencies": [
+              1
+            ],
+            "details": "Create a directory (e.g., 'locales') and add an 'en.json' (or equivalent) file containing all English strings. Ensure consistency in key naming and coverage of all UI text.",
+            "status": "pending"
+          },
+          {
+            "id": 3,
+            "title": "Implement Language Detection Logic",
+            "description": "Add logic to detect the user's preferred language, defaulting to English if no preference is found or if the detected language is unsupported.",
+            "dependencies": [
+              1
+            ],
+            "details": "Use browser settings, local storage, or user profile settings to detect language. Configure fallback to English. Ensure detection logic is integrated with the i18n framework.",
+            "status": "pending"
+          },
+          {
+            "id": 4,
+            "title": "Internationalize Email Templates in English",
+            "description": "Refactor all email templates to use the i18n system, ensuring all dynamic and static content is sourced from English translation files.",
+            "dependencies": [
+              2
+            ],
+            "details": "Update email templates to reference translation keys instead of hardcoded strings. Ensure templates render correctly in English and are ready for future localization.",
+            "status": "pending"
+          },
+          {
+            "id": 5,
+            "title": "Develop Language Switcher Component",
+            "description": "Create a UI component that allows users to switch languages, defaulting to English and updating the interface accordingly.",
+            "dependencies": [
+              1,
+              2,
+              3
+            ],
+            "details": "Build a language switcher (dropdown, toggle, etc.) that interacts with the i18n framework. Ensure switching updates the UI and persists user preference.",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": 21,
+        "title": "Implement Multilingual Support - Arabic with RTL",
+        "description": "Implement Arabic language support with Right-to-Left (RTL) layout across all frontend components and backend messages.",
+        "details": "1. Create Arabic translation files for all UI components\n2. Implement RTL layout support using Tailwind CSS\n3. Add Arabic translations for all error messages\n4. Create Arabic email templates with RTL support\n5. Implement Arabic font support for all components\n6. Add Arabic translations for PDF passes with RTL layout\n7. Implement Arabic translations for Apple and Google Wallet passes\n8. Test and fix RTL layout issues\n9. Add Arabic language detection\n10. Ensure all components adapt correctly to RTL layout",
+        "testStrategy": "Verify all UI components display correctly in Arabic with RTL layout. Test language switching between English and Arabic. Verify all error messages and emails are correctly translated and formatted.",
+        "priority": "medium",
+        "dependencies": [
+          20
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Update Translation Files for Arabic",
+            "description": "Extract all user-facing text and create/expand translation files to include Arabic translations, ensuring proper locale codes (e.g., ar, ar-EG).",
+            "dependencies": [],
+            "details": "Ensure all static and dynamic content is covered. Use professional translation or validated sources for accuracy.",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "Implement RTL Layout Support",
+            "description": "Adapt the application's layout to support right-to-left (RTL) direction when Arabic is selected, including setting dir=\"rtl\" and flipping UI components as needed.",
+            "dependencies": [
+              1
+            ],
+            "details": "Apply dir=\"rtl\" at the root level, adjust CSS for RTL, and ensure icons and navigation are mirrored appropriately. Test with various browsers and devices.",
+            "status": "pending"
+          },
+          {
+            "id": 3,
+            "title": "Integrate Arabic Font and Typography Support",
+            "description": "Ensure the application uses web-safe or embedded fonts that support Arabic script and proper rendering of Arabic characters.",
+            "dependencies": [
+              2
+            ],
+            "details": "Select fonts optimized for Arabic readability. Adjust font sizes and line heights for Arabic script as needed.",
+            "status": "pending"
+          },
+          {
+            "id": 4,
+            "title": "Localize Email Templates for Arabic and RTL",
+            "description": "Translate and adapt all email templates to Arabic, ensuring RTL layout and proper font support in email clients.",
+            "dependencies": [
+              1,
+              3
+            ],
+            "details": "Test email rendering in major clients (Gmail, Outlook, mobile). Ensure text direction, alignment, and fonts are correct.",
+            "status": "pending"
+          },
+          {
+            "id": 5,
+            "title": "Conduct RTL Testing and Fix UI/UX Issues",
+            "description": "Perform thorough testing of the application in Arabic/RTL mode, identifying and fixing layout, alignment, and usability issues.",
+            "dependencies": [
+              2,
+              3,
+              4
+            ],
+            "details": "Use both manual and automated testing. Validate date, time, and number localization. Address any flipped icons, misaligned elements, or broken layouts.",
+            "status": "pending"
+          },
+          {
+            "id": 6,
+            "title": "Implement and Test Language Detection",
+            "description": "Add logic to detect user language preferences and automatically switch to Arabic/RTL layout when appropriate.",
+            "dependencies": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            "details": "Support browser language detection and user profile settings. Ensure seamless switching between LTR and RTL languages.",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": 22,
+        "title": "Implement Cloud Storage for User Assets",
+        "description": "Set up cloud storage for user-uploaded assets such as logos and background images, with processing and optimization.",
+        "details": "1. Set up cloud storage service (AWS S3 or similar)\n2. Implement file upload API with validation\n3. Add image processing for optimization (resize, compress)\n4. Create WebP conversion for supported browsers\n5. Implement fallback formats (JPG/PNG) for older browsers\n6. Add secure URL generation for accessing assets\n7. Implement CDN integration for faster asset delivery\n8. Create cleanup mechanism for unused assets\n9. Add logging for all storage-related actions\n10. Implement error handling for upload failures",
+        "testStrategy": "Test file uploads with various file types and sizes. Verify image processing works correctly. Test CDN delivery. Verify secure URLs work as expected.",
+        "priority": "medium",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Cloud Storage Service Setup",
+            "description": "Provision and configure the cloud storage service, including selecting storage type (object, file, or block), setting up buckets or containers, and defining access permissions.",
+            "dependencies": [],
+            "details": "Choose the appropriate cloud provider and storage class, configure storage resources, and establish initial IAM policies for secure access.",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "Upload API Implementation",
+            "description": "Develop and deploy an API endpoint to handle file uploads to the cloud storage, ensuring proper authentication and validation.",
+            "dependencies": [
+              1
+            ],
+            "details": "Implement RESTful or GraphQL API for file uploads, integrate with cloud SDKs, and enforce file size/type restrictions as needed.",
+            "status": "pending"
+          },
+          {
+            "id": 3,
+            "title": "Image Processing Integration",
+            "description": "Integrate image processing workflows (e.g., resizing, format conversion, optimization) triggered after upload.",
+            "dependencies": [
+              2
+            ],
+            "details": "Set up serverless functions or background jobs to process images upon upload, and store processed results in designated storage locations.",
+            "status": "pending"
+          },
+          {
+            "id": 4,
+            "title": "CDN Integration",
+            "description": "Configure a Content Delivery Network (CDN) to serve files from cloud storage for improved performance and global reach.",
+            "dependencies": [
+              1,
+              3
+            ],
+            "details": "Connect storage buckets to the CDN, set up caching rules, and ensure processed images are distributed via the CDN endpoints.",
+            "status": "pending"
+          },
+          {
+            "id": 5,
+            "title": "Secure URL Generation",
+            "description": "Implement secure, time-limited URLs for accessing files, ensuring only authorized users can retrieve content.",
+            "dependencies": [
+              4
+            ],
+            "details": "Use signed URLs or token-based access mechanisms to restrict file access, and integrate with authentication systems as needed.",
+            "status": "pending"
+          },
+          {
+            "id": 6,
+            "title": "Storage Cleanup and Lifecycle Management",
+            "description": "Set up automated cleanup policies and lifecycle rules to manage storage costs and remove unused or expired files.",
+            "dependencies": [
+              1,
+              3,
+              5
+            ],
+            "details": "Configure storage lifecycle policies, schedule cleanup jobs, and monitor storage usage to ensure compliance and cost efficiency.",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": 23,
+        "title": "Implement Basic Analytics and Reporting",
+        "description": "Develop basic analytics and reporting features for organizers to track event registration and check-in statistics.",
+        "details": "1. Create data aggregation services for event statistics\n2. Implement API for retrieving registration statistics\n3. Create API for check-in statistics\n4. Implement dashboard widgets for key metrics\n5. Add basic charts and graphs for visual representation\n6. Create export functionality for reports (CSV, PDF)\n7. Implement real-time updates for check-in statistics\n8. Add filtering options for different time periods\n9. Create scheduled report generation\n10. Implement email delivery for reports",
+        "testStrategy": "Test analytics with various event configurations and data volumes. Verify statistics calculations are correct. Test export functionality with different formats.",
+        "priority": "low",
+        "dependencies": [
+          11,
+          17
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement Data Aggregation Layer",
+            "description": "Develop backend services to aggregate and process raw data from various sources for analytics and reporting.",
+            "dependencies": [],
+            "details": "Design and implement data pipelines to collect, clean, and summarize data needed for analytics, ensuring scalability and accuracy.",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "Integrate Registration/Check-in APIs",
+            "description": "Develop and expose APIs for registration and check-in events to feed analytics and reporting modules.",
+            "dependencies": [
+              1
+            ],
+            "details": "Create RESTful endpoints for capturing registration and check-in data, ensuring proper validation and integration with the aggregation layer.",
+            "status": "pending"
+          },
+          {
+            "id": 3,
+            "title": "Develop Dashboard Widgets",
+            "description": "Design and implement interactive dashboard widgets for visualizing key analytics metrics.",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "Build reusable UI components (charts, tables, filters) that display aggregated data and support drill-downs and filtering.",
+            "status": "pending"
+          },
+          {
+            "id": 4,
+            "title": "Implement Export Functionality",
+            "description": "Enable users to export analytics and reports in various formats (CSV, PDF, Excel).",
+            "dependencies": [
+              3
+            ],
+            "details": "Develop backend and frontend features to allow exporting of dashboard data and reports, supporting user-selected formats and filters.",
+            "status": "pending"
+          },
+          {
+            "id": 5,
+            "title": "Enable Real-Time Updates",
+            "description": "Implement mechanisms for real-time data updates in analytics dashboards and reports.",
+            "dependencies": [
+              3
+            ],
+            "details": "Use technologies like WebSockets or server-sent events to push live data updates to dashboard widgets, ensuring users see the latest information.",
+            "status": "pending"
+          },
+          {
+            "id": 6,
+            "title": "Schedule and Automate Report Generation",
+            "description": "Develop functionality for scheduling and automatically delivering periodic reports to stakeholders.",
+            "dependencies": [
+              4,
+              5
+            ],
+            "details": "Allow users to configure report schedules (daily, weekly, monthly), select recipients, and automate report generation and delivery via email or other channels.",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": 24,
+        "title": "Implement System Monitoring and Logging",
+        "description": "Set up comprehensive monitoring and logging for the entire system to track performance, errors, and user actions.",
+        "details": "1. Set up centralized logging system\n2. Implement request logging middleware\n3. Add error tracking and reporting\n4. Create performance monitoring for API endpoints\n5. Implement database query performance tracking\n6. Add user action logging for audit purposes\n7. Create alerting system for critical errors\n8. Implement log rotation and retention policies\n9. Add dashboard for monitoring system health\n10. Create regular performance reports",
+        "testStrategy": "Verify logs are correctly captured and stored. Test error tracking with simulated errors. Verify performance monitoring accurately measures response times.",
+        "priority": "medium",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Set Up Centralized Logging Infrastructure",
+            "description": "Deploy and configure a centralized logging system (e.g., ELK/EFK stack or cloud-based solution) to aggregate logs from all services and environments.",
+            "dependencies": [],
+            "details": "Install and configure log collectors/agents on all relevant servers and services. Ensure logs are transported to a central backend for storage and analysis. Configure log capture, transformation, and transport as needed.",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "Implement Error Tracking",
+            "description": "Integrate error tracking tools or frameworks to capture, categorize, and report application errors across all services.",
+            "dependencies": [
+              1
+            ],
+            "details": "Configure error logging to include relevant metadata (e.g., trace IDs, service names) and ensure errors are forwarded to the centralized logging system for correlation and analysis.",
+            "status": "pending"
+          },
+          {
+            "id": 3,
+            "title": "Configure Performance Monitoring",
+            "description": "Set up performance monitoring to track key metrics such as response times, throughput, and resource utilization.",
+            "dependencies": [
+              1
+            ],
+            "details": "Integrate performance monitoring tools or agents with the centralized logging system. Ensure metrics are collected, stored, and visualized alongside log data for comprehensive observability.",
+            "status": "pending"
+          },
+          {
+            "id": 4,
+            "title": "Set Up Alerting Mechanisms",
+            "description": "Define and implement alerting rules based on log patterns, error rates, and performance thresholds.",
+            "dependencies": [
+              2,
+              3
+            ],
+            "details": "Configure the centralized logging and monitoring system to trigger real-time alerts (e.g., email, Slack, PagerDuty) for critical events or anomalies, enabling rapid response to incidents.",
+            "status": "pending"
+          },
+          {
+            "id": 5,
+            "title": "Implement Log Rotation and Retention Policies",
+            "description": "Establish log rotation schedules and retention policies to manage log storage, optimize costs, and comply with organizational requirements.",
+            "dependencies": [
+              1
+            ],
+            "details": "Configure log storage buckets, retention periods, and automated log deletion or archiving. Ensure policies are tailored to log type, application, or team as needed.",
+            "status": "pending"
+          },
+          {
+            "id": 6,
+            "title": "Create and Configure Dashboards",
+            "description": "Design and set up dashboards for visualizing logs, errors, and performance metrics to facilitate monitoring and troubleshooting.",
+            "dependencies": [
+              1,
+              2,
+              3
+            ],
+            "details": "Use tools like Kibana or Grafana to build dashboards that provide actionable insights and support collaboration among team members.",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": 25,
+        "title": "Perform Security Audit and Hardening",
+        "description": "Conduct a comprehensive security audit of the system and implement necessary hardening measures.",
+        "details": "1. Perform security audit of authentication system\n2. Implement CSRF protection\n3. Add rate limiting for sensitive endpoints\n4. Conduct SQL injection vulnerability testing\n5. Implement XSS protection\n6. Add Content Security Policy (CSP)\n7. Perform penetration testing\n8. Implement secure headers\n9. Add data encryption for sensitive information\n10. Create security incident response plan",
+        "testStrategy": "Conduct penetration testing with various attack vectors. Verify all security measures are effective. Test rate limiting with high-volume requests. Verify data encryption works correctly.",
+        "priority": "high",
+        "dependencies": [
+          3,
+          4,
+          11,
+          17,
+          22
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Authentication Mechanisms Review",
+            "description": "Assess and verify the security of all authentication mechanisms, including password policies, multi-factor authentication, and session management.",
+            "dependencies": [],
+            "details": "Review password complexity requirements, check for implementation of multi-factor authentication, and evaluate session timeout and invalidation processes.",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "CSRF, XSS, and SQL Injection Protection Assessment",
+            "description": "Evaluate application defenses against Cross-Site Request Forgery (CSRF), Cross-Site Scripting (XSS), and SQL Injection (SQLi) vulnerabilities.",
+            "dependencies": [],
+            "details": "Review input validation, output encoding, use of prepared statements, and presence of CSRF tokens in forms and APIs.",
+            "status": "pending"
+          },
+          {
+            "id": 3,
+            "title": "Rate Limiting and Abuse Prevention",
+            "description": "Analyze and test the implementation of rate limiting and abuse prevention mechanisms across APIs and user interfaces.",
+            "dependencies": [],
+            "details": "Check for throttling on authentication endpoints, resource-intensive operations, and ensure proper error handling for rate-limited requests.",
+            "status": "pending"
+          },
+          {
+            "id": 4,
+            "title": "Secure Headers Configuration",
+            "description": "Review and configure HTTP security headers to mitigate common web vulnerabilities.",
+            "dependencies": [],
+            "details": "Verify presence and correctness of headers such as Content-Security-Policy, X-Frame-Options, X-XSS-Protection, Strict-Transport-Security, and others.",
+            "status": "pending"
+          },
+          {
+            "id": 5,
+            "title": "Encryption Review",
+            "description": "Assess encryption practices for data in transit and at rest, ensuring use of strong, up-to-date cryptographic protocols.",
+            "dependencies": [],
+            "details": "Check TLS versions, cipher suites, key management, and encryption of sensitive data in databases and backups.",
+            "status": "pending"
+          },
+          {
+            "id": 6,
+            "title": "Penetration Testing",
+            "description": "Conduct penetration testing to identify and exploit potential vulnerabilities in the system.",
+            "dependencies": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            "details": "Perform both automated and manual testing targeting authentication, input validation, rate limiting, headers, and encryption controls.",
+            "status": "pending"
+          },
+          {
+            "id": 7,
+            "title": "Incident Response Planning",
+            "description": "Develop and document an incident response plan to address potential security breaches and vulnerabilities.",
+            "dependencies": [],
+            "details": "Define roles, communication protocols, escalation procedures, and post-incident review processes.",
+            "status": "pending"
+          },
+          {
+            "id": 8,
+            "title": "Audit Reporting and Remediation Planning",
+            "description": "Compile findings from all assessments and tests, and create a prioritized remediation plan.",
+            "dependencies": [],
+            "details": "Document vulnerabilities, assign risk levels, recommend mitigation steps, and establish timelines for remediation.",
+            "status": "pending"
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "created": "2025-06-18T19:03:31.364Z",
+      "updated": "2025-06-18T19:03:31.364Z",
+      "description": "Tasks for master context"
+    }
+  }
+}
