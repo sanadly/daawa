@@ -9,7 +9,7 @@
         "testStrategy": "Verify that the repository structure is correct, all dependencies install correctly, and the CI/CD pipeline runs successfully. Test that the development environment can be started and accessed.",
         "priority": "high",
         "dependencies": [],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -17,7 +17,7 @@
             "description": "Define and implement a logical monorepo folder hierarchy that separates the Next.js frontend, NestJS backend, and any shared libraries or utilities, reflecting team boundaries and project needs.",
             "dependencies": [],
             "details": "Establish top-level directories for each major service (e.g., /frontend, /backend, /shared), document the structure, and ensure it supports scalability and maintainability.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 2,
@@ -27,7 +27,7 @@
               1
             ],
             "details": "Create the frontend app in its designated folder, set up initial pages, and integrate with shared code if applicable.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 3,
@@ -37,7 +37,7 @@
               1
             ],
             "details": "Create the backend app in its designated folder, set up initial controllers and services, and prepare for API integration.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 4,
@@ -48,7 +48,7 @@
               3
             ],
             "details": "Set up ESLint, Prettier, and any language-specific linters, and ensure they are enforced via pre-commit hooks or CI.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 5,
@@ -58,7 +58,7 @@
               4
             ],
             "details": "Use a CI/CD tool (e.g., GitHub Actions, CircleCI) to automate builds, tests, and deployments, leveraging monorepo best practices like selective builds and trunk-based development.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 6,
@@ -69,7 +69,7 @@
               3
             ],
             "details": "Create .env files, set up environment variable management, and provide setup scripts or documentation for onboarding.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 7,
@@ -77,7 +77,7 @@
             "description": "Implement a secure secrets management solution for storing and accessing sensitive configuration values in all environments.",
             "dependencies": [],
             "details": "Integrate with a secrets manager (e.g., Vault, AWS Secrets Manager) or use encrypted environment files, and update CI/CD to access secrets securely.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 8,
@@ -88,7 +88,7 @@
               7
             ],
             "details": "Integrate with logging (e.g., Winston, LogRocket) and monitoring tools (e.g., Prometheus, Sentry), and ensure logs are accessible and actionable.",
-            "status": "pending"
+            "status": "done"
           }
         ]
       },
@@ -102,7 +102,7 @@
         "dependencies": [
           1
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -110,7 +110,7 @@
             "description": "Design the relational database schema by identifying entities, defining tables, specifying fields, and outlining relationships based on business requirements. Ensure normalization, clear naming conventions, and appropriate data types.",
             "dependencies": [],
             "details": "Use ERD tools to visualize entities and relationships. Document table structures and field purposes. Apply normalization principles to minimize redundancy and improve data integrity.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 2,
@@ -120,7 +120,7 @@
               1
             ],
             "details": "Implement migration files for table creation, field definitions, and initial schema structure. Use a migration tool compatible with the chosen database.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 3,
@@ -130,7 +130,7 @@
               2
             ],
             "details": "Add primary keys, foreign keys, unique constraints, and relevant indexes to the migration scripts. Ensure constraints prevent invalid data and support efficient lookups.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 4,
@@ -140,7 +140,7 @@
               3
             ],
             "details": "Explicitly define foreign key relationships in the schema and migrations. Document relationship cardinality and ensure referential integrity.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 5,
@@ -150,7 +150,7 @@
               4
             ],
             "details": "Create representative sample data for each table, ensuring relationships are respected. Use the seed data to validate schema correctness and support early development.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 6,
@@ -160,7 +160,7 @@
               5
             ],
             "details": "Run benchmark queries, analyze execution plans, and adjust indexes or schema design as needed to achieve optimal performance.",
-            "status": "pending"
+            "status": "done"
           }
         ]
       },
@@ -168,87 +168,96 @@
         "id": 3,
         "title": "Implement User Authentication System",
         "description": "Develop the authentication system for Organizer, Admin, and Staff roles with registration, login, and account management functionality.",
-        "details": "1. Implement user registration API with email verification\n2. Implement login API with JWT token generation\n3. Implement password reset functionality\n4. Create middleware for role-based access control (Organizer, Admin, Staff)\n5. Implement account management APIs (update profile, change password)\n6. Set up secure password hashing using bcrypt\n7. Implement token refresh mechanism\n8. Create frontend components for login, registration, and account management\n9. Implement client-side form validation\n10. Add language preference selection during registration",
+        "details": "✅ COMPLETED - Full authentication system implemented with:\n1. ✅ User registration API with email verification\n2. ✅ Login API with JWT token generation\n3. ✅ Password reset functionality\n4. ✅ Middleware for role-based access control (Organizer, Admin, Staff)\n5. ✅ Account management APIs (update profile, change password)\n6. ✅ Secure password hashing using bcrypt/Argon2\n7. ✅ Token refresh mechanism\n8. ✅ Frontend components for login, registration, and account management\n9. ✅ Client-side form validation\n10. ✅ Language preference selection during registration\n11. ✅ Advanced security features (password history, lockout protection)\n12. ✅ Comprehensive permission system\n13. ✅ Activity monitoring and audit trails",
         "testStrategy": "Write unit tests for authentication APIs. Test registration, login, and password reset flows. Verify role-based access control works correctly. Test frontend components with different user roles.",
         "priority": "high",
         "dependencies": [
           2
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
             "title": "User Registration Implementation",
             "description": "Develop the backend and frontend flows for new user registration, including data validation, storing user details, and sending confirmation emails if required.",
-            "dependencies": [],
             "details": "Ensure secure handling of user input, prevent duplicate accounts, and integrate with the password hashing subtask for storing credentials securely.",
-            "status": "pending"
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 3
           },
           {
             "id": 2,
             "title": "User Login Flow",
             "description": "Create the login endpoint and frontend logic to authenticate users using their credentials, issuing tokens or session cookies upon successful authentication.",
+            "details": "Integrate with password hashing for credential verification and token management for session handling.",
+            "status": "done",
             "dependencies": [
               1
             ],
-            "details": "Integrate with password hashing for credential verification and token management for session handling.",
-            "status": "pending"
+            "parentTaskId": 3
           },
           {
             "id": 3,
             "title": "Password Reset Functionality",
             "description": "Implement secure password reset mechanisms, including request, token generation, email delivery, and password update flows.",
+            "details": "Ensure tokens are securely generated, expire after use, and integrate with password hashing for new password storage.",
+            "status": "done",
             "dependencies": [
               1
             ],
-            "details": "Ensure tokens are securely generated, expire after use, and integrate with password hashing for new password storage.",
-            "status": "pending"
+            "parentTaskId": 3
           },
           {
             "id": 4,
             "title": "Role-Based Access Control (RBAC)",
             "description": "Design and implement a system for assigning roles to users and enforcing access permissions based on roles throughout the application.",
+            "details": "Integrate with token management to embed role information and with account management for role assignment and updates.",
+            "status": "done",
             "dependencies": [
               1
             ],
-            "details": "Integrate with token management to embed role information and with account management for role assignment and updates.",
-            "status": "pending"
+            "parentTaskId": 3
           },
           {
             "id": 5,
             "title": "Account Management Features",
             "description": "Develop user account management capabilities, such as profile updates, account deactivation, and viewing account activity.",
+            "details": "Ensure secure update flows and integrate with RBAC for permission checks on sensitive actions.",
+            "status": "done",
             "dependencies": [
               1
             ],
-            "details": "Ensure secure update flows and integrate with RBAC for permission checks on sensitive actions.",
-            "status": "pending"
+            "parentTaskId": 3
           },
           {
             "id": 6,
             "title": "Password Hashing and Security",
             "description": "Implement secure password hashing using industry best practices (e.g., bcrypt, Argon2) for all password storage and verification operations.",
+            "details": "Ensure all password-related flows (registration, login, reset) use the hashing mechanism and regularly review for vulnerabilities.",
+            "status": "done",
             "dependencies": [
               1
             ],
-            "details": "Ensure all password-related flows (registration, login, reset) use the hashing mechanism and regularly review for vulnerabilities.",
-            "status": "pending"
+            "parentTaskId": 3
           },
           {
             "id": 7,
             "title": "Token Management System",
             "description": "Design and implement secure token issuance, validation, refresh, and revocation mechanisms for session and authentication management.",
+            "details": "Support JWT or similar tokens, embed user and role information, and ensure secure storage and transmission.",
+            "status": "done",
             "dependencies": [
               2,
               4
             ],
-            "details": "Support JWT or similar tokens, embed user and role information, and ensure secure storage and transmission.",
-            "status": "pending"
+            "parentTaskId": 3
           },
           {
             "id": 8,
             "title": "Frontend Integration",
             "description": "Integrate all authentication flows (registration, login, password reset, account management) into the frontend, ensuring secure communication and user experience.",
+            "details": "Handle token storage, session management, and display appropriate UI based on authentication and authorization state.",
+            "status": "done",
             "dependencies": [
               1,
               2,
@@ -257,8 +266,7 @@
               5,
               7
             ],
-            "details": "Handle token storage, session management, and display appropriate UI based on authentication and authorization state.",
-            "status": "pending"
+            "parentTaskId": 3
           }
         ]
       },
@@ -266,14 +274,14 @@
         "id": 4,
         "title": "Implement Core Event Management APIs",
         "description": "Develop the backend APIs for creating and managing events in Draft state, including event details, tier selection, and configuration storage.",
-        "details": "1. Implement API for creating a new event in Draft state\n2. Implement API for updating event details (name, date, venue, etc.)\n3. Implement API for selecting a tier and updating capacity limit\n4. Implement API for storing form configuration (fields, default +N)\n5. Implement API for storing design configuration (colors, logo, background)\n6. Implement API for submitting an event for activation (changing status to 'Pending')\n7. Implement API for retrieving event details\n8. Implement validation for all event-related data\n9. Create database queries and repositories for event operations\n10. Implement event status transition logic",
+        "details": "✅ COMPLETED - Full event management API implemented with:\n1. ✅ POST /events - Create new event in Draft state\n2. ✅ PATCH /events/:id - Update event details (name, date, venue)\n3. ✅ POST /events/:id/tiers - Add/manage tiers and capacity\n4. ✅ Form configuration storage with validation\n5. ✅ Design configuration storage (colors, logo, background)\n6. ✅ POST /events/:id/submit-for-activation - Status transitions\n7. ✅ GET /events/:id - Comprehensive event details retrieval\n8. ✅ Complete validation for all operations\n9. ✅ TypeORM repositories and optimized queries\n10. ✅ Event status transition logic with business rules",
         "testStrategy": "Write unit tests for all event management APIs. Test event creation, updating, and status transitions. Verify validation works correctly. Test with various event configurations.",
         "priority": "high",
         "dependencies": [
           2,
           3
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -281,7 +289,7 @@
             "description": "Define and implement the API endpoint for creating new events, including required fields, request/response formats, and error handling.",
             "dependencies": [],
             "details": "Specify HTTP method (POST), endpoint naming, payload structure, and initial validation rules for event creation.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 2,
@@ -291,7 +299,7 @@
               1
             ],
             "details": "Use appropriate HTTP methods (PUT/PATCH), ensure idempotency, and handle update-specific validation.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 3,
@@ -301,7 +309,7 @@
               1
             ],
             "details": "Define tier models, endpoints for tier selection, and ensure integration with event creation and update flows.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 4,
@@ -312,7 +320,7 @@
               3
             ],
             "details": "Choose appropriate storage solutions, define data models, and ensure secure and efficient data access.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 5,
@@ -323,7 +331,7 @@
               4
             ],
             "details": "Define allowed status states, transition rules, and enforce business logic for valid transitions.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 6,
@@ -336,7 +344,7 @@
               5
             ],
             "details": "Ensure all API inputs are validated according to business rules and provide meaningful error responses.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 7,
@@ -347,7 +355,7 @@
               6
             ],
             "details": "Implement data access layers, optimize queries for performance, and ensure consistency with API contracts.",
-            "status": "pending"
+            "status": "done"
           }
         ]
       },
@@ -355,14 +363,14 @@
         "id": 5,
         "title": "Develop Organizer Portal - Draft Event Creation UI",
         "description": "Create the frontend components for organizers to create and configure events in Draft state, including event details, tier selection, form configuration, and card design.",
-        "details": "1. Create dashboard component with event list and 'Create New Event' button\n2. Implement multi-step event creation flow with the following steps:\n   - Event details (name, date, venue, type)\n   - Tier selection with capacity and pricing information\n   - Form configuration (define fields, set default +N)\n   - Card design (logo upload, background selection, color picker, font selection)\n3. Implement preview functionality for the card design\n4. Create 'Submit for Activation' button and confirmation dialog\n5. Implement form validation for all steps\n6. Add save draft functionality throughout the flow\n7. Implement responsive design for all components\n8. Add loading states and error handling",
+        "details": "✅ COMPLETED - Full event creation UI implemented with:\n1. ✅ Modern dashboard with event list and creation button\n2. ✅ Multi-step event creation wizard:\n   - ✅ Event details step (name, date, venue, type)\n   - ✅ Tier configuration step (pricing, capacity, settings)\n   - ✅ Form configuration step (fields, default +N)\n   - ✅ Design customization step (branding, colors, theme)\n3. ✅ Real-time card design preview\n4. ✅ Submit for activation with validation\n5. ✅ Comprehensive form validation\n6. ✅ Auto-save draft functionality\n7. ✅ Responsive mobile-first design\n8. ✅ Loading states and error handling\n9. ✅ TypeScript integration with backend DTOs\n10. ✅ Role-based access control integration",
         "testStrategy": "Test the complete event creation flow. Verify all form validations work correctly. Test responsive design on different screen sizes. Verify draft saving functionality works throughout the flow.",
         "priority": "high",
         "dependencies": [
           3,
           4
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -370,7 +378,7 @@
             "description": "Design and implement the main dashboard interface, including navigation elements for accessing the multi-step form and other dashboard features.",
             "dependencies": [],
             "details": "Establish a consistent layout, sidebar or top navigation, and clear entry points to the multi-step form. Ensure the dashboard supports future extensibility.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 2,
@@ -380,7 +388,7 @@
               1
             ],
             "details": "Map out each step, group related questions, and implement logic for progressing between steps. Integrate progress indicators and ensure data persists across steps.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 3,
@@ -390,7 +398,7 @@
               2
             ],
             "details": "Design visually distinct tier cards or selectors, handle selection state, and ensure the choice influences subsequent form steps as needed.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 4,
@@ -401,7 +409,7 @@
               3
             ],
             "details": "Ensure fields are clearly labeled, grouped logically, and dynamically rendered when necessary. Support both required and optional fields.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 5,
@@ -412,7 +420,7 @@
               4
             ],
             "details": "Apply consistent color schemes, typography, and spacing. Ensure cards are visually appealing and accessible.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 6,
@@ -423,7 +431,7 @@
               5
             ],
             "details": "Display all relevant information in a clear, organized manner. Provide edit links or navigation to previous steps for corrections.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 7,
@@ -435,7 +443,7 @@
               6
             ],
             "details": "Implement immediate field validation with clear error messages. Test and optimize the UI for mobile, tablet, and desktop, ensuring usability and accessibility.",
-            "status": "pending"
+            "status": "done"
           }
         ]
       },
@@ -443,14 +451,14 @@
         "id": 6,
         "title": "Implement Admin Portal for Event Activation",
         "description": "Develop the admin interface for reviewing pending events and activating them after payment confirmation.",
-        "details": "1. Create admin dashboard component with filters for event status\n2. Implement list view of 'Pending Approval' events with key details\n3. Create event detail view with all configured information\n4. Implement 'Mark as Paid & Activate' button and confirmation dialog\n5. Create API for changing event status to 'Active'\n6. Implement notification system to alert organizer of activation\n7. Add admin notes field for internal comments\n8. Implement basic search and filtering functionality\n9. Add pagination for event lists\n10. Create audit log for admin actions",
+        "details": "✅ COMPLETED - Full admin portal implementation with:\n\n**Frontend Implementation:**\n1. ✅ Admin dashboard (`/admin/page.tsx`) with overview metrics and role-based access\n2. ✅ Admin events list page (`/admin/events/page.tsx`) with filtering, search, and bulk actions\n3. ✅ Admin event detail view (`/admin/events/[id]/page.tsx`) with activation flow and notes functionality\n4. ✅ Complete API integration with error handling and loading states\n5. ✅ Responsive design with proper TypeScript integration\n\n**Backend Implementation:**\n1. ✅ AdminModule with complete controller and service\n2. ✅ Dashboard metrics endpoint with event statistics\n3. ✅ Event management APIs (list, detail, status updates, notes)\n4. ✅ Bulk actions support for multiple events\n5. ✅ Proper error handling and validation\n6. ✅ Database entity alignment and audit logging\n\n**Key Features Delivered:**\n- Complete admin portal for event activation\n- Dashboard with key metrics and quick actions\n- Event list with filtering, search, and pagination\n- Event detail view with activation workflow\n- Admin notes functionality with secure storage\n- Bulk operations for multiple events\n- Comprehensive error handling and user feedback\n- Role-based access control throughout\n- Professional UI with loading states and responsive design\n\nAll 8 subtasks successfully implemented and tested.",
         "testStrategy": "Test the admin portal with different event statuses. Verify activation process works correctly. Test notification system. Verify search and filtering functionality works as expected.",
         "priority": "high",
         "dependencies": [
           3,
           4
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -458,7 +466,7 @@
             "description": "Create the main dashboard interface that provides an overview of key metrics, recent activity, and quick access to major admin functions.",
             "dependencies": [],
             "details": "This includes layout planning, widget/component selection, and integration with backend data sources.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 2,
@@ -468,7 +476,7 @@
               1
             ],
             "details": "Ensure the list is performant and can handle large datasets, with clear visual cues for event states.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 3,
@@ -478,7 +486,7 @@
               2
             ],
             "details": "Include sections for metadata, participants, attachments, and related actions.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 4,
@@ -488,7 +496,7 @@
               3
             ],
             "details": "Ensure auditability and proper state management throughout the activation process.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 5,
@@ -498,7 +506,7 @@
               1
             ],
             "details": "Support both in-app and email notifications, with customizable triggers and delivery settings.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 6,
@@ -508,7 +516,7 @@
               3
             ],
             "details": "Ensure notes are securely stored and properly associated with relevant entities.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 7,
@@ -518,7 +526,7 @@
               2
             ],
             "details": "Support multi-criteria filtering, keyword search, and advanced query options for efficient data retrieval.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 8,
@@ -532,7 +540,7 @@
               7
             ],
             "details": "Ensure pagination is performant and audit logs are immutable, searchable, and exportable for compliance.",
-            "status": "pending"
+            "status": "done"
           }
         ]
       },
@@ -547,7 +555,7 @@
           4,
           6
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -555,7 +563,7 @@
             "description": "Implement the logic to update the event's status to 'active' using the status change API, ensuring transactional integrity.",
             "dependencies": [],
             "details": "This subtask involves validating the event's current state, performing the status update, and handling any transactional requirements to ensure data consistency.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 2,
@@ -565,7 +573,7 @@
               1
             ],
             "details": "Check the event's maximum allowed capacity and ensure that activation does not violate this constraint. If the capacity is exceeded, abort activation and return an appropriate error.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 3,
@@ -576,7 +584,7 @@
               2
             ],
             "details": "Upon successful activation and capacity validation, generate a secure registration link and associate it with the event record.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 4,
@@ -586,7 +594,7 @@
               3
             ],
             "details": "Notify stakeholders (e.g., event organizers, attendees, or integrated systems) via email, push, or webhook about the event's activation and provide the registration link.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 5,
@@ -596,7 +604,7 @@
               4
             ],
             "details": "Invoke custom business logic, third-party integrations, or workflows that should occur after event activation and notification.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 6,
@@ -610,7 +618,7 @@
               5
             ],
             "details": "Record status changes, capacity checks, link generation, notifications, and hook executions in a centralized logging system.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 7,
@@ -625,7 +633,7 @@
               6
             ],
             "details": "Detect errors at any stage, log them, and ensure that partial activations are rolled back to maintain system integrity. Return meaningful error responses to API clients.",
-            "status": "pending"
+            "status": "done"
           }
         ]
       },
@@ -640,7 +648,7 @@
           4,
           7
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -648,7 +656,7 @@
             "description": "Design and configure the base PDF template, including layout, fonts, placeholders, and styling for pass generation.",
             "dependencies": [],
             "details": "Establish a reusable template structure that supports both static and dynamic content, ensuring compatibility with future enhancements.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 2,
@@ -658,7 +666,7 @@
               1
             ],
             "details": "Map data fields to template placeholders and ensure accurate population of all dynamic content sections.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 3,
@@ -668,7 +676,7 @@
               2
             ],
             "details": "Select a QR code library, define encoding standards, and ensure correct placement and sizing within the template.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 4,
@@ -678,7 +686,7 @@
               1
             ],
             "details": "Adjust template and rendering logic to handle RTL scripts, including text alignment, font selection, and layout mirroring.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 5,
@@ -690,7 +698,7 @@
               4
             ],
             "details": "Profile the generation process, identify bottlenecks, and implement caching, parallelization, or other improvements as needed.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 6,
@@ -700,7 +708,7 @@
               5
             ],
             "details": "Design API contracts, handle authentication, and ensure robust error handling and logging for integration with external systems.",
-            "status": "pending"
+            "status": "done"
           }
         ]
       },
@@ -861,7 +869,7 @@
           4,
           7
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -869,7 +877,7 @@
             "description": "Define and implement the core API endpoints for managing the primary guest, including create, read, update, and delete operations.",
             "dependencies": [],
             "details": "Specify RESTful endpoints, request/response schemas, and authentication requirements for the primary guest resource.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 2,
@@ -879,7 +887,7 @@
               1
             ],
             "details": "Design data models and API endpoints to handle multiple guests per primary guest, ensuring scalability and clear relationships.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 3,
@@ -890,7 +898,7 @@
               2
             ],
             "details": "Ensure APIs support pagination, filtering, and efficient data retrieval for both individual and bulk guest operations.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 4,
@@ -902,7 +910,7 @@
               3
             ],
             "details": "Define validation rules for required fields, data types, custom constraints, and error handling strategies.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 5,
@@ -915,7 +923,7 @@
               4
             ],
             "details": "Design a schema and API mechanisms for dynamic custom fields, including validation and storage strategies.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 6,
@@ -929,7 +937,7 @@
               5
             ],
             "details": "Integrate capacity checks into guest creation and update flows, returning appropriate errors when limits are reached.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 7,
@@ -944,7 +952,7 @@
               6
             ],
             "details": "Log API requests, responses, validation errors, and capacity violations, ensuring compliance and traceability.",
-            "status": "pending"
+            "status": "done"
           }
         ]
       },
@@ -1373,7 +1381,7 @@
         "dependencies": [
           11
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -1381,7 +1389,7 @@
             "description": "Develop backend logic to validate QR codes presented at check-in, ensuring authenticity and preventing reuse or forgery.",
             "dependencies": [],
             "details": "This includes decoding QR codes, verifying their association with valid tickets or attendees, and handling invalid or duplicate codes.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 2,
@@ -1391,7 +1399,7 @@
               1
             ],
             "details": "Ensure atomicity and idempotency to prevent double check-ins and support real-time updates to the event management system.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 3,
@@ -1401,7 +1409,7 @@
               2
             ],
             "details": "Allow QR codes to encode guest counts, update check-in records for all guests, and enforce guest limits per ticket.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 4,
@@ -1412,7 +1420,7 @@
               3
             ],
             "details": "Endpoints should support queries by attendee, event, and time range, and return comprehensive check-in histories.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 5,
@@ -1423,7 +1431,7 @@
               3
             ],
             "details": "Design local storage for offline check-ins, conflict resolution strategies, and robust sync endpoints.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 6,
@@ -1436,7 +1444,7 @@
               5
             ],
             "details": "Handle edge cases such as invalid QR codes, exceeded guest limits, duplicate check-ins, and sync conflicts.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 7,
@@ -1449,7 +1457,7 @@
               6
             ],
             "details": "Logs should include timestamps, user IDs, operation types, and error details, and support export or integration with monitoring tools.",
-            "status": "pending"
+            "status": "done"
           }
         ]
       },
@@ -1463,7 +1471,7 @@
         "dependencies": [
           17
         ],
-        "status": "pending",
+        "status": "in-progress",
         "subtasks": [
           {
             "id": 1,
@@ -1471,7 +1479,7 @@
             "description": "Develop the user authentication interface and logic, including input validation, error handling, and integration with backend authentication APIs.",
             "dependencies": [],
             "details": "Ensure secure handling of credentials, provide feedback for failed logins, and maintain session state for authenticated users.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 2,
@@ -1481,7 +1489,7 @@
               1
             ],
             "details": "Integrate with device camera APIs, provide user guidance for scanning, and ensure smooth performance across devices.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 3,
@@ -1491,7 +1499,7 @@
               1
             ],
             "details": "Include input validation, search suggestions, and clear feedback for no or multiple results.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 4,
@@ -1502,7 +1510,7 @@
               3
             ],
             "details": "Ensure clear visual feedback, accessibility, and support for both QR and manual check-in flows.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 5,
@@ -1514,7 +1522,7 @@
               4
             ],
             "details": "Use service workers or similar technologies to cache assets and data, and provide user feedback about offline status and sync progress.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 6,
@@ -1528,7 +1536,34 @@
               5
             ],
             "details": "Utilize internationalization libraries, provide translations for all UI text, and test layout in both LTR and RTL languages.",
-            "status": "pending"
+            "status": "done"
+          },
+          {
+            "id": 7,
+            "title": "Implement Responsive Design",
+            "description": "Make all components in the check-in module responsive, with a mobile-first approach. Ensure the layout is optimized for various screen sizes, from small phones to tablets and desktops.",
+            "details": "",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 18
+          },
+          {
+            "id": 8,
+            "title": "Support Check-in for +N Additional Guests",
+            "description": "When a guest who is permitted to bring additional guests is checked in, provide a mechanism for the event staff to specify how many of the additional guests are present and include them in the check-in record.",
+            "details": "This will likely involve modifying the check-in result view to include a stepper or input field for the additional guest count and updating the `handleCheckin` function to pass this information to the API.",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 18
+          },
+          {
+            "id": 9,
+            "title": "Create Check-in Statistics View",
+            "description": "Create a new component to display basic check-in statistics, such as the total number of guests checked in, the check-in rate over time, and a breakdown by ticket tier. This view should be accessible to authorized staff from the main check-in interface.",
+            "details": "This will require creating a new backend endpoint to provide the statistics data and a corresponding frontend component to fetch and visualize it. The component should include simple charts or graphs for clarity.",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 18
           }
         ]
       },
@@ -2073,7 +2108,7 @@
     ],
     "metadata": {
       "created": "2025-06-18T19:03:31.364Z",
-      "updated": "2025-06-18T19:03:31.364Z",
+      "updated": "2025-07-03T12:09:48.306Z",
       "description": "Tasks for master context"
     }
   }

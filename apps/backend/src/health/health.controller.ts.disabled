@@ -1,0 +1,226 @@
+import { Controller, Get, HttpStatus, Res } from '@nestjs/common';
+import { Response } from 'express';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { createHealthStatus, HealthStatus } from '../config/monitoring.config';
+import { logger, logPerformance } from '../config/logger.config';
+
+@ApiTags('health')
+@Controller('health')
+export class HealthController {
+  
+  @Get()
+  @ApiOperation({ summary: 'Get application health status' })
+  @ApiResponse({ 
+    status: 200, 
+    description: 'Application is healthy',
+    type: Object 
+  })
+  @ApiResponse({ 
+    status: 503, 
+    description: 'Application is unhealthy' 
+  })
+  async getHealth(@Res() res: Response): Promise<void> {
+    const startTime = Date.now();
+    
+    try {
+      const health = await createHealthStatus();
+      
+      // Determine HTTP status code based on health
+      const statusCode = this.getHttpStatusFromHealth(health.status);
+      
+      // Log health check
+      logger.info('Health check performed', {
+        status: health.status,
+        uptime: health.uptime,
+        environment: health.environment,
+      });
+      
+      // Log performance
+      logPerformance('health_check', startTime, 'HealthController');
+      
+      res.status(statusCode).json(health);
+    } catch (error) {
+      logger.error('Health check failed', {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined,
+      });
+      
+      const errorHealth: HealthStatus = {
+        status: 'unhealthy',
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+        version: process.env.npm_package_version || '1.0.0',
+        environment: process.env.NODE_ENV || 'development',
+        services: {
+          database: { status: 'error', error: error.message },
+          redis: { status: 'unknown' },
+          external_apis: { status: 'unknown' },
+        },
+        metrics: {
+          memory: process.memoryUsage(),
+          cpu: 0,
+          requests_per_minute: 0,
+          errors_per_minute: 0,
+        },
+      };
+      
+      res.status(HttpStatus.SERVICE_UNAVAILABLE).json(errorHealth);
+    }
+  }
+
+  @Get('ready')
+  @ApiOperation({ summary: 'Check if application is ready to serve requests' })
+  @ApiResponse({ 
+    status: 200, 
+    description: 'Application is ready' 
+  })
+  @ApiResponse({ 
+    status: 503, 
+    description: 'Application is not ready' 
+  })
+  async getReadiness(@Res() res: Response): Promise<void> {
+    try {
+      // Perform readiness checks
+      const checks = await this.performReadinessChecks();
+      const allReady = checks.every(check => check.ready);
+      
+      const result = {
+        ready: allReady,
+        timestamp: new Date().toISOString(),
+        checks,
+      };
+      
+      const statusCode = allReady ? HttpStatus.OK : HttpStatus.SERVICE_UNAVAILABLE;
+      
+      logger.debug('Readiness check performed', result);
+      
+      res.status(statusCode).json(result);
+    } catch (error) {
+      logger.error('Readiness check failed', {
+        error: error.message,
+        stack: error.stack,
+      });
+      
+      res.status(HttpStatus.SERVICE_UNAVAILABLE).json({
+        ready: false,
+        timestamp: new Date().toISOString(),
+        error: error.message,
+      });
+    }
+  }
+
+  @Get('live')
+  @ApiOperation({ summary: 'Check if application is alive (liveness probe)' })
+  @ApiResponse({ 
+    status: 200, 
+    description: 'Application is alive' 
+  })
+  async getLiveness(@Res() res: Response): Promise<void> {
+    // Simple liveness check - if the application can respond, it's alive
+    const result = {
+      alive: true,
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      pid: process.pid,
+    };
+    
+    logger.debug('Liveness check performed', result);
+    
+    res.status(HttpStatus.OK).json(result);
+  }
+
+  @Get('metrics/summary')
+  @ApiOperation({ summary: 'Get application metrics summary' })
+  @ApiResponse({ 
+    status: 200, 
+    description: 'Metrics summary' 
+  })
+  async getMetricsSummary(@Res() res: Response): Promise<void> {
+    try {
+      const summary = {
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+        memory: process.memoryUsage(),
+        cpu: process.cpuUsage(),
+        versions: process.versions,
+        platform: {
+          arch: process.arch,
+          platform: process.platform,
+          nodeVersion: process.version,
+        },
+        environment: process.env.NODE_ENV || 'development',
+      };
+      
+      logger.debug('Metrics summary requested', summary);
+      
+      res.status(HttpStatus.OK).json(summary);
+    } catch (error) {
+      logger.error('Failed to get metrics summary', {
+        error: error.message,
+        stack: error.stack,
+      });
+      
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        error: 'Failed to get metrics summary',
+        timestamp: new Date().toISOString(),
+      });
+    }
+  }
+
+  private getHttpStatusFromHealth(status: string): number {
+    switch (status) {
+      case 'healthy':
+        return HttpStatus.OK;
+      case 'degraded':
+        return HttpStatus.OK; // Still serving requests
+      case 'unhealthy':
+        return HttpStatus.SERVICE_UNAVAILABLE;
+      default:
+        return HttpStatus.SERVICE_UNAVAILABLE;
+    }
+  }
+
+  private async performReadinessChecks(): Promise<Array<{ name: string; ready: boolean; error?: string }>> {
+    const checks = [];
+    
+    // Database readiness check
+    try {
+      // TODO: Implement actual database connection check
+      // await this.databaseService.checkConnection();
+      checks.push({ name: 'database', ready: true });
+    } catch (error) {
+      checks.push({ 
+        name: 'database', 
+        ready: false, 
+        error: error.message 
+      });
+    }
+    
+    // Redis readiness check
+    try {
+      // TODO: Implement actual Redis connection check
+      // await this.redisService.ping();
+      checks.push({ name: 'redis', ready: true });
+    } catch (error) {
+      checks.push({ 
+        name: 'redis', 
+        ready: false, 
+        error: error.message 
+      });
+    }
+    
+    // External API readiness check
+    try {
+      // TODO: Implement external API health checks
+      checks.push({ name: 'external_apis', ready: true });
+    } catch (error) {
+      checks.push({ 
+        name: 'external_apis', 
+        ready: false, 
+        error: error.message 
+      });
+    }
+    
+    return checks;
+  }
+} 

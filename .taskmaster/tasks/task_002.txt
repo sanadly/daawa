@@ -1,6 +1,6 @@
 # Task ID: 2
 # Title: Design and Implement Database Schema
-# Status: pending
+# Status: done
 # Dependencies: 1
 # Priority: high
 # Description: Design and implement the PostgreSQL database schema for the core data models including Users, Events, Tiers, Guests, and CheckinRecords.
@@ -20,37 +20,37 @@
 Write unit tests for database models and relationships. Test migrations up and down. Verify constraints work correctly. Test performance with sample data.
 
 # Subtasks:
-## 1. Relational Schema Design [pending]
+## 1. Relational Schema Design [done]
 ### Dependencies: None
 ### Description: Design the relational database schema by identifying entities, defining tables, specifying fields, and outlining relationships based on business requirements. Ensure normalization, clear naming conventions, and appropriate data types.
 ### Details:
 Use ERD tools to visualize entities and relationships. Document table structures and field purposes. Apply normalization principles to minimize redundancy and improve data integrity.
 
-## 2. Migration Setup [pending]
+## 2. Migration Setup [done]
 ### Dependencies: 2.1
 ### Description: Set up database migration scripts to create the schema in the target database system. Ensure migrations are version-controlled and repeatable.
 ### Details:
 Implement migration files for table creation, field definitions, and initial schema structure. Use a migration tool compatible with the chosen database.
 
-## 3. Index and Constraint Implementation [pending]
+## 3. Index and Constraint Implementation [done]
 ### Dependencies: 2.2
 ### Description: Define and implement indexes and constraints to enforce data integrity and optimize query performance.
 ### Details:
 Add primary keys, foreign keys, unique constraints, and relevant indexes to the migration scripts. Ensure constraints prevent invalid data and support efficient lookups.
 
-## 4. Relationship Mapping [pending]
+## 4. Relationship Mapping [done]
 ### Dependencies: 2.3
 ### Description: Map relationships between tables, such as one-to-many and many-to-many, using foreign keys and join tables where necessary.
 ### Details:
 Explicitly define foreign key relationships in the schema and migrations. Document relationship cardinality and ensure referential integrity.
 
-## 5. Seed Data Creation [pending]
+## 5. Seed Data Creation [done]
 ### Dependencies: 2.4
 ### Description: Develop scripts or files to populate the database with initial seed data for development and testing purposes.
 ### Details:
 Create representative sample data for each table, ensuring relationships are respected. Use the seed data to validate schema correctness and support early development.
 
-## 6. Performance Testing [pending]
+## 6. Performance Testing [done]
 ### Dependencies: 2.5
 ### Description: Conduct performance testing on the schema using realistic queries and data volumes to identify bottlenecks and validate index effectiveness.
 ### Details:

@@ -1,0 +1,5 @@
+# Apps Directory
+
+This directory contains the main applications:
+- frontend/ - Next.js frontend application
+- backend/ - NestJS backend application 

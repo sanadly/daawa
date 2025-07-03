@@ -1,0 +1,52 @@
+# Dependencies
+node_modules/
+.npm/
+
+# Build outputs
+dist/
+build/
+out/
+.next/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment variables
+.env
+.env.*
+
+# Temporary files
+.tmp/
+.cache/
+*.temp
+*.tmp
+
+# Generated files
+coverage/
+.nyc_output/
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Taskmaster files
+.taskmaster/
+
+# Git files
+.git/
+
+# Husky files
+.husky/
+
+# Other generated content
+*.min.js
+*.min.css
+
+# Config files that don't need linting
+*.config.js
+.eslintrc.js 

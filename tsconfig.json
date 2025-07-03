@@ -1,0 +1,51 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": ["DOM", "DOM.Iterable", "ES6"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "baseUrl": ".",
+    "paths": {
+      "@daawa/shared": ["./packages/shared/src"],
+      "@daawa/shared/*": ["./packages/shared/src/*"],
+      "@daawa/ui": ["./packages/ui/src"],
+      "@daawa/ui/*": ["./packages/ui/src/*"],
+      "@daawa/types": ["./packages/types/src"],
+      "@daawa/types/*": ["./packages/types/src/*"],
+      "@daawa/config": ["./packages/config/src"],
+      "@daawa/config/*": ["./packages/config/src/*"]
+    }
+  },
+  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"],
+  "exclude": ["node_modules", "dist", "build", ".next"],
+  "references": [
+    {
+      "path": "./apps/frontend"
+    },
+    {
+      "path": "./apps/backend"
+    },
+    {
+      "path": "./packages/shared"
+    },
+    {
+      "path": "./packages/ui"
+    },
+    {
+      "path": "./packages/types"
+    },
+    {
+      "path": "./packages/config"
+    }
+  ]
+}

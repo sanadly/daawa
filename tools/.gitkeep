@@ -1,0 +1,5 @@
+# Tools Directory
+
+This directory contains development tools and scripts:
+- scripts/ - Build and deployment scripts
+- config/ - Tool configuration files 

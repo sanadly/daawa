@@ -1,0 +1,7 @@
+# Packages Directory
+
+This directory contains shared libraries and utilities:
+- shared/ - Common utilities and helpers
+- ui/ - Shared UI components
+- types/ - TypeScript type definitions
+- config/ - Shared configuration 

@@ -11,6 +11,21 @@ node_modules/
 
 # Environment variables
 .env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Secrets (encrypted local storage)
+.secrets/
+*.enc
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # Editor directories and files
 .idea
@@ -23,3 +38,48 @@ node_modules/
 
 # OS specific
 .DS_Store
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+
+# TypeScript
+*.tsbuildinfo
+
+# Coverage reports
+coverage/
+*.lcov
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Temporary folders
+tmp/
+temp/
+
+# Database
+*.db
+*.sqlite
+
+# Cache
+.cache/
+.parcel-cache/
+
+# Turbo
+.turbo/
+
+# Nx
+.nx/
+
+# Monorepo
+.pnpm-store/
+
+# Testing
+test-results/
+playwright-report/
+playwright/.cache/
