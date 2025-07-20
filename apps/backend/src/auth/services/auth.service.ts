@@ -10,7 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { RegisterDto } from '../dtos/register.dto';
 import { JwtService } from './jwt.service';
-import { User, UserRole } from '../../database/entities/user.entity';
+import { User, UserRole, AccountType } from '../../database/entities/user.entity';
 import { PasswordService } from './password.service';
 import { ConfigService } from '@nestjs/config';
 import { ROLE_PERMISSIONS } from '../constants/permissions';
@@ -53,11 +53,28 @@ export class AuthService {
   }
 
   async register(registerDto: RegisterDto): Promise<AuthResponse> {
-    const { email, password, name, phone, role, preferred_language } = registerDto;
+    const { 
+      email, 
+      password, 
+      name, 
+      phone, 
+      role, 
+      preferred_language,
+      account_type,
+      company_name,
+      company_registration_number,
+      company_website,
+      company_address,
+      job_title,
+      company_location,
+      company_description,
+      company_events_per_month,
+      company_staff_needed,
+    } = registerDto;
     
     if (await this.usersService.existsByEmail(email)) {
       throw new ConflictException('User with this email already exists');
-      }
+    }
 
     const hashedPassword = await this.passwordService.hashPassword(password);
     const user = this.userRepository.create({
@@ -67,17 +84,26 @@ export class AuthService {
       phone,
       role: role || UserRole.STAFF,
       preferred_language: preferred_language || 'en',
+      account_type: account_type || AccountType.INDIVIDUAL,
+      company_name,
+      company_registration_number,
+      company_website,
+      company_address,
+      job_title,
+      company_location,
+      company_description,
+      company_events_per_month,
+      company_staff_needed,
       is_active: true,
     });
     const savedUser = await this.userRepository.save(user);
 
-    const permissions = ROLE_PERMISSIONS[savedUser.role] || [];
-    const tokens = await this.jwtService.generateTokens(savedUser, permissions);
+    const tokens = await this.jwtService.generateTokens(savedUser);
 
-      return {
+    return {
       user: this.getPublicUser(savedUser),
-        tokens,
-      };
+      tokens,
+    };
   }
 
   async login(loginDto: LoginDto): Promise<AuthResponse> {
@@ -91,8 +117,7 @@ export class AuthService {
     user.last_login_at = new Date();
     await this.userRepository.save(user);
 
-    const permissions = ROLE_PERMISSIONS[user.role] || [];
-    const tokens = await this.jwtService.generateTokens(user, permissions);
+    const tokens = await this.jwtService.generateTokens(user);
 
     return {
       user: this.getPublicUser(user),
@@ -108,8 +133,7 @@ export class AuthService {
         throw new UnauthorizedException('Invalid refresh token');
       }
 
-      const permissions = ROLE_PERMISSIONS[user.role] || [];
-      const tokens = await this.jwtService.generateTokens(user, permissions);
+      const tokens = await this.jwtService.generateTokens(user);
 
       return {
         user: this.getPublicUser(user),

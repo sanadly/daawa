@@ -1,8 +1,8 @@
-import { Injectable, NotFoundException, BadRequestException, ForbiddenException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, FindOptionsWhere } from 'typeorm';
-import { Event, EventStatus } from '../database/entities/event.entity';
-import { Tier } from '../database/entities/tier.entity';
+import { Repository } from 'typeorm';
+import { Event, EventStatus, PlatformPaymentStatus } from '../database/entities/event.entity';
+import { Tier, TierType } from '../database/entities/tier.entity';
 import { User } from '../database/entities/user.entity';
 import { CreateEventDto } from './dtos/create-event.dto';
 import { UpdateEventDto } from './dtos/update-event.dto';
@@ -19,83 +19,56 @@ export class EventsService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async createEvent(organizerId: string, createEventDto: CreateEventDto): Promise<Event> {
-    // Verify organizer exists
+  async create(createEventDto: CreateEventDto, organizerId: string): Promise<Event> {
     const organizer = await this.userRepository.findOne({
-      where: { id: organizerId }
+      where: { id: organizerId },
     });
-    
+
     if (!organizer) {
       throw new NotFoundException('Organizer not found');
     }
 
-    // Validate dates
-    const startDate = new Date(createEventDto.start_datetime);
-    const endDate = new Date(createEventDto.end_datetime);
-    
-    if (startDate >= endDate) {
-      throw new BadRequestException('End date must be after start date');
-    }
-
-    if (startDate <= new Date()) {
-      throw new BadRequestException('Start date must be in the future');
-    }
-
-    // Validate check-in dates if provided
-    if (createEventDto.check_in_starts_at && createEventDto.check_in_ends_at) {
-      const checkInStart = new Date(createEventDto.check_in_starts_at);
-      const checkInEnd = new Date(createEventDto.check_in_ends_at);
-      
-      if (checkInStart >= checkInEnd) {
-        throw new BadRequestException('Check-in end time must be after check-in start time');
-      }
-    }
+    // Calculate platform fee (you can implement your own logic here)
+    const platformFee = this.calculatePlatformFee(createEventDto);
 
     const event = this.eventRepository.create({
       ...createEventDto,
       organizer_id: organizerId,
+      platform_fee: platformFee,
+      platform_payment_status: PlatformPaymentStatus.PENDING,
       status: EventStatus.DRAFT,
-      start_datetime: startDate,
-      end_datetime: endDate,
-      check_in_starts_at: createEventDto.check_in_starts_at ? new Date(createEventDto.check_in_starts_at) : null,
-      check_in_ends_at: createEventDto.check_in_ends_at ? new Date(createEventDto.check_in_ends_at) : null,
-      timezone: createEventDto.timezone || 'UTC',
-      primary_language: createEventDto.primary_language || 'en',
-      default_plus_n: createEventDto.default_plus_n || 0,
-      check_in_enabled: createEventDto.check_in_enabled ?? true,
+      start_datetime: new Date(createEventDto.start_datetime),
+      end_datetime: new Date(createEventDto.end_datetime),
+      check_in_starts_at: createEventDto.check_in_starts_at 
+        ? new Date(createEventDto.check_in_starts_at) 
+        : null,
+      check_in_ends_at: createEventDto.check_in_ends_at 
+        ? new Date(createEventDto.check_in_ends_at) 
+        : null,
     });
 
-    return await this.eventRepository.save(event);
+    const savedEvent = await this.eventRepository.save(event);
+
+    // Create a default free tier if none specified
+    if (!createEventDto.metadata?.skip_default_tier) {
+      await this.createDefaultTier(savedEvent.id);
+    }
+
+    return this.findOne(savedEvent.id);
   }
 
-  async findAll(organizerId?: string, status?: EventStatus): Promise<Event[]> {
-    const where: FindOptionsWhere<Event> = {};
-    
-    if (organizerId) {
-      where.organizer_id = organizerId;
-    }
-    
-    if (status) {
-      where.status = status;
-    }
-
-    return await this.eventRepository.find({
-      where,
-      relations: ['organizer', 'default_tier', 'tiers'],
+  async findAll(userId: string): Promise<Event[]> {
+    return this.eventRepository.find({
+      where: { organizer_id: userId },
+      relations: ['tiers', 'guests'],
       order: { created_at: 'DESC' },
     });
   }
 
-  async findOne(id: string, organizerId?: string): Promise<Event> {
-    const where: FindOptionsWhere<Event> = { id };
-    
-    if (organizerId) {
-      where.organizer_id = organizerId;
-    }
-
+  async findOne(id: string): Promise<Event> {
     const event = await this.eventRepository.findOne({
-      where,
-      relations: ['organizer', 'default_tier', 'tiers'],
+      where: { id },
+      relations: ['organizer', 'tiers', 'guests'],
     });
 
     if (!event) {
@@ -105,156 +78,220 @@ export class EventsService {
     return event;
   }
 
-  async updateEvent(id: string, organizerId: string, updateEventDto: UpdateEventDto): Promise<Event> {
-    const event = await this.findOne(id, organizerId);
+  async update(id: string, updateEventDto: UpdateEventDto, userId: string): Promise<Event> {
+    const event = await this.findOne(id);
 
-    // Validate date changes if provided
-    if (updateEventDto.start_datetime || updateEventDto.end_datetime) {
-      const startDate = updateEventDto.start_datetime ? new Date(updateEventDto.start_datetime) : event.start_datetime;
-      const endDate = updateEventDto.end_datetime ? new Date(updateEventDto.end_datetime) : event.end_datetime;
-      
-      if (startDate >= endDate) {
-        throw new BadRequestException('End date must be after start date');
-      }
+    if (event.organizer_id !== userId) {
+      throw new ForbiddenException('You can only update your own events');
     }
 
-    // Validate status transitions
-    if (updateEventDto.status && updateEventDto.status !== event.status) {
-      this.validateStatusTransition(event.status, updateEventDto.status);
+    // Prevent certain updates based on status
+    if (event.status === EventStatus.COMPLETED || event.status === EventStatus.CANCELLED) {
+      throw new BadRequestException('Cannot update completed or cancelled events');
     }
 
-    // Prepare update data
-    const updateData: Partial<Event> = {};
-    
-    // Copy simple fields
-    if (updateEventDto.name !== undefined) updateData.name = updateEventDto.name;
-    if (updateEventDto.description !== undefined) updateData.description = updateEventDto.description;
-    if (updateEventDto.venue_name !== undefined) updateData.venue_name = updateEventDto.venue_name;
-    if (updateEventDto.venue_address !== undefined) updateData.venue_address = updateEventDto.venue_address;
-    if (updateEventDto.timezone !== undefined) updateData.timezone = updateEventDto.timezone;
-    if (updateEventDto.primary_language !== undefined) updateData.primary_language = updateEventDto.primary_language;
-    if (updateEventDto.default_plus_n !== undefined) updateData.default_plus_n = updateEventDto.default_plus_n;
-    if (updateEventDto.capacity_limit !== undefined) updateData.capacity_limit = updateEventDto.capacity_limit;
-    if (updateEventDto.design_config !== undefined) updateData.design_config = updateEventDto.design_config;
-    if (updateEventDto.form_config !== undefined) updateData.form_config = updateEventDto.form_config;
-    if (updateEventDto.event_details !== undefined) updateData.event_details = updateEventDto.event_details;
-    if (updateEventDto.check_in_enabled !== undefined) updateData.check_in_enabled = updateEventDto.check_in_enabled;
-    if (updateEventDto.status !== undefined) updateData.status = updateEventDto.status;
-    
-    // Handle date conversions
+    // Handle datetime updates
+    const updateData: any = { ...updateEventDto };
     if (updateEventDto.start_datetime) {
       updateData.start_datetime = new Date(updateEventDto.start_datetime);
     }
-    
     if (updateEventDto.end_datetime) {
       updateData.end_datetime = new Date(updateEventDto.end_datetime);
     }
-    
     if (updateEventDto.check_in_starts_at) {
       updateData.check_in_starts_at = new Date(updateEventDto.check_in_starts_at);
     }
-    
     if (updateEventDto.check_in_ends_at) {
       updateData.check_in_ends_at = new Date(updateEventDto.check_in_ends_at);
     }
 
     await this.eventRepository.update(id, updateData);
-    return await this.findOne(id, organizerId);
+    return this.findOne(id);
   }
 
-  async submitForActivation(id: string, organizerId: string): Promise<Event> {
-    const event = await this.findOne(id, organizerId);
-    
-    if (event.status !== EventStatus.DRAFT) {
-      throw new BadRequestException('Only draft events can be submitted for activation');
+  async remove(id: string, userId: string): Promise<void> {
+    const event = await this.findOne(id);
+
+    if (event.organizer_id !== userId) {
+      throw new ForbiddenException('You can only delete your own events');
     }
 
-    // Validate event has required data for activation
-    if (!event.tier_id && (!event.tiers || event.tiers.length === 0)) {
-      throw new BadRequestException('Event must have at least one tier before activation');
+    if (event.status === EventStatus.ACTIVE) {
+      throw new BadRequestException('Cannot delete active events');
     }
 
-    await this.eventRepository.update(id, { status: EventStatus.PUBLISHED });
-    return await this.findOne(id, organizerId);
+    await this.eventRepository.remove(event);
   }
 
-  async addTierToEvent(eventId: string, organizerId: string, createTierDto: CreateTierDto): Promise<Tier> {
-    const event = await this.findOne(eventId, organizerId);
-    
-    // Check if tier name already exists for this event
-    const existingTier = await this.tierRepository.findOne({
-      where: { event_id: eventId, name: createTierDto.name }
+  async publish(id: string, userId: string): Promise<Event> {
+    const event = await this.findOne(id);
+
+    if (event.organizer_id !== userId) {
+      throw new ForbiddenException('You can only publish your own events');
+    }
+
+    if (event.platform_payment_status !== PlatformPaymentStatus.PAID) {
+      throw new BadRequestException('Platform fee must be paid before publishing');
+    }
+
+    if (event.status !== EventStatus.DRAFT && event.status !== EventStatus.PENDING_PAYMENT) {
+      throw new BadRequestException('Only draft or pending payment events can be published');
+    }
+
+    await this.eventRepository.update(id, {
+      status: EventStatus.PUBLISHED,
     });
+
+    return this.findOne(id);
+  }
+
+  async updatePlatformPaymentStatus(
+    id: string, 
+    status: PlatformPaymentStatus, 
+    paymentReference?: string
+  ): Promise<Event> {
+    const event = await this.findOne(id);
     
-    if (existingTier) {
-      throw new BadRequestException('Tier name already exists for this event');
+    const updateData: any = {
+      platform_payment_status: status,
+    };
+
+    if (paymentReference) {
+      updateData.platform_payment_reference = paymentReference;
+    }
+
+    if (status === PlatformPaymentStatus.PAID) {
+      updateData.platform_payment_date = new Date();
+      // Automatically move to published if payment is successful
+      if (event.status === EventStatus.PENDING_PAYMENT || event.status === EventStatus.DRAFT) {
+        updateData.status = EventStatus.PUBLISHED;
+      }
+    }
+
+    await this.eventRepository.update(id, updateData);
+    return this.findOne(id);
+  }
+
+  // Tier management methods
+  async createTier(eventId: string, createTierDto: CreateTierDto, userId: string): Promise<Tier> {
+    const event = await this.findOne(eventId);
+
+    if (event.organizer_id !== userId) {
+      throw new ForbiddenException('You can only add tiers to your own events');
     }
 
     const tier = this.tierRepository.create({
       ...createTierDto,
       event_id: eventId,
-      price: createTierDto.price || 0,
-      currency: createTierDto.currency || 'USD',
-      max_plus_n: createTierDto.max_plus_n || 0,
-      is_active: createTierDto.is_active ?? true,
-      sort_order: createTierDto.sort_order || 0,
+      sale_starts_at: createTierDto.sale_starts_at 
+        ? new Date(createTierDto.sale_starts_at) 
+        : null,
+      sale_ends_at: createTierDto.sale_ends_at 
+        ? new Date(createTierDto.sale_ends_at) 
+        : null,
     });
 
-    return await this.tierRepository.save(tier);
+    return this.tierRepository.save(tier);
   }
 
-  async updateEventTier(eventId: string, tierId: string, organizerId: string, updateData: Partial<CreateTierDto>): Promise<Tier> {
-    // Verify event ownership
-    await this.findOne(eventId, organizerId);
-    
+  async updateTier(tierId: string, updateTierDto: Partial<CreateTierDto>, userId: string): Promise<Tier> {
     const tier = await this.tierRepository.findOne({
-      where: { id: tierId, event_id: eventId }
+      where: { id: tierId },
+      relations: ['event'],
     });
-    
+
     if (!tier) {
       throw new NotFoundException('Tier not found');
+    }
+
+    if (tier.event.organizer_id !== userId) {
+      throw new ForbiddenException('You can only update tiers of your own events');
+    }
+
+    const updateData: any = { ...updateTierDto };
+    if (updateTierDto.sale_starts_at) {
+      updateData.sale_starts_at = new Date(updateTierDto.sale_starts_at);
+    }
+    if (updateTierDto.sale_ends_at) {
+      updateData.sale_ends_at = new Date(updateTierDto.sale_ends_at);
     }
 
     await this.tierRepository.update(tierId, updateData);
-    return await this.tierRepository.findOne({ where: { id: tierId } });
+    return this.tierRepository.findOne({ where: { id: tierId } });
   }
 
-  async setDefaultTier(eventId: string, tierId: string, organizerId: string): Promise<Event> {
-    const event = await this.findOne(eventId, organizerId);
-    
+  async removeTier(tierId: string, userId: string): Promise<void> {
     const tier = await this.tierRepository.findOne({
-      where: { id: tierId, event_id: eventId }
+      where: { id: tierId },
+      relations: ['event', 'guests'],
     });
-    
+
     if (!tier) {
       throw new NotFoundException('Tier not found');
     }
 
-    await this.eventRepository.update(eventId, { tier_id: tierId });
-    return await this.findOne(eventId, organizerId);
+    if (tier.event.organizer_id !== userId) {
+      throw new ForbiddenException('You can only delete tiers of your own events');
+    }
+
+    if (tier.guests && tier.guests.length > 0) {
+      throw new BadRequestException('Cannot delete tier with registered guests');
+    }
+
+    await this.tierRepository.remove(tier);
   }
 
-  async deleteEvent(id: string, organizerId: string): Promise<void> {
-    const event = await this.findOne(id, organizerId);
+  async getTiers(eventId: string): Promise<Tier[]> {
+    const event = await this.findOne(eventId);
+    return this.tierRepository.find({
+      where: { event_id: eventId },
+      order: { sort_order: 'ASC', created_at: 'ASC' },
+    });
+  }
+
+  // Private helper methods
+  private calculatePlatformFee(createEventDto: CreateEventDto): number {
+    // Implement your platform fee calculation logic here
+    // For example: base fee + percentage of estimated revenue
+    const baseFee = 10.0; // 10 LYD base fee
     
-    if (event.status === EventStatus.ACTIVE) {
-      throw new BadRequestException('Cannot delete active events');
-    }
-
-    await this.eventRepository.delete(id);
+    // You could factor in expected attendance, event duration, etc.
+    const complexityMultiplier = this.getComplexityMultiplier(createEventDto);
+    
+    return baseFee * complexityMultiplier;
   }
 
-  private validateStatusTransition(currentStatus: EventStatus, newStatus: EventStatus): void {
-    const allowedTransitions: Record<EventStatus, EventStatus[]> = {
-      [EventStatus.DRAFT]: [EventStatus.PUBLISHED, EventStatus.CANCELLED],
-      [EventStatus.PUBLISHED]: [EventStatus.ACTIVE, EventStatus.CANCELLED],
-      [EventStatus.ACTIVE]: [EventStatus.COMPLETED, EventStatus.CANCELLED],
-      [EventStatus.COMPLETED]: [],
-      [EventStatus.CANCELLED]: [],
-    };
-
-    if (!allowedTransitions[currentStatus].includes(newStatus)) {
-      throw new BadRequestException(`Cannot transition from ${currentStatus} to ${newStatus}`);
+  private getComplexityMultiplier(createEventDto: CreateEventDto): number {
+    let multiplier = 1.0;
+    
+    // Add complexity based on features
+    if (createEventDto.event_settings?.max_capacity && createEventDto.event_settings.max_capacity > 100) {
+      multiplier += 0.5; // Large events
     }
+    
+    if (createEventDto.form_config?.custom_questions?.length > 0) {
+      multiplier += 0.2; // Custom forms
+    }
+    
+    if (createEventDto.design_config) {
+      multiplier += 0.3; // Custom design
+    }
+    
+    return Math.min(multiplier, 3.0); // Cap at 3x base fee
+  }
+
+  private async createDefaultTier(eventId: string): Promise<Tier> {
+    const defaultTier = this.tierRepository.create({
+      event_id: eventId,
+      name: 'General Admission',
+      description: 'Standard event access',
+      tier_type: TierType.FREE,
+      price: 0,
+      currency: 'LYD',
+      is_active: true,
+      sort_order: 0,
+    });
+
+    return this.tierRepository.save(defaultTier);
   }
 } 

@@ -5,11 +5,12 @@ import { AdminService } from './admin.service';
 import { Event } from '../database/entities/event.entity';
 import { User } from '../database/entities/user.entity';
 import { UserActivity } from '../database/entities/user-activity.entity';
+import { Guest } from '../database/entities/guest.entity';
 import { EventsModule } from '../events/events.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Event, User, UserActivity]),
+    TypeOrmModule.forFeature([Event, User, UserActivity, Guest]),
     EventsModule,
   ],
   controllers: [AdminController],

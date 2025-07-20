@@ -28,6 +28,7 @@ import { Roles } from '../auth/decorators/roles.decorator';
 import { RequirePermissions } from '../auth/decorators/permissions.decorator';
 import { UserRole } from '../database/entities/user.entity';
 import { Permission } from '../auth/constants/permissions';
+import { Public } from '../auth/decorators/public.decorator';
 import { GuestsService } from './guests.service';
 import {
   CreateGuestDto,
@@ -35,6 +36,8 @@ import {
   GuestQueryDto,
   GuestResponseDto,
   PaginatedGuestResponseDto,
+  SelfRegistrationDto,
+  SelfRegistrationResponseDto,
 } from './dtos';
 
 @Controller('guests')
@@ -57,7 +60,12 @@ export class GuestsController {
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Event or tier not found' })
   @ApiResponse({ status: HttpStatus.CONFLICT, description: 'Guest email already exists' })
   @ApiBody({ type: CreateGuestDto })
-  @Roles(UserRole.ORGANIZER, UserRole.ADMIN, UserRole.STAFF)
+  @Roles(
+    UserRole.INDIVIDUAL_ORGANIZER,
+    UserRole.COMPANY_ORGANIZER,
+    UserRole.ADMIN,
+    UserRole.STAFF,
+  )
   @RequirePermissions(Permission.GUEST_CREATE)
   @HttpCode(HttpStatus.CREATED)
   async createGuest(@Body() createGuestDto: CreateGuestDto): Promise<GuestResponseDto> {
@@ -73,7 +81,12 @@ export class GuestsController {
     type: PaginatedGuestResponseDto,
   })
   @ApiQuery({ type: GuestQueryDto })
-  @Roles(UserRole.ORGANIZER, UserRole.ADMIN, UserRole.STAFF)
+  @Roles(
+    UserRole.INDIVIDUAL_ORGANIZER,
+    UserRole.COMPANY_ORGANIZER,
+    UserRole.ADMIN,
+    UserRole.STAFF,
+  )
   @RequirePermissions(Permission.GUEST_READ)
   async findGuests(@Query() query: GuestQueryDto): Promise<PaginatedGuestResponseDto> {
     this.logger.log('Finding guests with filters');
@@ -89,7 +102,12 @@ export class GuestsController {
   })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Guest not found' })
   @ApiParam({ name: 'id', description: 'Guest ID', type: 'string' })
-  @Roles(UserRole.ORGANIZER, UserRole.ADMIN, UserRole.STAFF)
+  @Roles(
+    UserRole.INDIVIDUAL_ORGANIZER,
+    UserRole.COMPANY_ORGANIZER,
+    UserRole.ADMIN,
+    UserRole.STAFF,
+  )
   @RequirePermissions(Permission.GUEST_READ)
   async findGuestById(@Param('id') id: string): Promise<GuestResponseDto> {
     this.logger.log(`Finding guest with ID: ${id}`);
@@ -108,7 +126,12 @@ export class GuestsController {
   @ApiResponse({ status: HttpStatus.CONFLICT, description: 'Guest email already exists' })
   @ApiParam({ name: 'id', description: 'Guest ID', type: 'string' })
   @ApiBody({ type: UpdateGuestDto })
-  @Roles(UserRole.ORGANIZER, UserRole.ADMIN, UserRole.STAFF)
+  @Roles(
+    UserRole.INDIVIDUAL_ORGANIZER,
+    UserRole.COMPANY_ORGANIZER,
+    UserRole.ADMIN,
+    UserRole.STAFF,
+  )
   @RequirePermissions(Permission.GUEST_UPDATE)
   async updateGuest(
     @Param('id') id: string,
@@ -127,7 +150,7 @@ export class GuestsController {
     description: 'Cannot delete primary guest with additional guests',
   })
   @ApiParam({ name: 'id', description: 'Guest ID', type: 'string' })
-  @Roles(UserRole.ORGANIZER, UserRole.ADMIN)
+  @Roles(UserRole.INDIVIDUAL_ORGANIZER, UserRole.COMPANY_ORGANIZER, UserRole.ADMIN)
   @RequirePermissions(Permission.GUEST_DELETE)
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteGuest(@Param('id') id: string): Promise<void> {
@@ -149,7 +172,12 @@ export class GuestsController {
   })
   @ApiParam({ name: 'primaryGuestId', description: 'Primary guest ID', type: 'string' })
   @ApiBody({ type: CreateGuestDto })
-  @Roles(UserRole.ORGANIZER, UserRole.ADMIN, UserRole.STAFF)
+  @Roles(
+    UserRole.INDIVIDUAL_ORGANIZER,
+    UserRole.COMPANY_ORGANIZER,
+    UserRole.ADMIN,
+    UserRole.STAFF,
+  )
   @RequirePermissions(Permission.GUEST_CREATE)
   @HttpCode(HttpStatus.CREATED)
   async addAdditionalGuest(
@@ -177,11 +205,34 @@ export class GuestsController {
     },
   })
   @ApiParam({ name: 'eventId', description: 'Event ID', type: 'string' })
-  @Roles(UserRole.ORGANIZER, UserRole.ADMIN, UserRole.STAFF)
+  @Roles(
+    UserRole.INDIVIDUAL_ORGANIZER,
+    UserRole.COMPANY_ORGANIZER,
+    UserRole.ADMIN,
+    UserRole.STAFF,
+  )
   @RequirePermissions(Permission.GUEST_READ)
   async getGuestStats(@Param('eventId') eventId: string) {
     this.logger.log(`Getting guest statistics for event: ${eventId}`);
     return this.guestsService.getGuestStats(eventId);
+  }
+
+  @Post('self-register')
+  @Public()
+  @ApiOperation({ summary: 'Self-register for an event (public endpoint)' })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'Guest self-registration completed successfully',
+    type: SelfRegistrationResponseDto,
+  })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid input data or registration closed' })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Event or tier not found' })
+  @ApiResponse({ status: HttpStatus.CONFLICT, description: 'Guest email already exists' })
+  @ApiBody({ type: SelfRegistrationDto })
+  @HttpCode(HttpStatus.CREATED)
+  async selfRegister(@Body() selfRegistrationDto: SelfRegistrationDto): Promise<SelfRegistrationResponseDto> {
+    this.logger.log(`Self-registration for event ${selfRegistrationDto.event_id}`);
+    return this.guestsService.selfRegister(selfRegistrationDto);
   }
 
   // Bulk operations for future use
@@ -193,7 +244,7 @@ export class GuestsController {
     type: [GuestResponseDto],
   })
   @ApiBody({ type: [CreateGuestDto] })
-  @Roles(UserRole.ORGANIZER, UserRole.ADMIN)
+  @Roles(UserRole.INDIVIDUAL_ORGANIZER, UserRole.COMPANY_ORGANIZER, UserRole.ADMIN)
   @RequirePermissions(Permission.GUEST_CREATE, Permission.GUEST_IMPORT)
   @HttpCode(HttpStatus.CREATED)
   async createGuestsBulk(@Body() createGuestDtos: CreateGuestDto[]): Promise<GuestResponseDto[]> {
@@ -222,7 +273,7 @@ export class GuestsController {
     type: [GuestResponseDto],
   })
   @ApiParam({ name: 'eventId', description: 'Event ID', type: 'string' })
-  @Roles(UserRole.ORGANIZER, UserRole.ADMIN)
+  @Roles(UserRole.INDIVIDUAL_ORGANIZER, UserRole.COMPANY_ORGANIZER, UserRole.ADMIN)
   @RequirePermissions(Permission.GUEST_READ, Permission.GUEST_EXPORT)
   async exportEventGuests(@Param('eventId') eventId: string): Promise<GuestResponseDto[]> {
     this.logger.log(`Exporting guests for event: ${eventId}`);

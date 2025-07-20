@@ -26,26 +26,7 @@
       "@daawa/config/*": ["./packages/config/src/*"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"],
-  "exclude": ["node_modules", "dist", "build", ".next"],
-  "references": [
-    {
-      "path": "./apps/frontend"
-    },
-    {
-      "path": "./apps/backend"
-    },
-    {
-      "path": "./packages/shared"
-    },
-    {
-      "path": "./packages/ui"
-    },
-    {
-      "path": "./packages/types"
-    },
-    {
-      "path": "./packages/config"
-    }
-  ]
+  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx","src","migrations",
+  "ormconfig.ts"],
+  "exclude": ["node_modules", "dist", "build", ".next"]
 }

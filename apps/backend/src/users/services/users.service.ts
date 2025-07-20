@@ -1,9 +1,12 @@
-import { Injectable, ConflictException, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, ConflictException, NotFoundException, BadRequestException, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../../database/entities/user.entity';
 import { RegisterDto } from '../../auth/dtos/register.dto';
 import { PasswordService } from '../../auth/services/password.service';
+import { ImageProcessingService } from '../../storage/services/image-processing.service';
+import { SecureUrlService } from '../../storage/services/secure-url.service';
+import { IStorageService, StorageFile } from '../../storage/interfaces/storage.interface';
 
 @Injectable()
 export class UsersService {
@@ -11,6 +14,9 @@ export class UsersService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly passwordService: PasswordService,
+    @Inject('IStorageService') private readonly storageService: IStorageService,
+    private readonly imageProcessingService: ImageProcessingService,
+    private readonly secureUrlService: SecureUrlService,
   ) {}
 
   /**
@@ -251,5 +257,291 @@ export class UsersService {
       verified,
       unverified: total - verified,
     };
+  }
+
+  /**
+   * Upload and set user avatar
+   */
+  async uploadAvatar(userId: string, file: StorageFile): Promise<{ avatarUrl: string; thumbnails: any; responsiveUrls: any }> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    // Validate file is an image
+    if (!file.mimetype.startsWith('image/')) {
+      throw new BadRequestException('File must be an image');
+    }
+
+    // Delete old avatar if exists
+    if (user.avatar_url) {
+      await this.deleteAvatar(userId);
+    }
+
+    try {
+      // Process the image with optimized settings for avatars
+      const processedImage = await this.imageProcessingService.processImage(
+        file,
+        {
+          width: 400,
+          height: 400,
+          quality: 85,
+          format: 'webp',
+          fit: 'cover',
+        },
+        `avatars/${userId}`,
+      );
+
+      const avatarUrl = processedImage.formats.webp?.url || processedImage.original.url;
+
+      // Update user with new avatar URL
+      await this.userRepository.update(userId, {
+        avatar_url: avatarUrl,
+        updated_at: new Date(),
+      });
+
+      // Get responsive URLs for the avatar
+      const responsiveUrls = this.storageService.getResponsiveImageUrls(
+        processedImage.formats.webp?.key || processedImage.original.key
+      );
+
+      // Invalidate CDN cache for user avatar
+      await this.storageService.invalidateUserAvatar(userId);
+
+      return {
+        avatarUrl,
+        thumbnails: processedImage.thumbnails,
+        responsiveUrls,
+      };
+    } catch (error) {
+      throw new BadRequestException(`Failed to upload avatar: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
+
+  /**
+   * Delete user avatar
+   */
+  async deleteAvatar(userId: string): Promise<void> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (!user.avatar_url) {
+      return; // No avatar to delete
+    }
+
+    try {
+      // Extract key from URL for deletion
+      const urlParts = user.avatar_url.split('/');
+      const keyIndex = urlParts.findIndex(part => part === 'avatars');
+      if (keyIndex !== -1) {
+        const key = urlParts.slice(keyIndex).join('/');
+        
+        // Delete all avatar files (original, processed, thumbnails)
+        const filesToDelete = await this.storageService.listFiles(`avatars/${userId}`);
+        if (filesToDelete.length > 0) {
+          await this.storageService.deleteMultiple(filesToDelete, 'daawa-processed-images');
+        }
+      }
+
+      // Invalidate CDN cache for user avatar
+      await this.storageService.invalidateUserAvatar(userId);
+
+      // Update user to remove avatar URL
+      await this.userRepository.update(userId, {
+        avatar_url: null,
+        updated_at: new Date(),
+      });
+    } catch (error) {
+      // Log error but don't throw - we still want to clear the URL from database
+      console.error('Failed to delete avatar files:', error);
+      
+      // Clear avatar URL from database anyway
+      await this.userRepository.update(userId, {
+        avatar_url: null,
+        updated_at: new Date(),
+      });
+    }
+  }
+
+  /**
+   * Get user avatar URL with CDN optimization
+   */
+  async getAvatarUrl(userId: string, version?: string): Promise<string | null> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      select: ['avatar_url'],
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (!user.avatar_url) {
+      return null;
+    }
+
+    // If version is provided, get cache-optimized URL
+    if (version) {
+      const urlParts = user.avatar_url.split('/');
+      const keyIndex = urlParts.findIndex(part => part === 'avatars');
+      if (keyIndex !== -1) {
+        const key = urlParts.slice(keyIndex).join('/');
+        return this.storageService.getCacheOptimizedUrl(key, version);
+      }
+    }
+
+    return user.avatar_url;
+  }
+
+  /**
+   * Get responsive avatar URLs for different formats and sizes
+   */
+  async getAvatarResponsiveUrls(userId: string): Promise<any> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      select: ['avatar_url'],
+    });
+
+    if (!user || !user.avatar_url) {
+      return null;
+    }
+
+    try {
+      // Extract key from URL
+      const urlParts = user.avatar_url.split('/');
+      const keyIndex = urlParts.findIndex(part => part === 'avatars');
+      if (keyIndex !== -1) {
+        const key = urlParts.slice(keyIndex).join('/');
+        return this.storageService.getResponsiveImageUrls(key);
+      }
+    } catch (error) {
+      console.error('Failed to get responsive URLs for avatar:', error);
+    }
+
+    return { original: user.avatar_url };
+  }
+
+  /**
+   * Generate avatar presigned URL for secure access
+   */
+  async getAvatarPresignedUrl(userId: string, expiresIn = 3600): Promise<string | null> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      select: ['avatar_url'],
+    });
+
+    if (!user || !user.avatar_url) {
+      return null;
+    }
+
+    try {
+      // Extract key from URL
+      const urlParts = user.avatar_url.split('/');
+      const keyIndex = urlParts.findIndex(part => part === 'avatars');
+      if (keyIndex !== -1) {
+        const key = urlParts.slice(keyIndex).join('/');
+        return await this.storageService.getPresignedUrl(key, {
+          bucket: 'daawa-processed-images',
+          expiresIn,
+        });
+      }
+    } catch (error) {
+      console.error('Failed to generate presigned URL for avatar:', error);
+    }
+
+    return user.avatar_url; // Fallback to public URL
+  }
+
+  /**
+   * Generate secure avatar URL with token-based access
+   */
+  async getAvatarSecureUrl(
+    userId: string, 
+    requestingUserId?: string,
+    expiresIn = 3600,
+    maxDownloads?: number
+  ): Promise<{
+    secureUrl: string;
+    directUrl?: string;
+    expiresAt: Date;
+    token: string;
+  } | null> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      select: ['avatar_url'],
+    });
+
+    if (!user || !user.avatar_url) {
+      return null;
+    }
+
+    try {
+      // Extract key from URL
+      const urlParts = user.avatar_url.split('/');
+      const keyIndex = urlParts.findIndex(part => part === 'avatars');
+      if (keyIndex !== -1) {
+        const key = urlParts.slice(keyIndex).join('/');
+        
+        return await this.secureUrlService.generateSecureUrl(key, {
+          expiresIn,
+          userId: requestingUserId,
+          resourceType: 'avatar',
+          permissions: ['read'],
+          maxDownloads,
+        });
+      }
+    } catch (error) {
+      console.error('Failed to generate secure URL for avatar:', error);
+    }
+
+    return null;
+  }
+
+  /**
+   * Generate secure responsive avatar URLs
+   */
+  async getAvatarSecureResponsiveUrls(
+    userId: string,
+    requestingUserId?: string,
+    expiresIn = 3600,
+    maxDownloads?: number
+  ): Promise<any> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      select: ['avatar_url'],
+    });
+
+    if (!user || !user.avatar_url) {
+      return null;
+    }
+
+    try {
+      // Extract key from URL
+      const urlParts = user.avatar_url.split('/');
+      const keyIndex = urlParts.findIndex(part => part === 'avatars');
+      if (keyIndex !== -1) {
+        const key = urlParts.slice(keyIndex).join('/');
+        
+        return await this.secureUrlService.generateSecureResponsiveUrls(key, {
+          expiresIn,
+          userId: requestingUserId,
+          resourceType: 'avatar',
+          permissions: ['read'],
+          maxDownloads,
+        });
+      }
+    } catch (error) {
+      console.error('Failed to generate secure responsive URLs for avatar:', error);
+    }
+
+    return null;
   }
 } 

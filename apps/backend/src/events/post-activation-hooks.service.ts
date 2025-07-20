@@ -69,7 +69,7 @@ export class PostActivationHooksService {
         event_name: event.name,
         organizer_id: event.organizer_id,
         venue: event.venue_name,
-        capacity: event.capacity_limit,
+        capacity: event.total_capacity,
         start_date: event.start_datetime,
         end_date: event.end_datetime,
         activation_timestamp: new Date().toISOString(),
@@ -109,7 +109,7 @@ export class PostActivationHooksService {
           registration_link: registrationLink,
           venue: event.venue_name,
           start_date: event.start_datetime,
-          capacity: event.capacity_limit,
+          capacity: event.total_capacity,
         },
         metadata: {
           activated_at: new Date().toISOString(),

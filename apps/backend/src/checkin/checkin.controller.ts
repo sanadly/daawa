@@ -61,8 +61,13 @@ export class CheckinController {
   @ApiResponse({ status: 200, description: 'QR code is valid', type: QrValidationResponseDto })
   @ApiResponse({ status: 400, description: 'Invalid QR code data' })
   @ApiResponse({ status: 404, description: 'Guest or Event not found' })
-  @Roles(UserRole.STAFF, UserRole.ORGANIZER, UserRole.ADMIN)
-  @RequirePermissions(Permission.CHECKIN_PERFORM)
+  @Roles(
+    UserRole.STAFF,
+    UserRole.INDIVIDUAL_ORGANIZER,
+    UserRole.COMPANY_ORGANIZER,
+    UserRole.ADMIN,
+  )
+  @RequirePermissions(Permission.GUEST_READ)
   async validateQrCode(
     @Body() validationData: QrValidationRequestDto,
   ): Promise<QrValidationResponseDto> {
@@ -73,7 +78,12 @@ export class CheckinController {
   @Post('record')
   @ApiOperation({ summary: 'Record a new check-in' })
   @ApiResponse({ status: 201, description: 'Check-in recorded successfully', type: CheckinResponseDto })
-  @Roles(UserRole.STAFF, UserRole.ORGANIZER, UserRole.ADMIN)
+  @Roles(
+    UserRole.STAFF,
+    UserRole.INDIVIDUAL_ORGANIZER,
+    UserRole.COMPANY_ORGANIZER,
+    UserRole.ADMIN,
+  )
   @RequirePermissions(Permission.CHECKIN_PERFORM)
   async recordCheckin(
     @Body() checkinRequestDto: CheckinRequestDto,
@@ -87,7 +97,12 @@ export class CheckinController {
   @Post('bulk')
   @ApiOperation({ summary: 'Record multiple check-ins at once' })
   @ApiResponse({ status: 201, description: 'Bulk check-in processed' })
-  @Roles(UserRole.STAFF, UserRole.ORGANIZER, UserRole.ADMIN)
+  @Roles(
+    UserRole.STAFF,
+    UserRole.INDIVIDUAL_ORGANIZER,
+    UserRole.COMPANY_ORGANIZER,
+    UserRole.ADMIN,
+  )
   @RequirePermissions(Permission.CHECKIN_PERFORM, Permission.CHECKIN_OVERRIDE)
   async bulkCheckin(
     @Body() bulkCheckinDto: BulkCheckinRequestDto,
@@ -102,7 +117,12 @@ export class CheckinController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Synchronize offline check-in records' })
   @ApiResponse({ status: 200, description: 'Offline records synchronized', type: SyncCheckinResponseDto })
-  @Roles(UserRole.STAFF, UserRole.ORGANIZER, UserRole.ADMIN)
+  @Roles(
+    UserRole.STAFF,
+    UserRole.INDIVIDUAL_ORGANIZER,
+    UserRole.COMPANY_ORGANIZER,
+    UserRole.ADMIN,
+  )
   @RequirePermissions(Permission.CHECKIN_PERFORM)
   async syncOfflineCheckins(
     @Body() syncCheckinDto: SyncCheckinRequestDto,
@@ -120,7 +140,12 @@ export class CheckinController {
   @ApiQuery({ name: 'limit', required: false, type: Number })
   @ApiQuery({ name: 'search', required: false, type: String })
   @ApiResponse({ status: 200, description: 'Check-in history retrieved', type: CheckinHistoryResponseDto })
-  @Roles(UserRole.STAFF, UserRole.ORGANIZER, UserRole.ADMIN)
+  @Roles(
+    UserRole.STAFF,
+    UserRole.INDIVIDUAL_ORGANIZER,
+    UserRole.COMPANY_ORGANIZER,
+    UserRole.ADMIN,
+  )
   @RequirePermissions(Permission.CHECKIN_READ)
   async getCheckinHistory(
     @Param('eventId', ParseUUIDPipe) eventId: string,
@@ -131,11 +156,16 @@ export class CheckinController {
     return await this.checkinService.getCheckinHistory(historyQuery);
   }
 
-  @Get(':eventId/statistics')
+  @Get('statistics/:eventId')
   @ApiOperation({ summary: 'Get detailed check-in statistics for an event' })
   @ApiParam({ name: 'eventId', description: 'ID of the event' })
   @ApiResponse({ status: 200, description: 'Event statistics retrieved', type: CheckinStatisticsDto })
-  @Roles(UserRole.STAFF, UserRole.ORGANIZER, UserRole.ADMIN)
+  @Roles(
+    UserRole.STAFF,
+    UserRole.INDIVIDUAL_ORGANIZER,
+    UserRole.COMPANY_ORGANIZER,
+    UserRole.ADMIN,
+  )
   @RequirePermissions(Permission.ANALYTICS_READ)
   async getDetailedCheckinStats(
     @Param('eventId', ParseUUIDPipe) eventId: string,
@@ -144,25 +174,17 @@ export class CheckinController {
     return await this.checkinService.getDetailedCheckinStats(eventId);
   }
 
-  @Get('stats/:eventId')
-  @ApiOperation({ summary: 'Get check-in statistics for an event' })
-  @ApiParam({ name: 'eventId', description: 'ID of the event' })
-  @ApiResponse({ status: 200, description: 'Event statistics retrieved', type: CheckinStatsResponseDto })
-  @Roles(UserRole.STAFF, UserRole.ORGANIZER, UserRole.ADMIN)
-  @RequirePermissions(Permission.ANALYTICS_READ)
-  async getCheckinStats(
-    @Param('eventId', ParseUUIDPipe) eventId: string,
-  ): Promise<CheckinStatsResponseDto> {
-    this.logger.log(`Fetching statistics for event ID: ${eventId}`);
-    return await this.checkinService.getCheckinStats(eventId);
-  }
-
   @Get('guest-status/:eventId/:guestId')
   @ApiOperation({ summary: 'Get check-in status for a specific guest' })
   @ApiParam({ name: 'eventId', description: 'ID of the event' })
   @ApiParam({ name: 'guestId', description: 'ID of the guest' })
   @ApiResponse({ status: 200, description: 'Guest check-in status retrieved' })
-  @Roles(UserRole.STAFF, UserRole.ORGANIZER, UserRole.ADMIN)
+  @Roles(
+    UserRole.STAFF,
+    UserRole.INDIVIDUAL_ORGANIZER,
+    UserRole.COMPANY_ORGANIZER,
+    UserRole.ADMIN,
+  )
   @RequirePermissions(Permission.GUEST_READ)
   async getGuestCheckinStatus(
     @Param('eventId', ParseUUIDPipe) eventId: string,
@@ -176,14 +198,20 @@ export class CheckinController {
   @ApiOperation({ summary: 'Generate a QR code for a specific guest and event' })
   @ApiParam({ name: 'eventId', description: 'ID of the event' })
   @ApiParam({ name: 'guestId', description: 'ID of the guest' })
-  @ApiResponse({ status: 200, description: 'QR code generated successfully', type: String })
-  @Roles(UserRole.STAFF, UserRole.ORGANIZER, UserRole.ADMIN)
-  @RequirePermissions(Permission.CHECKIN_PERFORM)
+  @ApiResponse({ status: 200, description: 'Guest QR code generated successfully' })
+  @Roles(
+    UserRole.STAFF,
+    UserRole.INDIVIDUAL_ORGANIZER,
+    UserRole.COMPANY_ORGANIZER,
+    UserRole.ADMIN,
+  )
+  @RequirePermissions(Permission.GUEST_READ)
   async generateGuestQrCode(
     @Param('eventId', ParseUUIDPipe) eventId: string,
     @Param('guestId', ParseUUIDPipe) guestId: string,
-  ): Promise<string> {
-    this.logger.log(`Generating QR code for guest ID: ${guestId} and event ID: ${eventId}`);
-    return await this.qrCodeService.generateQrCode(guestId, eventId);
+  ): Promise<{ qrCodeData: string }> {
+    this.logger.log(`Generating QR code for guest ID: ${guestId} at event ID: ${eventId}`);
+    const qrCodeData = await this.qrCodeService.generateQrCode(guestId, eventId);
+    return { qrCodeData };
   }
 } 

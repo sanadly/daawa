@@ -6,7 +6,7 @@ import { Event } from '../database/entities/event.entity';
 import { User } from '../database/entities/user.entity';
 import { CheckinService } from './services/checkin.service';
 import { QrCodeService } from './services/qr-code.service';
-// import { CheckinController } from './checkin.controller';
+import { CheckinController } from './checkin.controller';
 
 @Module({
   imports: [
@@ -17,7 +17,7 @@ import { QrCodeService } from './services/qr-code.service';
       User,
     ]),
   ],
-  controllers: [], // CheckinController - will be enabled after fixing permission issues
+  controllers: [CheckinController], // Re-enabled CheckinController
   providers: [CheckinService, QrCodeService],
   exports: [CheckinService, QrCodeService],
 })

@@ -123,17 +123,19 @@ export class QrCodeService {
       }
 
       // Check if event is active for check-in
-      const now = new Date();
-      const checkInStart = new Date(event.check_in_starts_at);
-      const checkInEnd = new Date(event.check_in_ends_at);
+      if (event.check_in_starts_at && event.check_in_ends_at) {
+        const now = new Date();
+        const checkInStart = new Date(event.check_in_starts_at);
+        const checkInEnd = new Date(event.check_in_ends_at);
 
-      if (now < checkInStart || now > checkInEnd) {
-        return {
-          is_valid: false,
-          error_message: 'Event check-in is not currently active',
-          error_code: 'EVENT_NOT_ACTIVE',
-          already_checked_in: false,
-        };
+        if (now < checkInStart || now > checkInEnd) {
+          return {
+            is_valid: false,
+            error_message: 'Event check-in is not currently active',
+            error_code: 'EVENT_NOT_ACTIVE',
+            already_checked_in: false,
+          };
+        }
       }
 
       // Check if guest is already checked in

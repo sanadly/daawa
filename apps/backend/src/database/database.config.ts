@@ -25,11 +25,11 @@ const createDatabaseConfig = (): TypeOrmModuleOptions => {
     type: 'postgres',
     host: process.env.DATABASE_HOST || 'localhost',
     port: parseInt(process.env.DATABASE_PORT || '5432'),
-    username: process.env.DATABASE_USERNAME || 'postgres',
-    password: process.env.DATABASE_PASSWORD || 'postgres',
+    username: process.env.DATABASE_USERNAME || 'daawa',
+    password: process.env.DATABASE_PASSWORD || 'Asb1562002',
     database: isTest 
-      ? process.env.DATABASE_TEST_NAME || 'daawa_test'
-      : process.env.DATABASE_NAME || 'daawa_development',
+      ? process.env.DATABASE_TEST_NAME || 'daawa'
+      : process.env.DATABASE_NAME || 'daawa',
     
     // SSL configuration
     ssl: process.env.DATABASE_SSL === 'true' ? {
@@ -43,7 +43,7 @@ const createDatabaseConfig = (): TypeOrmModuleOptions => {
     synchronize: !isProduction && process.env.DATABASE_SYNCHRONIZE !== 'false',
     
     // Logging
-    logging: process.env.DATABASE_LOGGING === 'true' || nodeEnv === 'development',
+    logging: process.env.DATABASE_LOGGING === 'true',
     logger: 'advanced-console',
     
     // Migration configuration
@@ -88,9 +88,9 @@ const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
   host: process.env.DATABASE_HOST || 'localhost',
   port: parseInt(process.env.DATABASE_PORT || '5432'),
-  username: process.env.DATABASE_USERNAME || 'postgres',
-  password: process.env.DATABASE_PASSWORD || 'postgres',
-  database: process.env.DATABASE_NAME || 'daawa_development',
+  username: process.env.DATABASE_USERNAME || 'daawa',
+  password: process.env.DATABASE_PASSWORD || 'Asb1562002',
+  database: process.env.DATABASE_NAME || 'daawa',
   
   ssl: process.env.DATABASE_SSL === 'true' ? {
     rejectUnauthorized: false,

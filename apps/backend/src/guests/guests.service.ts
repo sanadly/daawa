@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, QueryRunner, FindOptionsWhere, Like } from 'typeorm';
-import { Guest } from '../database/entities/guest.entity';
+import { Guest, InviteStatus, RsvpStatus } from '../database/entities/guest.entity';
 import { Event } from '../database/entities/event.entity';
 import { Tier } from '../database/entities/tier.entity';
 import {
@@ -16,7 +16,11 @@ import {
   GuestQueryDto,
   GuestResponseDto,
   PaginatedGuestResponseDto,
+  SelfRegistrationDto,
+  SelfRegistrationResponseDto,
 } from './dtos';
+import { NotificationService } from '../notifications/notification.service';
+import { PassesService } from '../passes/passes.service';
 
 @Injectable()
 export class GuestsService {
@@ -29,6 +33,8 @@ export class GuestsService {
     private readonly eventRepository: Repository<Event>,
     @InjectRepository(Tier)
     private readonly tierRepository: Repository<Tier>,
+    private readonly notificationService: NotificationService,
+    private readonly passesService: PassesService,
   ) {}
 
   async createGuest(createGuestDto: CreateGuestDto): Promise<GuestResponseDto> {
@@ -98,6 +104,8 @@ export class GuestsService {
     });
 
     const savedGuest = await this.guestRepository.save(guest);
+
+    await this.passesService.createPassForGuest(savedGuest.id);
 
     this.logger.log(`Guest created successfully with ID ${savedGuest.id}`);
 
@@ -354,5 +362,261 @@ export class GuestsService {
     }
 
     this.logger.log(`Capacity check passed: ${currentGuestCount + guestCount}/${tier.guest_limit}`);
+  }
+
+  async selfRegister(selfRegistrationDto: SelfRegistrationDto): Promise<SelfRegistrationResponseDto> {
+    this.logger.log(`Self-registration for event ${selfRegistrationDto.event_id}`);
+
+    const queryRunner = this.guestRepository.manager.connection.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      // Validate event exists and is accepting registrations
+      const event = await queryRunner.manager.findOne(Event, {
+        where: { id: selfRegistrationDto.event_id },
+        relations: ['tiers'],
+      });
+
+      if (!event) {
+        throw new NotFoundException(`Event with ID ${selfRegistrationDto.event_id} not found`);
+      }
+
+      // Additional validation for self-registration
+      if (event.status !== 'active') {
+        throw new BadRequestException('Event is not currently accepting registrations');
+      }
+
+      // Check if registration period is valid
+      const now = new Date();
+      if (event.start_datetime < now) {
+        throw new BadRequestException('Registration is closed - event has already occurred');
+      }
+
+      // Validate tier exists and belongs to event
+      const tier = await queryRunner.manager.findOne(Tier, {
+        where: { id: selfRegistrationDto.tier_id, event_id: selfRegistrationDto.event_id },
+      });
+
+      if (!tier) {
+        throw new NotFoundException(
+          `Tier with ID ${selfRegistrationDto.tier_id} not found for event ${selfRegistrationDto.event_id}`
+        );
+      }
+
+      // Calculate total guests (primary + additional)
+      const totalGuestsCount = 1 + (selfRegistrationDto.additional_guests?.length || 0);
+
+      // Validate capacity for all guests
+      await this.validateCapacityWithQueryRunner(
+        queryRunner,
+        selfRegistrationDto.event_id,
+        selfRegistrationDto.tier_id,
+        totalGuestsCount
+      );
+
+      // Check for duplicate email (primary guest)
+      const existingGuest = await queryRunner.manager.findOne(Guest, {
+        where: {
+          email: selfRegistrationDto.email,
+          event_id: selfRegistrationDto.event_id,
+        },
+      });
+
+      if (existingGuest) {
+        throw new ConflictException(
+          `Guest with email ${selfRegistrationDto.email} already exists for this event`
+        );
+      }
+
+      // Create primary guest
+      const primaryGuestData = {
+        event_id: selfRegistrationDto.event_id,
+        tier_id: selfRegistrationDto.tier_id,
+        name: selfRegistrationDto.name,
+        email: selfRegistrationDto.email,
+        phone: selfRegistrationDto.phone,
+        custom_field_answers: selfRegistrationDto.custom_field_answers,
+        dietary_restrictions: selfRegistrationDto.dietary_restrictions,
+        accessibility_needs: selfRegistrationDto.accessibility_needs,
+        is_primary: true,
+        rsvp_status: RsvpStatus.ACCEPTED, // Self-registration implies acceptance
+        invite_status: InviteStatus.DELIVERED, // Self-registration means invite was "delivered"
+        rsvp_responded_at: new Date(),
+      };
+
+      const primaryGuest = queryRunner.manager.create(Guest, primaryGuestData);
+      const savedPrimaryGuest = await queryRunner.manager.save(Guest, primaryGuest);
+
+      const guestIds = [savedPrimaryGuest.id];
+
+      // Create additional guests if provided
+      if (selfRegistrationDto.additional_guests?.length > 0) {
+        for (const additionalGuestData of selfRegistrationDto.additional_guests) {
+          // Check for duplicate email if provided for additional guest
+          if (additionalGuestData.email) {
+            const existingAdditionalGuest = await queryRunner.manager.findOne(Guest, {
+              where: {
+                email: additionalGuestData.email,
+                event_id: selfRegistrationDto.event_id,
+              },
+            });
+
+            if (existingAdditionalGuest) {
+              throw new ConflictException(
+                `Additional guest with email ${additionalGuestData.email} already exists for this event`
+              );
+            }
+          }
+
+          const additionalGuest = queryRunner.manager.create(Guest, {
+            event_id: selfRegistrationDto.event_id,
+            tier_id: selfRegistrationDto.tier_id,
+            primary_guest_id: savedPrimaryGuest.id,
+            name: additionalGuestData.name,
+            email: additionalGuestData.email,
+            phone: additionalGuestData.phone,
+            custom_field_answers: additionalGuestData.custom_field_answers,
+            dietary_restrictions: additionalGuestData.dietary_restrictions,
+            accessibility_needs: additionalGuestData.accessibility_needs,
+            is_primary: false,
+            rsvp_status: RsvpStatus.ACCEPTED,
+            invite_status: InviteStatus.DELIVERED,
+            rsvp_responded_at: new Date(),
+          });
+
+          const savedAdditionalGuest = await queryRunner.manager.save(Guest, additionalGuest);
+          guestIds.push(savedAdditionalGuest.id);
+        }
+      }
+
+      await queryRunner.commitTransaction();
+
+      this.logger.log(
+        `Self-registration completed: ${totalGuestsCount} guest(s) registered for event ${event.id}`
+      );
+
+      // Send confirmation email
+      try {
+        await this.sendRegistrationConfirmationEmail(savedPrimaryGuest, event, tier);
+      } catch (emailError) {
+        this.logger.error(`Failed to send confirmation email for guest ${savedPrimaryGuest.id}`, emailError);
+        // Do not throw error here, registration is already successful
+      }
+
+      // Create passes for all new guests
+      for (const guestId of guestIds) {
+        await this.passesService.createPassForGuest(guestId);
+      }
+
+      return SelfRegistrationResponseDto.create({
+        primary_guest_id: savedPrimaryGuest.id,
+        guest_ids: guestIds,
+        total_guests: totalGuestsCount,
+        event: {
+          id: event.id,
+          title: event.name,
+          date: event.start_datetime,
+        },
+        tier: {
+          id: tier.id,
+          name: tier.name,
+          price: tier.price,
+        },
+      });
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      this.logger.error('Self-registration failed', error instanceof Error ? error.stack : String(error));
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  private async validateCapacityWithQueryRunner(
+    queryRunner: any,
+    eventId: string,
+    tierId: string,
+    guestCount: number = 1,
+  ): Promise<void> {
+    this.logger.log(`Validating capacity for event ${eventId}, tier ${tierId}`);
+
+    // Get tier with capacity info
+    const tier = await queryRunner.manager.findOne(Tier, {
+      where: { id: tierId, event_id: eventId },
+    });
+
+    if (!tier) {
+      throw new NotFoundException(`Tier with ID ${tierId} not found`);
+    }
+
+    // If tier has no guest limit, skip validation
+    if (!tier.guest_limit) {
+      return;
+    }
+
+    // Count current guests for this tier
+    const currentGuestCount = await queryRunner.manager.count(Guest, {
+      where: { tier_id: tierId, event_id: eventId },
+    });
+
+    if (currentGuestCount + guestCount > tier.guest_limit) {
+      throw new BadRequestException(
+        `Adding ${guestCount} guest(s) would exceed tier capacity (${currentGuestCount + guestCount}/${tier.guest_limit})`
+      );
+    }
+
+    this.logger.log(`Capacity check passed: ${currentGuestCount + guestCount}/${tier.guest_limit}`);
+  }
+
+  private async sendRegistrationConfirmationEmail(guest: Guest, event: Event, tier: Tier): Promise<void> {
+    const subject = `Confirmation for ${event.name}`;
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3001';
+    // TODO: Create a more sophisticated QR code generation that includes more data
+    const qrCodeData = JSON.stringify({ guestId: guest.id, eventId: event.id });
+    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrCodeData)}`;
+
+    const htmlBody = `
+      <h1>Registration Confirmed!</h1>
+      <p>Hello ${guest.name},</p>
+      <p>Your registration for the event "<strong>${event.name}</strong>" is confirmed.</p>
+      <h3>Event Details:</h3>
+      <ul>
+        <li><strong>Event:</strong> ${event.name}</li>
+        <li><strong>Date:</strong> ${event.start_datetime.toLocaleString()}</li>
+        <li><strong>Venue:</strong> ${event.venue_name || 'TBA'}</li>
+        <li><strong>Tier:</strong> ${tier.name}</li>
+      </ul>
+      <p>Here is your unique QR code for check-in:</p>
+      <img src="${qrCodeUrl}" alt="Your QR Code" />
+      <p>We look forward to seeing you there!</p>
+      <br/>
+      <p>Thank you,</p>
+      <p>The Daawa Team</p>
+    `;
+
+    const textBody = `
+      Registration Confirmed!
+      Hello ${guest.name},
+      Your registration for the event "${event.name}" is confirmed.
+      
+      Event Details:
+      - Event: ${event.name}
+      - Date: ${event.start_datetime.toLocaleString()}
+      - Venue: ${event.venue_name || 'TBA'}
+      - Tier: ${tier.name}
+      
+      We look forward to seeing you there!
+
+      Thank you,
+      The Daawa Team
+    `;
+
+    await this.notificationService.sendEmail({
+      to: guest.email,
+      subject,
+      body: textBody,
+      html: htmlBody,
+    });
   }
 } 

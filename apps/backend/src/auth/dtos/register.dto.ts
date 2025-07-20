@@ -1,6 +1,6 @@
-import { IsEmail, IsString, MinLength, MaxLength, IsEnum, IsOptional, Matches } from 'class-validator';
+import { IsEmail, IsString, MinLength, MaxLength, IsEnum, IsOptional, Matches, IsUrl, ValidateIf, IsInt, Min } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { UserRole } from '../../database/entities/user.entity';
+import { UserRole, AccountType } from '../../database/entities/user.entity';
 
 export class RegisterDto {
   @IsString()
@@ -29,8 +29,42 @@ export class RegisterDto {
   @MinLength(8, { message: 'Password confirmation must be at least 8 characters long' })
   confirmPassword: string;
 
-  @IsEnum(UserRole, { message: 'Role must be one of: admin, organizer, staff' })
+  @IsEnum(UserRole, { message: 'Role must be one of: admin, company_organizer, individual_organizer, staff' })
   role: UserRole;
+
+  @IsEnum(AccountType, { message: 'Account type must be one of: individual, company' })
+  account_type: AccountType;
+
+  // Company-specific fields (required if account_type is company)
+  @ValidateIf(o => o.account_type === AccountType.COMPANY)
+  @IsString()
+  @MinLength(2, { message: 'Company name must be at least 2 characters long' })
+  @MaxLength(255, { message: 'Company name must not exceed 255 characters' })
+  @Transform(({ value }) => value?.trim())
+  company_name?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(255, { message: 'Company registration number must not exceed 255 characters' })
+  @Transform(({ value }) => value?.trim())
+  company_registration_number?: string;
+
+  @IsOptional()
+  @IsUrl({}, { message: 'Please provide a valid company website URL' })
+  @MaxLength(255, { message: 'Company website must not exceed 255 characters' })
+  company_website?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(255, { message: 'Company address must not exceed 255 characters' })
+  @Transform(({ value }) => value?.trim())
+  company_address?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(100, { message: 'Job title must not exceed 100 characters' })
+  @Transform(({ value }) => value?.trim())
+  job_title?: string;
 
   @IsOptional()
   @IsString()
@@ -43,4 +77,26 @@ export class RegisterDto {
   @MaxLength(20, { message: 'Phone number must not exceed 20 characters' })
   @Matches(/^[+]?[1-9][\d\s\-()]+$/, { message: 'Please provide a valid phone number' })
   phone?: string;
+
+  @IsOptional()
+  @IsString()
+  managing_organization_id?: string;
+
+  @IsOptional()
+  @IsString()
+  company_location?: string;
+
+  @IsOptional()
+  @IsString()
+  company_description?: string;
+
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  company_events_per_month?: number;
+
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  company_staff_needed?: number;
 } 

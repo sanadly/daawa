@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="{{locale}}" dir="{{direction}}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{eventName}} - Invitation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            background-color: #f8fafc;
+            direction: {{direction}};
+        }
+        
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px 30px;
+        }
+        
+        .greeting {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #2d3748;
+        }
+        
+        .event-card {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .event-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 15px;
+        }
+        
+        .event-details {
+            display: table;
+            width: 100%;
+            margin: 20px 0;
+        }
+        
+        .detail-row {
+            display: table-row;
+        }
+        
+        .detail-label {
+            display: table-cell;
+            font-weight: 600;
+            color: #4a5568;
+            padding: 8px 15px 8px 0;
+            vertical-align: top;
+            width: 30%;
+        }
+        
+        .detail-value {
+            display: table-cell;
+            color: #2d3748;
+            padding: 8px 0;
+            vertical-align: top;
+        }
+        
+        .cta-section {
+            text-align: center;
+            margin: 40px 0;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: transform 0.2s ease;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .pass-info {
+            background: #edf2f7;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .qr-code {
+            margin: 20px 0;
+        }
+        
+        .qr-code img {
+            max-width: 200px;
+            height: auto;
+        }
+        
+        .footer {
+            background: #2d3748;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .footer p {
+            margin-bottom: 10px;
+            opacity: 0.8;
+        }
+        
+        .social-links {
+            margin: 20px 0;
+        }
+        
+        .social-links a {
+            color: #cbd5e0;
+            text-decoration: none;
+            margin: 0 10px;
+            font-size: 14px;
+        }
+        
+        /* RTL Support */
+        [dir="rtl"] .detail-label {
+            padding: 8px 0 8px 15px;
+            text-align: right;
+        }
+        
+        [dir="rtl"] .detail-value {
+            text-align: right;
+        }
+        
+        /* Mobile Responsiveness */
+        @media only screen and (max-width: 600px) {
+            .email-container {
+                margin: 0;
+                box-shadow: none;
+            }
+            
+            .header, .content, .footer {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .event-title {
+                font-size: 20px;
+            }
+            
+            .event-card {
+                padding: 20px;
+            }
+            
+            .event-details {
+                display: block;
+            }
+            
+            .detail-row {
+                display: block;
+                margin-bottom: 10px;
+            }
+            
+            .detail-label, .detail-value {
+                display: block;
+                width: 100%;
+                padding: 2px 0;
+            }
+            
+            .cta-button {
+                padding: 14px 28px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>{{translations.youAreInvited}}</h1>
+            <p>{{translations.eventInvitation}}</p>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="content">
+            <div class="greeting">
+                {{translations.hello}} {{guestName}},
+            </div>
+            
+            <p>{{translations.invitationMessage}}</p>
+            
+            <!-- Event Details Card -->
+            <div class="event-card">
+                <div class="event-title">{{eventName}}</div>
+                
+                <div class="event-details">
+                    <div class="detail-row">
+                        <div class="detail-label">{{translations.date}}:</div>
+                        <div class="detail-value">{{eventDate}}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">{{translations.time}}:</div>
+                        <div class="detail-value">{{eventTime}}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">{{translations.venue}}:</div>
+                        <div class="detail-value">{{venueName}}</div>
+                    </div>
+                    {{#if venueAddress}}
+                    <div class="detail-row">
+                        <div class="detail-label">{{translations.address}}:</div>
+                        <div class="detail-value">{{venueAddress}}</div>
+                    </div>
+                    {{/if}}
+                    {{#if tierName}}
+                    <div class="detail-row">
+                        <div class="detail-label">{{translations.ticketType}}:</div>
+                        <div class="detail-value">{{tierName}}</div>
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+            
+            <!-- Call to Action -->
+            <div class="cta-section">
+                <a href="{{registrationLink}}" class="cta-button">
+                    {{translations.confirmAttendance}}
+                </a>
+            </div>
+            
+            {{#if passLink}}
+            <!-- Pass Information -->
+            <div class="pass-info">
+                <h3>{{translations.yourPass}}</h3>
+                <p>{{translations.passInstructions}}</p>
+                
+                {{#if qrCodeUrl}}
+                <div class="qr-code">
+                    <img src="{{qrCodeUrl}}" alt="{{translations.qrCodeAlt}}" />
+                </div>
+                {{/if}}
+                
+                <a href="{{passLink}}" style="color: #667eea; text-decoration: none; font-weight: 600;">
+                    {{translations.downloadPass}}
+                </a>
+            </div>
+            {{/if}}
+            
+            <p>{{translations.lookingForward}}</p>
+            
+            {{#if eventDescription}}
+            <div style="margin-top: 30px; padding: 20px; background: #f7fafc; border-radius: 8px;">
+                <h3 style="margin-bottom: 10px; color: #2d3748;">{{translations.aboutEvent}}</h3>
+                <p style="color: #4a5568;">{{eventDescription}}</p>
+            </div>
+            {{/if}}
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p>{{translations.emailFooter}}</p>
+            <p style="font-size: 14px;">{{organizerName}}</p>
+            
+            {{#if socialLinks}}
+            <div class="social-links">
+                {{#each socialLinks}}
+                <a href="{{url}}">{{name}}</a>
+                {{/each}}
+            </div>
+            {{/if}}
+            
+            <p style="font-size: 12px; margin-top: 20px;">
+                {{translations.unsubscribe}} <a href="{{unsubscribeLink}}" style="color: #cbd5e0;">{{translations.clickHere}}</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html> 

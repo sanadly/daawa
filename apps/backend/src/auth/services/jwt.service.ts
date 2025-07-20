@@ -7,7 +7,6 @@ export interface JwtPayload {
   sub: string;
   email: string;
   role: string;
-  permissions: string[];
 }
 
 export interface QrCodePayload {
@@ -33,18 +32,14 @@ export class JwtService {
     private readonly configService: ConfigService,
   ) {}
 
-  async generateTokens(user: User, permissions: string[]) {
+  async generateTokens(user: User) {
     const payload: JwtPayload = {
       sub: user.id,
       email: user.email,
       role: user.role,
-      permissions,
     };
 
-    const accessToken = this.nestJwtService.sign(payload, {
-      secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
-      expiresIn: this.configService.get<string>('JWT_ACCESS_EXPIRATION'),
-    });
+    const accessToken = this.nestJwtService.sign(payload);
 
     const refreshToken = this.nestJwtService.sign(payload, {
       secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
@@ -57,7 +52,7 @@ export class JwtService {
   async verifyToken(token: string): Promise<JwtPayload> {
     try {
       return this.nestJwtService.verify(token, {
-        secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
+        secret: this.configService.get<string>('JWT_ACCESS_SECRE'),
       });
     } catch (error) {
       this.logger.error('Invalid token', error);

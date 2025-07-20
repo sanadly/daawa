@@ -1,49 +1,36 @@
 import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { AppModule } from './app.module';
+import { logger } from './config/logger.config';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { HttpExceptionFilter } from './middleware/http-exception.filter';
+import { join } from 'path';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  // Enable CORS
-  app.enableCors({
-    origin:
-      process.env.NODE_ENV === 'production'
-        ? process.env.FRONTEND_URL
-        : ['http://localhost:3000', 'http://127.0.0.1:3000'],
-    credentials: true,
+  // Serve static assets (e.g., template previews)
+  app.useStaticAssets(join(__dirname, 'assets'), {
+    prefix: '/assets/',
+  });
+  app.useStaticAssets(join(process.cwd(), 'uploads'), {
+    prefix: '/uploads/',
   });
 
-  // Global validation pipe
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-      transformOptions: {
-        enableImplicitConversion: true,
-      },
-    })
-  );
+  app.useGlobalFilters(new HttpExceptionFilter());
 
-  // API prefix
+  // Set global prefix for all routes
   app.setGlobalPrefix('api/v1');
-
-  // Swagger documentation
+  
+  // Swagger setup for API documentation
   if (process.env.NODE_ENV !== 'production') {
     const config = new DocumentBuilder()
       .setTitle('Daawa API')
       .setDescription('Event Management System API')
       .setVersion('1.0')
       .addBearerAuth()
-      .addTag('auth', 'Authentication endpoints')
-      .addTag('events', 'Event management endpoints')
-      .addTag('guests', 'Guest management endpoints')
-      .addTag('passes', 'Pass generation endpoints')
-      .addTag('checkin', 'Check-in endpoints')
       .build();
-
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api/docs', app, document, {
       swaggerOptions: {
@@ -51,14 +38,23 @@ async function bootstrap() {
       },
     });
   }
+  
+  // Global validation pipe
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+      forbidNonWhitelisted: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+    })
+  );
 
   const port = process.env.PORT || 3001;
   await app.listen(port);
 
-  console.log(`🚀 Daawa API is running on: http://localhost:${port}`);
-  if (process.env.NODE_ENV !== 'production') {
-    console.log(`📚 API Documentation: http://localhost:${port}/api/docs`);
-  }
+  logger.info(`🚀 Daawa API is running on: http://localhost:${port}`);
+  logger.info(`📚 API Documentation: http://localhost:${port}/api/docs`);
 }
-
 bootstrap();

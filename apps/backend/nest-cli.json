@@ -6,8 +6,14 @@
     "tsConfigPath": "tsconfig.json",
     "webpack": false,
     "deleteOutDir": true,
-    "assets": ["**/*.hbs", "**/*.ejs"],
-    "watchAssets": true
+    "watchAssets": true,
+    "assets": [
+      { "include": "assets/**/*", "watchAssets": true, "outDir": "dist/src" },
+      { "include": "email/templates/*.hbs", "watchAssets": true, "outDir": "dist/src" },
+      { "include": "passes/templates/*.hbs", "watchAssets": true, "outDir": "dist/src" },
+      { "include": "email/translations/*.json", "watchAssets": true, "outDir": "dist/src" },
+      "**/*.json"
+    ]
   },
   "generateOptions": {
     "spec": true,

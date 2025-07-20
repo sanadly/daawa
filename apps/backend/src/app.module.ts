@@ -12,16 +12,22 @@ import { AdminModule } from './admin/admin.module';
 import { PassesModule } from './passes/passes.module';
 import { GuestsModule } from './guests/guests.module';
 import { CheckinModule } from './checkin/checkin.module';
+import { EmailModule } from './email/email.module';
+import { StorageModule } from './storage/storage.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
-import { TestAuthController } from './test-auth.controller';
 import { PasswordService } from './auth/services/password.service';
+import { CompanyModule } from './company/company.module';
+import storageConfig from './config/storage.config';
+import secretsConfig from './config/secrets.config';
+
 
 @Module({
   imports: [
     // Configuration module
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['.env.local', '.env'],
+      load: [storageConfig, secretsConfig],
+      envFilePath: ['../../environments/development.env', '.env'],
       expandVariables: true,
     }),
 
@@ -35,8 +41,10 @@ import { PasswordService } from './auth/services/password.service';
     AdminModule,
     PassesModule,
     GuestsModule,
-    
     CheckinModule,
+    EmailModule,
+    StorageModule,
+    CompanyModule,
   ],
   controllers: [AppController],
   providers: [

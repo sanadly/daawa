@@ -1,6 +1,7 @@
 import { registerAs } from '@nestjs/config';
 import * as fs from 'fs';
 import * as path from 'path';
+import { MailerOptions } from '@nestjs-modules/mailer';
 
 export interface SecretsConfig {
   database: {
@@ -47,6 +48,11 @@ export interface SecretsConfig {
     rateLimitWindowMs: number;
     rateLimitMaxRequests: number;
   };
+  app: {
+    port: number;
+    environment: string;
+    backendUrl: string;
+  };
 }
 
 /**
@@ -56,7 +62,6 @@ export interface SecretsConfig {
 const loadSecrets = (): SecretsConfig => {
   const nodeEnv = process.env.NODE_ENV || 'development';
   
-  // In production, try to load from secrets manager or encrypted files
   if (nodeEnv === 'production') {
     return loadProductionSecrets();
   } else if (nodeEnv === 'staging') {
@@ -70,13 +75,6 @@ const loadSecrets = (): SecretsConfig => {
  * Load production secrets from AWS Secrets Manager or similar
  */
 const loadProductionSecrets = (): SecretsConfig => {
-  // In a real production environment, you would integrate with:
-  // - AWS Secrets Manager
-  // - Azure Key Vault
-  // - HashiCorp Vault
-  // - Google Secret Manager
-  
-  // For now, load from environment variables that should be provided by the secrets manager
   return {
     database: {
       host: getRequiredEnv('PROD_DB_HOST'),
@@ -121,6 +119,11 @@ const loadProductionSecrets = (): SecretsConfig => {
       rateLimitEnabled: process.env.RATE_LIMIT_ENABLED === 'true',
       rateLimitWindowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000'),
       rateLimitMaxRequests: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100'),
+    },
+    app: {
+      port: parseInt(process.env.PORT, 10) || 3000,
+      environment: 'production',
+      backendUrl: getRequiredEnv('PROD_BACKEND_URL'),
     },
   };
 };
@@ -173,6 +176,11 @@ const loadStagingSecrets = (): SecretsConfig => {
       rateLimitWindowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000'),
       rateLimitMaxRequests: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '200'),
     },
+    app: {
+      port: parseInt(process.env.PORT, 10) || 3001,
+      environment: 'staging',
+      backendUrl: getRequiredEnv('STAGING_BACKEND_URL'),
+    },
   };
 };
 
@@ -221,8 +229,13 @@ const loadDevelopmentSecrets = (): SecretsConfig => {
       bcryptRounds: parseInt(process.env.BCRYPT_ROUNDS || '10'),
       helmetEnabled: process.env.HELMET_ENABLED !== 'false',
       rateLimitEnabled: process.env.RATE_LIMIT_ENABLED !== 'false',
-      rateLimitWindowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000'),
+      rateLimitWindowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '60000'),
       rateLimitMaxRequests: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '1000'),
+    },
+    app: {
+      port: parseInt(process.env.PORT, 10) || 3001,
+      environment: 'development',
+      backendUrl: process.env.BACKEND_URL || 'http://localhost:3001',
     },
   };
 };
@@ -233,7 +246,7 @@ const loadDevelopmentSecrets = (): SecretsConfig => {
 const getRequiredEnv = (key: string): string => {
   const value = process.env[key];
   if (!value) {
-    throw new Error(`Required environment variable ${key} is not set`);
+    throw new Error(`Missing required environment variable: ${key}`);
   }
   return value;
 };
@@ -242,17 +255,27 @@ const getRequiredEnv = (key: string): string => {
  * Try to load encrypted secrets file (for local secure storage)
  */
 const loadEncryptedSecretsFile = (filePath: string): Record<string, string> | null => {
-  try {
-    if (fs.existsSync(filePath)) {
-      const encryptedContent = fs.readFileSync(filePath, 'utf8');
-      // In a real implementation, you would decrypt this content
-      // For now, assume it's a JSON file
-      return JSON.parse(encryptedContent);
-    }
-  } catch (error) {
-    console.warn(`Failed to load encrypted secrets file: ${error instanceof Error ? error.message : 'Unknown error'}`);
-  }
+  // Implement logic to read and decrypt a file
+  // For example, using a master key from environment variables
   return null;
 };
 
-export default registerAs('secrets', loadSecrets); 
+export default registerAs('secrets', loadSecrets);
+
+export const getMailerConfig = (configService: any): MailerOptions => {
+  const secrets = configService.get('secrets');
+  return {
+    transport: {
+      host: secrets.smtp.host,
+      port: secrets.smtp.port,
+      secure: false, // true for 465, false for other ports
+      auth: {
+        user: secrets.smtp.user,
+        pass: secrets.smtp.password,
+      },
+    },
+    defaults: {
+      from: `"Daawa" <${secrets.smtp.from}>`,
+    },
+  };
+}; 

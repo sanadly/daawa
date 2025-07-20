@@ -1,0 +1,561 @@
+{
+  "common": {
+    "appName": "Daawa",
+    "siteName": "Daawa",
+    "appTagline": "Event Management & Digital Invitations Platform",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "update": "Update",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "actions": "Actions",
+    "yes": "Yes",
+    "no": "No",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close",
+    "submit": "Submit",
+    "download": "Download",
+    "upload": "Upload",
+    "share": "Share",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "print": "Print",
+    "export": "Export",
+    "import": "Import",
+    "refresh": "Refresh",
+    "settings": "Settings",
+    "logout": "Logout",
+    "login": "Login",
+    "signup": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "name": "Name",
+    "phone": "Phone",
+    "date": "Date",
+    "time": "Time",
+    "location": "Location",
+    "description": "Description",
+    "status": "Status",
+    "active": "Active",
+    "inactive": "Inactive",
+    "pending": "Pending",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "view": "View",
+    "saveChanges": "Save Changes",
+    "backToEvent": "Back to Event",
+    "noData": "No data to display.",
+    "all": "All",
+    "paginationText": "Page {{page}} of {{totalPages}} ({{total}} items)"
+  },
+  "navigation": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "events": "Events",
+    "guests": "Guests",
+    "invitations": "Invitations",
+    "checkin": "Check-in",
+    "reports": "Reports",
+    "profile": "Profile",
+    "help": "Help",
+    "about": "About",
+    "admin": "Admin",
+    "company": "Company",
+    "analytics": "Analytics",
+    "billing": "Billing",
+    "qrTest": "QR Test",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "landing": {
+    "hero": {
+      "title": "Create Beautiful Digital Invitations",
+      "subtitle": "Design, manage, and track your events with our all-in-one platform",
+      "cta": {
+        "getStarted": "Get Started",
+        "learnMore": "Learn More"
+      }
+    },
+    "features": {
+      "title": "Everything You Need for Perfect Events",
+      "design": {
+        "title": "Beautiful Designs",
+        "description": "Create stunning invitations with our intuitive designer"
+      },
+      "manage": {
+        "title": "Guest Management",
+        "description": "Track RSVPs, manage guest lists, and send reminders"
+      },
+      "checkin": {
+        "title": "Easy Check-in",
+        "description": "QR code scanning for seamless event entry"
+      },
+      "analytics": {
+        "title": "Real-time Analytics",
+        "description": "Track attendance and engagement metrics"
+      }
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Login to your account",
+      "subtitle": "Sign in to your account",
+      "signIn": "Sign In",
+      "signingIn": "Signing in...",
+      "forgotPassword": "Forgot your password?",
+      "noAccount": "Don't have an account?"
+    },
+    "signup": {
+      "title": "Create Account",
+      "subtitle": "Get started with Daawa",
+      "createAccount": "Create Account",
+      "creatingAccount": "Creating account...",
+      "haveAccount": "Already have an account?",
+      "loginLink": "Sign in",
+      "companyFields": {
+        "location": "Company Location",
+        "description": "Company Description",
+        "eventsPerMonth": "Events Per Month",
+        "staffNeeded": "Staff Needed"
+      }
+    },
+    "forgotPassword": {
+      "title": "Forgot Password",
+      "subtitle": "Enter your email to reset password",
+      "resetPassword": "Reset Password",
+      "backToLogin": "Back to Login"
+    },
+    "resetPassword": {
+      "title": "Reset Password",
+      "subtitle": "Enter your new password",
+      "resetPassword": "Reset Password",
+      "backToLogin": "Back to Login"
+    },
+    "fields": {
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "fullName": "Full Name",
+      "phone": "Phone Number",
+      "accountType": "Account Type",
+      "companyName": "Company Name",
+      "jobTitle": "Job Title"
+    },
+    "placeholders": {
+      "email": "Enter your email",
+      "password": "Enter your password",
+      "confirmPassword": "Confirm your password",
+      "fullName": "Enter your full name",
+      "phone": "Enter your phone number",
+      "companyName": "Enter company name",
+      "jobTitle": "Enter your job title"
+    },
+    "validation": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Invalid email format",
+      "passwordRequired": "Password is required",
+      "passwordMinLength": "Password must be at least {{min}} characters",
+      "confirmPasswordRequired": "Please confirm your password",
+      "passwordsDoNotMatch": "Passwords do not match",
+      "nameRequired": "Name is required",
+      "companyNameRequired": "Company name is required",
+      "fieldRequired": "This field is required",
+      "positiveNumberRequired": "Must be a positive number"
+    },
+    "errors": {
+      "invalidCredentials": "Invalid email or password",
+      "loginFailed": "Login failed. Please try again.",
+      "signupFailed": "Registration failed. Please try again.",
+      "emailConflict": "An account with this email already exists"
+    },
+    "accountTypes": {
+      "individual": "Individual",
+      "company": "Company"
+    }
+  },
+  "dashboard": {
+    "welcome": "Welcome back, {{name}}!",
+    "stats": {
+      "totalEvents": "Total Events",
+      "activeEvents": "Active Events",
+      "totalGuests": "Total Guests",
+      "checkedIn": "Checked In"
+    },
+    "recentEvents": "Recent Events",
+    "quickActions": {
+      "createEvent": "Create New Event",
+      "viewAllEvents": "View All Events",
+      "manageGuests": "Manage Guests"
+    }
+  },
+  "events": {
+    "title": "Events",
+    "create": "Create Event",
+    "edit": "Edit Event",
+    "delete": "Delete Event",
+    "details": "Event Details",
+    "created": "Event created successfully! Redirecting to designer...",
+    "createFailed": "Failed to create event.",
+    "noEvents": "No events found. Create your first one!",
+    "form": {
+      "basicInfo": "Basic Info",
+      "tiersAndCapacity": "Tiers & Capacity",
+      "confirmation": "Confirmation",
+      "reviewAndPay": "Review details and pay the platform fee to publish your event.",
+      "platformFee": "Platform Fee",
+      "feeCalculation": "{{count}} guests x {{price}} LYD/guest",
+      "createAndPay": "Create Event & Proceed to Payment",
+      "name": "Event Name",
+      "description": "Description",
+      "startDate": "Start Date",
+      "startTime": "Start Time",
+      "endDate": "End Date",
+      "endTime": "End Time",
+      "totalCapacity": "Total Capacity",
+      "tiers": "Tiers",
+      "addTier": "Add Tier",
+      "tierName": "Tier Name",
+      "tierType": "Tier Type",
+      "tierPrice": "Price (LYD)",
+      "tierCapacity": "Capacity"
+    },
+    "validation": {
+      "nameRequired": "Event name is required",
+      "descriptionRequired": "Event description is required",
+      "venueRequired": "Venue is required",
+      "addressRequired": "Address is required",
+      "startDateRequired": "Start date is required",
+      "startTimeRequired": "Start time is required",
+      "endDateRequired": "End date is required",
+      "endTimeRequired": "End time is required",
+      "endDateAfterStart": "End date must be after start date",
+      "maxGuestsRequired": "Maximum guests is required",
+      "maxGuestsMinimum": "At least 1 guest is required",
+      "priceRequired": "Price is required when event is paid"
+    },
+    "status": {
+      "draft": "Draft",
+      "active": "Active",
+      "ended": "Ended",
+      "cancelled": "Cancelled"
+    },
+    "pricing": {
+      "free": "Free Event",
+      "paid": "Paid Event",
+      "pricePerInvite": "Price per invitation",
+      "baseCost": "Base cost ({{count}} invitations)",
+      "additionalCost": "Additional invitation cost",
+      "totalEstimate": "Total estimated cost"
+    },
+    "tierTypes": {
+      "FREE": "Free",
+      "PAID": "Paid",
+      "VIP": "VIP",
+      "SPONSOR": "Sponsor",
+      "STUDENT": "Student",
+      "EARLY_BIRD": "Early Bird"
+    },
+    "deleteFailed": "Failed to delete event.",
+    "noTiers": "No tiers found for this event.",
+    "tier": "Tier",
+    "tiers": "Tiers",
+    "tiersDescription": "Manage pricing tiers for your event."
+  },
+  "designer": {
+    "title": "Event Design",
+    "template": "Template",
+    "templates": {
+      "modern": "Modern",
+      "classic": "Classic", 
+      "minimal": "Minimal",
+      "bold": "Bold"
+    },
+    "colors": "Colors",
+    "primaryColor": "Primary Color",
+    "secondaryColor": "Secondary Color", 
+    "accentColor": "Accent Color",
+    "textColor": "Text Color",
+    "backgroundColor": "Background Color",
+    "typography": "Typography",
+    "fontFamily": "Font Family",
+    "fontSize": "Font Size",
+    "images": "Images",
+    "bannerImage": "Banner Image",
+    "logo": "Logo",
+    "livePreview": "Live Preview",
+    "showPreview": "Show Preview",
+    "hidePreview": "Hide Preview",
+    "saveSuccess": "Design saved successfully!",
+    "saveFailed": "Failed to save design",
+    "location": "Location",
+    "venueAddress": "Venue Address",
+    "venueAddressPlaceholder": "e.g., 123 Main St, Anytown, USA",
+    "viewOnGoogleMaps": "View on Google Maps",
+    "dragAndDrop": "Drag & drop an image here",
+    "clickToUpload": "or click to select a file",
+    "uploading": "Uploading...",
+    "uploadSuccess": "Image uploaded successfully!",
+    "uploadFailed": "Image upload failed. Please try again."
+  },
+  "guests": {
+    "title": "Guests",
+    "addGuest": "Add Guest",
+    "addGuestDescription": "Fill in the details to add a new guest to your event.",
+    "editGuest": "Edit Guest",
+    "searchPlaceholder": "Search by name or email...",
+    "totalGuests": "Total Guests",
+    "primaryGuests": "Primary Guests",
+    "checkedIn": "Checked In",
+    "rsvpAccepted": "RSVP Accepted",
+    "fetchFailed": "Failed to fetch guests.",
+    "addSuccess": "Guest added successfully.",
+    "addFailed": "Failed to add guest.",
+    "updateSuccess": "Guest updated successfully.",
+    "updateFailed": "Failed to update guest.",
+    "deleteSuccess": "Guest deleted successfully.",
+    "deleteFailed": "Failed to delete guest.",
+    "confirmDelete": "Are you sure you want to delete this guest?",
+    "selectTier": "Select a tier",
+    "importGuests": "Import Guests",
+    "exportGuests": "Export Guests",
+    "list": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "rsvp": "RSVP",
+      "checkedIn": "Checked In",
+      "table": "Table",
+      "notes": "Notes"
+    },
+    "form": {
+      "personalInfo": "Personal Information",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "additionalInfo": "Additional Information",
+      "dietaryRestrictions": "Dietary Restrictions",
+      "specialNeeds": "Special Needs",
+      "plusOne": "Plus One",
+      "notes": "Notes"
+    },
+    "rsvp": {
+      "pending": "Pending",
+      "attending": "Attending",
+      "notAttending": "Not Attending",
+      "maybe": "Maybe"
+    },
+    "sendInvites": "Send Invites",
+    "invitesSentSuccess": "Invitations sent successfully!",
+    "invitesSentFailed": "Failed to send invitations.",
+    "showQrCode": "Show QR Code",
+    "qrCodeFor": "QR Code for",
+    "scanInstruction": "Scan this code at the event check-in.",
+    "qrCodeFetchFailed": "Failed to fetch QR code."
+  },
+  "checkin": {
+    "title": "Check-in",
+    "totalGuests": "Total Guests",
+    "checkedIn": "Checked In",
+    "checkinRate": "Check-in Rate",
+    "scanQr": "Scan QR Code",
+    "timeline": "Check-in Timeline",
+    "recentCheckins": "Recent Check-ins",
+    "checkins": "Check-ins",
+    "time": "Time",
+    "method": "Method",
+    "fetchFailed": "Failed to fetch check-in data.",
+    "noData": "No check-in data available for this event.",
+    "alreadyCheckedIn": "This guest has already been checked in.",
+    "scanAgain": "Scan Again",
+    "confirmCheckin": "Confirm Check-in",
+    "checkingIn": "Checking in...",
+    "invalidQr": "Invalid QR Code"
+  },
+  "invitations": {
+    "title": "Invitations",
+    "send": "Send Invitations",
+    "schedule": "Schedule Send",
+    "preview": "Preview",
+    "history": "Send History",
+    "templates": {
+      "email": "Email Template",
+      "sms": "SMS Template",
+      "whatsapp": "WhatsApp Template"
+    },
+    "status": {
+      "sent": "Sent",
+      "delivered": "Delivered",
+      "opened": "Opened",
+      "clicked": "Clicked",
+      "bounced": "Bounced",
+      "failed": "Failed"
+    },
+    "manageInvitations": "Manage Invitations",
+    "sendInvitations": "Send Invitations",
+    "sendReminders": "Send Reminders",
+    "retryFailedBtn": "Retry Failed",
+    "inviteStatus": "Invite Status",
+    "rsvpStatus": "RSVP Status",
+    "fetchGuestsFailed": "Failed to fetch guests for invitations.",
+    "selectGuestsToSend": "Please select at least one guest to send invitations.",
+    "invitationsSentSuccess": "Invitations sent successfully.",
+    "invitationsSentFailed": "Failed to send invitations.",
+    "remindersSentSuccess": "Reminders sent successfully.",
+    "remindersSentFailed": "Failed to send reminders.",
+    "retrySuccess": "Successfully retried failed invitations.",
+    "retryFailed": "Failed to retry invitations.",
+    "sent": "Sent",
+    "confirmed": "Confirmed",
+    "pending": "Pending"
+  },
+  "reports": {
+    "title": "Reports & Analytics",
+    "overview": "Overview",
+    "attendance": "Attendance Report",
+    "rsvp": "RSVP Report",
+    "checkin": "Check-in Report",
+    "export": "Export Report",
+    "dateRange": "Date Range",
+    "filters": "Filters"
+  },
+  "profile": {
+    "title": "Profile Settings",
+    "personalInfo": "Personal Information",
+    "accountSettings": "Account Settings",
+    "notifications": "Notifications",
+    "security": "Security",
+    "billing": "Billing",
+    "changePassword": "Change Password",
+    "twoFactor": "Two-Factor Authentication",
+    "deleteAccount": "Delete Account"
+  },
+  "admin": {
+    "title": "Admin Dashboard",
+    "tabs": {
+      "overview": "Overview",
+      "events": "Events",
+      "users": "Users",
+      "payments": "Payments",
+      "system": "System"
+    },
+    "overview": {
+      "totalRevenue": "Total Revenue",
+      "inLast7Days": "in last 7 days",
+      "totalEvents": "Total Events",
+      "active": "Active",
+      "pending": "Pending",
+      "userGrowth": "User Growth",
+      "newUsersInLast7Days": "new users in last 7 days",
+      "topOrganizers": "Top Organizers",
+      "revenueAnalytics": "Revenue Analytics",
+      "revenue": "Revenue"
+    },
+    "users": {
+      "name": "Name",
+      "role": "Role",
+      "status": "Status",
+      "joined": "Joined",
+      "searchPlaceholder": "Search users by name, email...",
+      "filterByRole": "Filter by role",
+      "filterByStatus": "Filter by status",
+      "statusUpdated": "User status updated",
+      "statusUpdateFailed": "Failed to update user status",
+      "confirmDelete": "Are you sure you want to delete this user?",
+      "userDeleted": "User deleted successfully",
+      "deleteFailed": "Failed to delete user",
+      "deactivate": "Deactivate",
+      "activate": "Activate"
+    },
+    "system": {
+      "healthStatus": "System Health Status",
+      "overallStatus": "Overall Status",
+      "allSystemsOperational": "All systems operational.",
+      "issuesDetected": "Issues detected.",
+      "database": "Database",
+      "emailService": "Email Service"
+    },
+    "payments": "Payments",
+    "stats": {
+      "totalEvents": "Total Events",
+      "totalUsers": "Total Users",
+      "paidEvents": "Paid Events",
+      "revenue": "Total Revenue"
+    },
+    "eventsList": {
+      "title": "Events Management",
+      "name": "Event Name",
+      "organizer": "Organizer",
+      "guests": "Guests",
+      "status": "Status",
+      "payment": "Payment",
+      "actions": "Actions"
+    },
+    "usersList": {
+      "title": "Users Management",
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "events": "Events",
+      "joined": "Joined",
+      "actions": "Actions"
+    },
+    "paymentStatus": {
+      "pending": "Pending Payment",
+      "paid": "Paid",
+      "failed": "Failed",
+      "refunded": "Refunded"
+    },
+    "setPaymentStatus": "Set Payment",
+    "paymentStatusUpdated": "Payment status updated successfully.",
+    "paymentStatusUpdateFailed": "Failed to update payment status.",
+    "statsUpdated": "Stats have been updated.",
+    "totalResponses": "Total Responses"
+  },
+  "errors": {
+    "404": {
+      "title": "Page Not Found",
+      "message": "The page you're looking for doesn't exist",
+      "action": "Go to Dashboard"
+    },
+    "500": {
+      "title": "Server Error",
+      "message": "Something went wrong on our end",
+      "action": "Try Again"
+    },
+    "403": {
+      "title": "Access Denied",
+      "message": "You don't have permission to access this resource",
+      "action": "Go Back"
+    },
+    "required": "{{field}} is required",
+    "invalidEmail": "Invalid email address",
+    "passwordMismatch": "Passwords do not match",
+    "unknown": "An unexpected error occurred.",
+    "fetchEventFailed": "Failed to fetch event details.",
+    "eventNotFound": "Event not found."
+  },
+  "validation": {
+    "required": "This field is required",
+    "email": "Please enter a valid email",
+    "minLength": "Must be at least {{min}} characters",
+    "maxLength": "Must be no more than {{max}} characters",
+    "pattern": "Invalid format",
+    "passwordMatch": "Passwords do not match",
+    "phoneNumber": "Please enter a valid phone number"
+  },
+  "passes": {
+    "title": "Passes",
+    "scanAtEvent": "Scan at event check-in"
+  }
+} 

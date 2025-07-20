@@ -6,6 +6,8 @@ import {
   UpdateDateColumn,
   OneToMany,
   Index,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 import { Event } from './event.entity';
 import { CheckinRecord } from './checkin-record.entity';
@@ -15,14 +17,22 @@ import { Guest } from './guest.entity';
 
 export enum UserRole {
   ADMIN = 'admin',
-  ORGANIZER = 'organizer',
+  COMPANY_ORGANIZER = 'company_organizer',
+  INDIVIDUAL_ORGANIZER = 'individual_organizer',
   STAFF = 'staff',
+}
+
+export enum AccountType {
+  INDIVIDUAL = 'individual',
+  COMPANY = 'company',
 }
 
 @Entity('users')
 @Index(['email'], { unique: true })
 @Index(['role'])
 @Index(['is_active'])
+@Index(['account_type'])
+@Index(['managing_organization_id'])
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -41,6 +51,44 @@ export class User {
     enum: UserRole,
   })
   role: UserRole;
+
+  @Column({
+    type: 'enum',
+    enum: AccountType,
+    default: AccountType.INDIVIDUAL,
+  })
+  account_type: AccountType;
+
+  // Company-specific fields
+  @Column({ length: 255, nullable: true })
+  company_name?: string;
+
+  @Column({ length: 255, nullable: true })
+  company_registration_number?: string;
+
+  @Column({ length: 255, nullable: true })
+  company_website?: string;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  company_address: string;
+
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  job_title: string;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  company_location: string;
+
+  @Column({ type: 'text', nullable: true })
+  company_description: string;
+
+  @Column({ type: 'integer', nullable: true })
+  company_events_per_month: number;
+
+  @Column({ type: 'integer', nullable: true })
+  company_staff_needed: number;
+
+  @Column({ type: 'uuid', nullable: true })
+  managing_organization_id: string;
 
   @Column({ length: 5, default: 'en' })
   preferred_language: string;
@@ -67,6 +115,13 @@ export class User {
   updated_at: Date;
 
   // Relationships
+  @ManyToOne(() => User, (user) => user.managed_users, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'managing_organization_id' })
+  managing_organization?: User;
+
+  @OneToMany(() => User, (user) => user.managing_organization)
+  managed_users: User[];
+
   @OneToMany(() => Event, (event) => event.organizer)
   organized_events: Event[];
 

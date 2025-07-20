@@ -967,7 +967,7 @@
           7,
           11
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -975,7 +975,7 @@
             "description": "Create a backend API endpoint to receive and process self-registration form submissions, supporting dynamic fields and +N guest data.",
             "dependencies": [],
             "details": "Define the API contract, request/response structure, and ensure it can handle custom fields and multiple guests per registration.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 2,
@@ -985,7 +985,7 @@
               1
             ],
             "details": "Include checks for required fields, field formats, and cross-field dependencies. Ensure validation is extensible for custom fields.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 3,
@@ -996,7 +996,7 @@
               2
             ],
             "details": "Design data models and API payloads to accommodate multiple guests, and ensure validation and storage logic handle guest entries.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 4,
@@ -1008,7 +1008,7 @@
               3
             ],
             "details": "Check available capacity before accepting registrations, including guests, and handle race conditions or transactional integrity.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 5,
@@ -1021,7 +1021,7 @@
               4
             ],
             "details": "Generate secure tokens, send confirmation emails, and handle confirmation callbacks to activate registrations.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 6,
@@ -1034,7 +1034,7 @@
               4
             ],
             "details": "Allow admin-configurable fields, store custom field data, and ensure validation and API responses reflect customizations.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 7,
@@ -1049,7 +1049,7 @@
               6
             ],
             "details": "Return structured error responses, log errors for monitoring, and ensure user-facing messages are actionable and secure.",
-            "status": "pending"
+            "status": "done"
           }
         ]
       },
@@ -1063,7 +1063,7 @@
         "dependencies": [
           12
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -1071,7 +1071,7 @@
             "description": "Develop the frontend logic to render forms dynamically based on configuration data, allowing for flexible field types and layouts.",
             "dependencies": [],
             "details": "Utilize a component-based approach to render form fields according to a configuration object or schema. Ensure the form can adapt to different field types and structures as defined by backend or static configuration.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 2,
@@ -1081,7 +1081,7 @@
               1
             ],
             "details": "Implement UI controls (such as 'Add Guest' and 'Remove Guest' buttons) that allow users to append or remove guest input sections. Ensure the form state updates accordingly and integrates with the dynamic rendering logic.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 3,
@@ -1092,7 +1092,7 @@
               2
             ],
             "details": "Apply both synchronous and asynchronous validation rules (e.g., required fields, email format, unique constraints) and provide real-time feedback to users. Ensure validation scales with dynamically generated fields.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 4,
@@ -1102,7 +1102,7 @@
               3
             ],
             "details": "After successful validation, display a summary of all form data, including guest information, in a clear and accessible format. Provide options to edit or confirm the submission.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 5,
@@ -1112,7 +1112,7 @@
               1
             ],
             "details": "Integrate internationalization (i18n) libraries and apply RTL-compatible styles. Ensure all text, labels, and UI elements adapt to the selected language and direction.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 6,
@@ -1126,7 +1126,7 @@
               5
             ],
             "details": "Implement semantic HTML, ARIA attributes, keyboard navigation, and screen reader compatibility. Test with accessibility tools to verify compliance.",
-            "status": "pending"
+            "status": "done"
           }
         ]
       },
@@ -1143,7 +1143,7 @@
           10,
           13
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -1151,7 +1151,7 @@
             "description": "Create a confirmation page that summarizes the user's pass purchase and provides access to delivery and download options.",
             "dependencies": [],
             "details": "The confirmation page should display relevant pass details, purchase summary, and clear calls-to-action for downloading or receiving passes.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 2,
@@ -1161,7 +1161,7 @@
               1
             ],
             "details": "Ensure each button triggers the correct download or save action for the selected pass type and is visible only when that pass type is available.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 3,
@@ -1171,7 +1171,7 @@
               1
             ],
             "details": "Provide a visual preview that accurately reflects the final pass appearance on different devices and formats.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 4,
@@ -1181,7 +1181,7 @@
               1
             ],
             "details": "Ensure emails are sent reliably, include all necessary pass information, and support multiple pass types.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 5,
@@ -1194,7 +1194,7 @@
               4
             ],
             "details": "Implement language selection, translation files, and RTL layout adjustments across all user-facing components.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 6,
@@ -1207,7 +1207,7 @@
               5
             ],
             "details": "Display user-friendly error messages and fallback options for failed downloads, email issues, or localization errors.",
-            "status": "pending"
+            "status": "done"
           }
         ]
       },
@@ -1223,7 +1223,7 @@
           7,
           11
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -1231,7 +1231,7 @@
             "description": "Enhance the dashboard UI to display a list of active events with key metrics and quick actions.",
             "dependencies": [],
             "details": "Include event status, upcoming dates, and summary statistics. Ensure real-time updates and responsive design.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 2,
@@ -1241,7 +1241,7 @@
               1
             ],
             "details": "Allow navigation from the dashboard to the event detail page. Display event description, location, time, and organizer info.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 3,
@@ -1251,7 +1251,7 @@
               2
             ],
             "details": "Enable sorting, searching, and status indicators (e.g., RSVP, checked-in). Support bulk actions for guest management.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 4,
@@ -1261,7 +1261,7 @@
               3
             ],
             "details": "Provide forms for single guest entry and a CSV upload tool with validation and error handling.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 5,
@@ -1271,7 +1271,7 @@
               4
             ],
             "details": "Allow selection of guests and sending of customizable email invitations. Track delivery and RSVP status.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 6,
@@ -1283,7 +1283,7 @@
               5
             ],
             "details": "Use interactive charts and summary widgets to visualize key metrics. Ensure data is updated dynamically.",
-            "status": "pending"
+            "status": "done"
           }
         ]
       },
@@ -1301,7 +1301,7 @@
           11,
           15
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -1309,7 +1309,7 @@
             "description": "Develop responsive and visually appealing email templates that support personalization and are compatible across devices and email clients.",
             "dependencies": [],
             "details": "Use wireframing and prototyping tools to design templates. Ensure templates include placeholders for personalized content and links. Test for mobile and desktop compatibility.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 2,
@@ -1319,7 +1319,7 @@
               1
             ],
             "details": "API should accept template data, recipient information, and personalization parameters. Ensure secure handling of tokens and links. Integrate with SMTP or third-party email services.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 3,
@@ -1330,7 +1330,7 @@
               2
             ],
             "details": "Support dynamic fields such as recipient name, organization, and unique invite links. Ensure data privacy and correct mapping of personalized content.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 4,
@@ -1342,7 +1342,7 @@
               3
             ],
             "details": "Interface should allow batch uploads, preview of personalized emails, and status feedback. Integrate with the backend API for sending invitations.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 5,
@@ -1354,7 +1354,7 @@
               4
             ],
             "details": "Integrate tracking pixels and unique links. Store and display analytics in the frontend. Handle privacy and compliance requirements.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 6,
@@ -1367,7 +1367,7 @@
               5
             ],
             "details": "Provide clear error messages to users, log errors for diagnostics, and implement retry mechanisms for transient failures.",
-            "status": "pending"
+            "status": "done"
           }
         ]
       },
@@ -1578,7 +1578,7 @@
           13,
           14
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -1586,7 +1586,7 @@
             "description": "Create the main landing page for the guest portal, providing navigation to event details, pass access, RSVP, and guest information sections.",
             "dependencies": [],
             "details": "Ensure the home page is visually clear, intuitive, and provides quick access to all major features of the portal.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 2,
@@ -1596,7 +1596,7 @@
               1
             ],
             "details": "Display all relevant event data in a clear format and ensure real-time updates are reflected for guests.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 3,
@@ -1606,7 +1606,7 @@
               1
             ],
             "details": "Integrate secure access to digital passes and ensure compatibility with mobile devices for easy entry.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 4,
@@ -1616,7 +1616,7 @@
               1
             ],
             "details": "Show guest-specific details such as name, contact info, dietary preferences, and any special accommodations.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 5,
@@ -1627,7 +1627,7 @@
               4
             ],
             "details": "Include options for confirming attendance, specifying preferences, and leaving comments or feedback.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 6,
@@ -1641,7 +1641,7 @@
               5
             ],
             "details": "Implement WCAG-compliant accessibility features and provide language selection with accurate translations throughout the portal.",
-            "status": "pending"
+            "status": "done"
           }
         ]
       },
@@ -1659,7 +1659,7 @@
           18,
           19
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -1667,7 +1667,7 @@
             "description": "Integrate an internationalization (i18n) library or framework into the project, configuring English as the default language and ensuring the application is ready for future language additions.",
             "dependencies": [],
             "details": "Choose an appropriate i18n library (e.g., i18next for React, built-in i18n for Next.js, or Spring Boot i18n for Java). Configure the default locale to 'en' and ensure the app loads English translations by default.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 2,
@@ -1677,7 +1677,7 @@
               1
             ],
             "details": "Create a directory (e.g., 'locales') and add an 'en.json' (or equivalent) file containing all English strings. Ensure consistency in key naming and coverage of all UI text.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 3,
@@ -1687,7 +1687,7 @@
               1
             ],
             "details": "Use browser settings, local storage, or user profile settings to detect language. Configure fallback to English. Ensure detection logic is integrated with the i18n framework.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 4,
@@ -1697,7 +1697,7 @@
               2
             ],
             "details": "Update email templates to reference translation keys instead of hardcoded strings. Ensure templates render correctly in English and are ready for future localization.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 5,
@@ -1709,7 +1709,7 @@
               3
             ],
             "details": "Build a language switcher (dropdown, toggle, etc.) that interacts with the i18n framework. Ensure switching updates the UI and persists user preference.",
-            "status": "pending"
+            "status": "done"
           }
         ]
       },
@@ -1723,7 +1723,7 @@
         "dependencies": [
           20
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -1731,7 +1731,7 @@
             "description": "Extract all user-facing text and create/expand translation files to include Arabic translations, ensuring proper locale codes (e.g., ar, ar-EG).",
             "dependencies": [],
             "details": "Ensure all static and dynamic content is covered. Use professional translation or validated sources for accuracy.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 2,
@@ -1741,7 +1741,7 @@
               1
             ],
             "details": "Apply dir=\"rtl\" at the root level, adjust CSS for RTL, and ensure icons and navigation are mirrored appropriately. Test with various browsers and devices.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 3,
@@ -1751,7 +1751,7 @@
               2
             ],
             "details": "Select fonts optimized for Arabic readability. Adjust font sizes and line heights for Arabic script as needed.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 4,
@@ -1762,7 +1762,7 @@
               3
             ],
             "details": "Test email rendering in major clients (Gmail, Outlook, mobile). Ensure text direction, alignment, and fonts are correct.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 5,
@@ -1774,7 +1774,7 @@
               4
             ],
             "details": "Use both manual and automated testing. Validate date, time, and number localization. Address any flipped icons, misaligned elements, or broken layouts.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 6,
@@ -1788,7 +1788,7 @@
               5
             ],
             "details": "Support browser language detection and user profile settings. Ensure seamless switching between LTR and RTL languages.",
-            "status": "pending"
+            "status": "done"
           }
         ]
       },
@@ -1802,7 +1802,7 @@
         "dependencies": [
           1
         ],
-        "status": "pending",
+        "status": "in-progress",
         "subtasks": [
           {
             "id": 1,
@@ -1810,7 +1810,7 @@
             "description": "Provision and configure the cloud storage service, including selecting storage type (object, file, or block), setting up buckets or containers, and defining access permissions.",
             "dependencies": [],
             "details": "Choose the appropriate cloud provider and storage class, configure storage resources, and establish initial IAM policies for secure access.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 2,
@@ -1820,7 +1820,7 @@
               1
             ],
             "details": "Implement RESTful or GraphQL API for file uploads, integrate with cloud SDKs, and enforce file size/type restrictions as needed.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 3,
@@ -1830,7 +1830,7 @@
               2
             ],
             "details": "Set up serverless functions or background jobs to process images upon upload, and store processed results in designated storage locations.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 4,
@@ -1841,7 +1841,7 @@
               3
             ],
             "details": "Connect storage buckets to the CDN, set up caching rules, and ensure processed images are distributed via the CDN endpoints.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 5,
@@ -1851,7 +1851,7 @@
               4
             ],
             "details": "Use signed URLs or token-based access mechanisms to restrict file access, and integrate with authentication systems as needed.",
-            "status": "pending"
+            "status": "done"
           },
           {
             "id": 6,
@@ -1863,7 +1863,7 @@
               5
             ],
             "details": "Configure storage lifecycle policies, schedule cleanup jobs, and monitor storage usage to ensure compliance and cost efficiency.",
-            "status": "pending"
+            "status": "in-progress"
           }
         ]
       },
@@ -2108,7 +2108,7 @@
     ],
     "metadata": {
       "created": "2025-06-18T19:03:31.364Z",
-      "updated": "2025-07-03T12:09:48.306Z",
+      "updated": "2025-07-05T03:03:06.873Z",
       "description": "Tasks for master context"
     }
   }

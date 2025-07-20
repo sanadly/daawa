@@ -84,7 +84,11 @@ export class RoleAssignmentService {
     }
 
     // Organizers can assign staff roles only
-    if (assignerRole === UserRole.ORGANIZER && targetRole === UserRole.STAFF) {
+    if (
+      (assignerRole === UserRole.INDIVIDUAL_ORGANIZER ||
+        assignerRole === UserRole.COMPANY_ORGANIZER) &&
+      targetRole === UserRole.STAFF
+    ) {
       return true;
     }
 
@@ -128,9 +132,14 @@ export class RoleAssignmentService {
         description: 'Full system access, can manage all users and settings',
       },
       {
-        role: UserRole.ORGANIZER,
+        role: UserRole.COMPANY_ORGANIZER,
         level: 2,
-        description: 'Can create and manage events, assign staff roles',
+        description: 'Can create and manage events for a company, assign staff roles',
+      },
+      {
+        role: UserRole.INDIVIDUAL_ORGANIZER,
+        level: 2,
+        description: 'Can create and manage events as an individual, assign staff roles',
       },
       {
         role: UserRole.STAFF,

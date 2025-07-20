@@ -84,8 +84,9 @@ export const ROLE_PERMISSIONS: PermissionMap = {
     Permission.TEMPLATE_UPDATE,
     Permission.TEMPLATE_DELETE,
   ],
-  [UserRole.ORGANIZER]: [
-    // Event and guest management
+  
+  [UserRole.COMPANY_ORGANIZER]: [
+    // Full event and guest management for companies
     Permission.EVENT_CREATE,
     Permission.EVENT_READ,
     Permission.EVENT_UPDATE,
@@ -97,6 +98,29 @@ export const ROLE_PERMISSIONS: PermissionMap = {
     Permission.GUEST_DELETE,
     Permission.GUEST_IMPORT,
     Permission.GUEST_EXPORT,
+    Permission.CHECKIN_PERFORM,
+    Permission.CHECKIN_READ,
+    Permission.ANALYTICS_READ,
+    Permission.ANALYTICS_EXPORT,
+    Permission.TEMPLATE_CREATE,
+    Permission.TEMPLATE_READ,
+    Permission.TEMPLATE_UPDATE,
+    Permission.TEMPLATE_DELETE,
+  ],
+  [UserRole.INDIVIDUAL_ORGANIZER]: [
+    // Event and guest management for individuals
+    Permission.EVENT_CREATE,
+    Permission.EVENT_READ,
+    Permission.EVENT_UPDATE,
+    Permission.EVENT_DELETE,
+    Permission.EVENT_PUBLISH,
+    Permission.GUEST_CREATE,
+    Permission.GUEST_READ,
+    Permission.GUEST_UPDATE,
+    Permission.GUEST_DELETE,
+    Permission.GUEST_IMPORT,
+    Permission.GUEST_EXPORT,
+    Permission.CHECKIN_PERFORM,
     Permission.CHECKIN_READ,
     Permission.ANALYTICS_READ,
     Permission.ANALYTICS_EXPORT,

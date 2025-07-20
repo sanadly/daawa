@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EventsController } from './events.controller';
 import { EventsService } from './events.service';
-import { ActivationService } from './activation.service';
+
 import { PostActivationHooksService } from './post-activation-hooks.service';
 import { Event } from '../database/entities/event.entity';
 import { Tier } from '../database/entities/tier.entity';
@@ -17,7 +17,7 @@ import { NotificationsModule } from '../notifications/notifications.module';
     NotificationsModule,
   ],
   controllers: [EventsController],
-  providers: [EventsService, ActivationService, PostActivationHooksService],
-  exports: [EventsService, ActivationService],
+  providers: [EventsService, PostActivationHooksService],
+  exports: [EventsService],
 })
 export class EventsModule {} 

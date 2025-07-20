@@ -188,7 +188,14 @@ export class PdfPassService implements OnModuleInit, OnModuleDestroy {
 
   private async loadTemplate(): Promise<void> {
     try {
-      const templatePath = path.join(__dirname, '../templates/pass-template.hbs');
+      const templatePath = path.join(
+        __dirname,
+        '../templates',
+        'pass-template.hbs',
+      );
+
+      this.logger.log('Looking for template at:', templatePath);
+
       const templateContent = await fs.readFile(templatePath, 'utf-8');
       
       this.templateCache.set('default', {

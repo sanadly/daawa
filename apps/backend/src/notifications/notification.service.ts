@@ -111,7 +111,7 @@ export class NotificationService {
         venue: event.venue_name,
         start_date: event.start_datetime,
         end_date: event.end_datetime,
-        capacity: event.capacity_limit,
+        capacity: event.total_capacity,
         status: event.status,
       },
       registration_link: registrationLink,
@@ -212,7 +212,7 @@ export class NotificationService {
   /**
    * Send email (placeholder for actual email service integration)
    */
-  private async sendEmail(emailData: EmailNotification): Promise<void> {
+  public async sendEmail(emailData: EmailNotification): Promise<void> {
     // TODO: Integrate with actual email service (SendGrid, AWS SES, etc.)
     this.logger.log(`Sending email to: ${emailData.to}`);
     this.logger.log(`Subject: ${emailData.subject}`);

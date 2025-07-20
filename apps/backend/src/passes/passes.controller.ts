@@ -37,6 +37,10 @@ import { PassGenerationService, PassGenerationRequest } from './services/pass-ge
 import { PdfPassService } from './services/pdf-pass.service';
 import { AppleWalletService } from './services/apple-wallet.service';
 import { GoogleWalletService } from './services/google-wallet.service';
+import { PassesService } from './passes.service';
+import { Public } from '../auth/decorators/public.decorator';
+import { PassResponseDto } from './dto';
+import { PassTemplateService } from './services/pass-template.service';
 
 export class GeneratePassDto {
   eventId: string;
@@ -80,6 +84,7 @@ export class PassesController {
     private readonly pdfPassService: PdfPassService,
     private readonly appleWalletService: AppleWalletService,
     private readonly googleWalletService: GoogleWalletService,
+    private readonly passTemplateService: PassTemplateService,
   ) {}
 
   /**
@@ -377,7 +382,7 @@ export class PassesController {
 
   @Get('stats')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.ADMIN, UserRole.ORGANIZER)
+  @Roles(UserRole.ADMIN, UserRole.INDIVIDUAL_ORGANIZER, UserRole.COMPANY_ORGANIZER)
   @ApiBearerAuth()
   @ApiOperation({
     summary: 'Get pass generation statistics',
@@ -579,36 +584,32 @@ export class PassesController {
   async validateQrToken(
     @Param('token') token: string,
   ): Promise<{ success: boolean; data: any }> {
+    this.logger.log(`Validating QR token: ${token}`);
     try {
-      this.logger.log(`Validating QR token: ${token.substring(0, 20)}...`);
+      // In a real scenario, this would involve cryptographic verification
+      // and checking against a database of issued tokens.
+      const decoded = JSON.parse(Buffer.from(token, 'base64').toString('utf-8'));
+      if (!decoded.passId || !decoded.eventId || !decoded.guestId) {
+        throw new Error('Invalid QR token payload');
+      }
 
-      // TODO: Implement QR token validation using JWT service
-      // const payload = await this.jwtService.verifyQrCodeToken(token);
-
-      return {
-        success: true,
-        data: {
-          valid: true,
-          eventId: 'placeholder',
-          guestId: 'placeholder',
-          passId: 'placeholder',
-          issuedAt: new Date().toISOString(),
-          expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-        },
-      };
-
+      // Placeholder for actual validation logic
+      return { success: true, data: decoded };
          } catch (error) {
-       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-       this.logger.warn(`QR token validation failed: ${errorMessage}`);
-       
-       return {
-         success: false,
-         data: {
-           valid: false,
-           error: 'Invalid or expired token',
-         },
-       };
+      this.logger.error('QR token validation failed', error);
+      throw new BadRequestException('Invalid or expired QR token');
      }
+  }
+
+  /**
+   * Get available pass templates
+   */
+  @Public()
+  @Get('templates')
+  @ApiOperation({ summary: 'Get available pass design templates' })
+  @ApiResponse({ status: 200, description: 'List of available templates' })
+  async getTemplates() {
+    return this.passTemplateService.getAvailableTemplates();
   }
 
   private updateStats(generationTime: number, success: boolean): void {

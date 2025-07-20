@@ -29,6 +29,20 @@ export enum ActivityType {
   EVENT_CREATED = 'event_created',
   EVENT_UPDATED = 'event_updated',
   EVENT_CANCELLED = 'event_cancelled',
+  EVENT_PAYMENT_STATUS_UPDATE = 'event_payment_status_update',
+  USER_LOGIN = 'USER_LOGIN',
+  USER_LOGOUT = 'USER_LOGOUT',
+  USER_REGISTER = 'USER_REGISTER',
+  USER_UPDATED = 'USER_UPDATED',
+  USER_STATUS_UPDATE = 'user_status_update',
+  USER_DELETED = 'user_deleted',
+  PASSWORD_RESET_REQUEST = 'PASSWORD_RESET_REQUEST',
+  PASSWORD_RESET_SUCCESS = 'PASSWORD_RESET_SUCCESS',
+  EVENT_DELETED = 'EVENT_DELETED',
+  GUEST_ADDED = 'GUEST_ADDED',
+  GUEST_UPDATED = 'GUEST_UPDATED',
+  GUEST_DELETED = 'GUEST_DELETED',
+  PAYMENT_PROCESSED = 'payment_processed',
 }
 
 @Entity('user_activities')

@@ -34,12 +34,8 @@ export class AuthController {
   /**
    * Register a new user
    */
+  @Public()
   @Post('register')
-  @HttpCode(HttpStatus.CREATED)
-  @ApiOperation({ summary: 'Register a new user' })
-  @ApiResponse({ status: 201, description: 'User registered successfully' })
-  @ApiResponse({ status: 400, description: 'Invalid input data' })
-  @ApiResponse({ status: 409, description: 'User already exists' })
   async register(@Body() registerDto: RegisterDto) {
     this.logger.log(`Registration attempt for email: ${registerDto.email}`);
     const result = await this.authService.register(registerDto);
@@ -53,6 +49,7 @@ export class AuthController {
   /**
    * Login user
    */
+  @Public()
   @Post('login')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Login user' })
@@ -71,6 +68,7 @@ export class AuthController {
   /**
    * Refresh access token
    */
+  @Public()
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Refresh access token' })
@@ -190,7 +188,7 @@ export class AuthController {
    * Organizer and Admin only endpoint - RBAC demonstration
    */
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.ADMIN, UserRole.ORGANIZER)
+  @Roles(UserRole.ADMIN, UserRole.COMPANY_ORGANIZER, UserRole.INDIVIDUAL_ORGANIZER)
   @Get('events/manage')
   async getEventManagement(@GetUser() user: User) {
     return {
