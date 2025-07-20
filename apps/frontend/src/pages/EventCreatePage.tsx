@@ -48,10 +48,12 @@ const EventCreatePage: React.FC = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { getLocalizedPath, language } = useLanguage()
-  const isRTL = language === 'ar'
   
   const [currentStep, setCurrentStep] = useState(1)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  
+  // Check if current language is RTL
+  const isRTL = language === 'ar'
   
   const form = useForm({
     resolver: zodResolver(eventSchema), 
@@ -162,35 +164,51 @@ const EventCreatePage: React.FC = () => {
                 <div>
                   <Label htmlFor="name">{t('events.form.name')}</Label>
                   <Input id="name" {...form.register('name')} />
-                  {form.formState.errors.name && <p className="text-sm text-red-500">{form.formState.errors.name.message}</p>}
+                  {form.formState.errors.name && <p className="text-sm text-red-500">{t('events.validation.nameRequired')}</p>}
                 </div>
                 <div>
                   <Label htmlFor="description">{t('events.form.description')}</Label>
                   <Textarea id="description" {...form.register('description')} />
-                  {form.formState.errors.description && <p className="text-sm text-red-500">{form.formState.errors.description.message}</p>}
+                  {form.formState.errors.description && <p className="text-sm text-red-500">{t('events.validation.descriptionRequired')}</p>}
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="start_date">{t('events.form.startDate')}</Label>
-                    <Input id="start_date" type="date" {...form.register('start_date')} />
-                    {form.formState.errors.start_date && <p className="text-sm text-red-500">{form.formState.errors.start_date.message}</p>}
+                    <Input 
+                      id="start_date" 
+                      type="date" 
+                      {...form.register('start_date')}
+                    />
+                    {form.formState.errors.start_date && <p className="text-sm text-red-500">{t('events.validation.startDateRequired')}</p>}
                   </div>
                   <div>
                     <Label htmlFor="start_time">{t('events.form.startTime')}</Label>
-                    <Input id="start_time" type="time" {...form.register('start_time')} />
-                    {form.formState.errors.start_time && <p className="text-sm text-red-500">{form.formState.errors.start_time.message}</p>}
+                    <Input 
+                      id="start_time" 
+                      type="time" 
+                      {...form.register('start_time')}
+                    />
+                    {form.formState.errors.start_time && <p className="text-sm text-red-500">{t('events.validation.startTimeRequired')}</p>}
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="end_date">{t('events.form.endDate')}</Label>
-                    <Input id="end_date" type="date" {...form.register('end_date')} />
-                    {form.formState.errors.end_date && <p className="text-sm text-red-500">{form.formState.errors.end_date.message}</p>}
+                    <Input 
+                      id="end_date" 
+                      type="date" 
+                      {...form.register('end_date')}
+                    />
+                    {form.formState.errors.end_date && <p className="text-sm text-red-500">{t('events.validation.endDateRequired')}</p>}
                   </div>
                   <div>
                     <Label htmlFor="end_time">{t('events.form.endTime')}</Label>
-                    <Input id="end_time" type="time" {...form.register('end_time')} />
-                    {form.formState.errors.end_time && <p className="text-sm text-red-500">{form.formState.errors.end_time.message}</p>}
+                    <Input 
+                      id="end_time" 
+                      type="time" 
+                      {...form.register('end_time')}
+                    />
+                    {form.formState.errors.end_time && <p className="text-sm text-red-500">{t('events.validation.endTimeRequired')}</p>}
                   </div>
                 </div>
               </CardContent>
@@ -208,8 +226,12 @@ const EventCreatePage: React.FC = () => {
               <CardContent className="space-y-4">
                 <div>
                   <Label htmlFor="total_capacity">{t('events.form.totalCapacity')}</Label>
-                  <Input id="total_capacity" type="number" {...form.register('event_settings.max_capacity')} />
-                  {form.formState.errors.event_settings?.max_capacity && <p className="text-sm text-red-500">{form.formState.errors.event_settings.max_capacity.message}</p>}
+                  <Input 
+                    id="total_capacity" 
+                    type="number" 
+                    {...form.register('event_settings.max_capacity')}
+                  />
+                  {form.formState.errors.event_settings?.max_capacity && <p className="text-sm text-red-500">{t('events.validation.maxGuestsMinimum')}</p>}
                 </div>
                 
                 <div className="flex items-center justify-between mt-4">
@@ -218,7 +240,7 @@ const EventCreatePage: React.FC = () => {
                     <Plus className="mr-2 h-4 w-4" /> {t('events.form.addTier')}
                   </Button>
                 </div>
-                {form.formState.errors.tiers?.root && <p className="text-sm text-red-500">{form.formState.errors.tiers.root.message}</p>}
+                {form.formState.errors.tiers?.root && <p className="text-sm text-red-500">{t('events.validation.nameRequired')}</p>}
 
                 <div className="space-y-4">
                   {fields.map((field, index) => (
@@ -235,8 +257,10 @@ const EventCreatePage: React.FC = () => {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <Label>{t('events.form.tierName')}</Label>
-                          <Input {...form.register(`tiers.${index}.name`)} />
-                          {form.formState.errors.tiers?.[index]?.name && <p className="text-sm text-red-500">{form.formState.errors.tiers[index].name.message}</p>}
+                          <Input 
+                            {...form.register(`tiers.${index}.name`)}
+                          />
+                          {form.formState.errors.tiers?.[index]?.name && <p className="text-sm text-red-500">{t('events.validation.nameRequired')}</p>}
                         </div>
                         <div>
                           <Label>{t('events.form.tierType')}</Label>
@@ -246,7 +270,7 @@ const EventCreatePage: React.FC = () => {
                             render={({ field }) => (
                               <Select onValueChange={field.onChange} defaultValue={field.value}>
                                 <SelectTrigger>
-                                  <SelectValue placeholder="Select tier type" />
+                                  <SelectValue placeholder={t('events.form.tierType')} />
                                 </SelectTrigger>
                                 <SelectContent>
                                   {Object.values(TierType).map(type => (
@@ -259,13 +283,19 @@ const EventCreatePage: React.FC = () => {
                         </div>
                         <div>
                           <Label>{t('events.form.tierPrice')}</Label>
-                          <Input type="number" {...form.register(`tiers.${index}.price`)} />
-                          {form.formState.errors.tiers?.[index]?.price && <p className="text-sm text-red-500">{form.formState.errors.tiers[index].price.message}</p>}
+                          <Input 
+                            type="number" 
+                            {...form.register(`tiers.${index}.price`)}
+                          />
+                          {form.formState.errors.tiers?.[index]?.price && <p className="text-sm text-red-500">{t('events.validation.priceRequired')}</p>}
                         </div>
                         <div>
                           <Label>{t('events.form.tierCapacity')}</Label>
-                          <Input type="number" {...form.register(`tiers.${index}.capacity`)} />
-                          {form.formState.errors.tiers?.[index]?.capacity && <p className="text-sm text-red-500">{form.formState.errors.tiers[index].capacity.message}</p>}
+                          <Input 
+                            type="number" 
+                            {...form.register(`tiers.${index}.capacity`)}
+                          />
+                          {form.formState.errors.tiers?.[index]?.capacity && <p className="text-sm text-red-500">{t('events.validation.maxGuestsMinimum')}</p>}
                         </div>
                       </div>
                     </Card>
@@ -325,13 +355,13 @@ const EventCreatePage: React.FC = () => {
   ]
 
   return (
-    <div dir={isRTL ? "rtl" : "ltr"} className="max-w-4xl mx-auto">
+    <div className="max-w-4xl mx-auto">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
           {t('events.create')}
         </h1>
         <p className="text-gray-600">
-          Create a new event and manage invitations
+          {t('events.subtitle')}
         </p>
       </div>
 
@@ -386,7 +416,7 @@ const EventCreatePage: React.FC = () => {
             disabled={currentStep === 1}
             className="flex items-center gap-2"
           >
-            <ChevronLeft className="w-4 h-4" />
+            {isRTL ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
             {t('common.previous')}
           </Button>
 
@@ -397,7 +427,7 @@ const EventCreatePage: React.FC = () => {
               className="flex items-center gap-2"
             >
               {t('common.next')}
-              <ChevronRight className="w-4 h-4" />
+              {isRTL ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
             </Button>
           ) : (
             <Button

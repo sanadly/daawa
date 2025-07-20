@@ -103,7 +103,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         {...getRootProps()}
         className={`relative border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${
           isDragActive
-            ? 'border-blue-400 bg-blue-50'
+            ? 'border-primary-400 bg-primary-50'
             : 'border-gray-300 hover:border-gray-400'
         } ${uploading ? 'pointer-events-none opacity-50' : ''}`}
       >
@@ -129,7 +129,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           <div className="py-12">
             {uploading ? (
               <div className="flex flex-col items-center">
-                <Loader className="w-12 h-12 animate-spin text-blue-500 mb-4" />
+                <Loader className="w-12 h-12 animate-spin text-primary-500 mb-4" />
                 <p className="text-lg font-medium text-gray-700 mb-2">
                   {t('designer.uploading')}
                 </p>

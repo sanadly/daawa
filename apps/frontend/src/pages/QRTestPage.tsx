@@ -104,10 +104,10 @@ const QRTestPage: React.FC = () => {
 
           <div className="flex gap-2">
             <Button onClick={generateQR} disabled={loading}>
-              {loading ? 'Generating...' : 'Generate QR Code'}
+              {loading ? t('common.loading') : 'Generate QR Code'}
             </Button>
             <Button onClick={validateAndCheckin} disabled={loading || !qrCode} variant="outline">
-              {loading ? 'Processing...' : 'Validate & Check-in'}
+              {loading ? t('common.loading') : 'Validate & Check-in'}
             </Button>
           </div>
 

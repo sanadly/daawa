@@ -23,9 +23,7 @@ export class CompanyController {
     @GetUser() companyOrganizer: User,
   ) {
     const user = await this.companyService.registerStaff(createStaffDto, companyOrganizer);
-    // Return a sanitized user object
-    const { password_hash, ...result } = user;
-    return result;
+    return user;
   }
 
   @Get('users')
@@ -33,5 +31,66 @@ export class CompanyController {
   @ApiOperation({ summary: 'Get all users managed by the company' })
   async getManagedUsers(@GetUser() companyOrganizer: User) {
     return this.companyService.getManagedUsers(companyOrganizer);
+  }
+
+  @Get('stats')
+  @ApiOperation({ summary: 'Get company statistics including events, users, and metrics' })
+  async getStats(@GetUser() companyOrganizer: User) {
+    return this.companyService.getCompanyStats(companyOrganizer);
+  }
+}
+
+// Public company controller for unauthenticated endpoints
+@ApiTags('company-public')
+@Controller('public/company')
+export class CompanyPublicController {
+  constructor(private readonly companyService: CompanyService) {}
+
+  @Get('stats')
+  @ApiOperation({ summary: 'Get public company statistics' })
+  async getPublicStats() {
+    // Return mock data for now since we don't have authentication context
+    return {
+      company: {
+        name: 'Sample Company',
+        organizer: {
+          id: '1',
+          name: 'John Doe',
+          email: 'john@example.com'
+        }
+      },
+      stats: {
+        totalEvents: 25,
+        totalGuests: 150,
+        managedUsers: 8,
+        eventsByStatus: {
+          'upcoming': 5,
+          'ongoing': 2,
+          'completed': 18
+        },
+        guestsByRsvpStatus: {
+          'confirmed': 120,
+          'pending': 20,
+          'declined': 10
+        }
+      },
+      recentEvents: [
+        {
+          id: '1',
+          name: 'Tech Conference 2024',
+          status: 'upcoming',
+          startDate: '2024-12-15T10:00:00Z',
+          createdAt: '2024-11-01T09:00:00Z'
+        },
+        {
+          id: '2',
+          name: 'Annual Meeting',
+          status: 'completed',
+          startDate: '2024-11-20T14:00:00Z',
+          createdAt: '2024-10-15T10:00:00Z'
+        }
+      ],
+      lastUpdated: new Date().toISOString()
+    };
   }
 } 

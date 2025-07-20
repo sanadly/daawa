@@ -6,15 +6,12 @@ import {
   Delete,
   Body,
   Param,
-  Query,
   UseGuards,
-  HttpCode,
-  HttpStatus,
   ParseUUIDPipe,
   ValidationPipe,
   Request,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { EventsService } from './events.service';
 
 import { CreateEventDto } from './dtos/create-event.dto';
@@ -22,9 +19,8 @@ import { UpdateEventDto } from './dtos/update-event.dto';
 import { CreateTierDto } from './dtos/create-tier.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
-import { GetUser } from '../auth/decorators/user.decorator';
 import { Roles } from '../auth/decorators/roles.decorator';
-import { Event, EventStatus, PlatformPaymentStatus } from '../database/entities/event.entity';
+import { Event, PlatformPaymentStatus } from '../database/entities/event.entity';
 import { Tier } from '../database/entities/tier.entity';
 import { UserRole } from '../database/entities/user.entity';
 
@@ -186,5 +182,18 @@ export class EventsController {
     return { message: 'Tier deleted successfully' };
   }
 
+  @Get('dashboard/stats')
+  @Roles(
+    UserRole.INDIVIDUAL_ORGANIZER,
+    UserRole.COMPANY_ORGANIZER,
+    UserRole.ADMIN,
+    UserRole.STAFF,
+  )
+  @ApiOperation({ summary: 'Get dashboard statistics for the authenticated user' })
+  @ApiResponse({ status: 200, description: 'Dashboard statistics retrieved successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async getDashboardStats(@Request() req) {
+    return this.eventsService.getDashboardStats(req.user.id);
+  }
 
 } 

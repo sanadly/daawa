@@ -242,11 +242,36 @@ export class EventsService {
   }
 
   async getTiers(eventId: string): Promise<Tier[]> {
-    const event = await this.findOne(eventId);
     return this.tierRepository.find({
       where: { event_id: eventId },
-      order: { sort_order: 'ASC', created_at: 'ASC' },
+      order: { price: 'ASC' },
     });
+  }
+
+  async getDashboardStats(userId: string) {
+    // Get user's events with guest counts
+    const events = await this.eventRepository.find({
+      where: { organizer_id: userId },
+      relations: ['guests'],
+    });
+
+    // Calculate statistics
+    const totalEvents = events.length;
+    const activeEvents = events.filter(event => event.status === EventStatus.ACTIVE).length;
+    const totalGuests = events.reduce((sum, event) => sum + (event.guests?.length || 0), 0);
+    
+    // Calculate checked-in guests
+    const checkedIn = events.reduce((sum, event) => {
+      const checkedInGuests = event.guests?.filter(guest => guest.checkin_status === 'checked_in') || [];
+      return sum + checkedInGuests.length;
+    }, 0);
+
+    return {
+      totalEvents,
+      activeEvents,
+      totalGuests,
+      checkedIn,
+    };
   }
 
   // Private helper methods

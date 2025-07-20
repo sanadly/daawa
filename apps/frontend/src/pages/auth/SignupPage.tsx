@@ -186,7 +186,7 @@ const SignupPage: React.FC = () => {
                     {...register('company_location', {
                       required: accountType === AccountType.COMPANY ? t('auth.validation.fieldRequired') : false,
                     })}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500/50 focus:border-green-500 transition-shadow duration-300 ${errors.company_location ? 'border-red-500' : 'border-gray-300'}`}
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-shadow duration-300 ${errors.company_location ? 'border-red-500' : 'border-gray-300'}`}
                   />
                   {errors.company_location && <p className="text-red-500 text-xs mt-1">{errors.company_location.message}</p>}
                 </div>
@@ -199,7 +199,7 @@ const SignupPage: React.FC = () => {
                   <textarea
                     id="company_description"
                     {...register('company_description')}
-                    className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500/50 focus:border-green-500 transition-shadow duration-300 border-gray-300"
+                    className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-shadow duration-300 border-gray-300"
                     rows={3}
                   ></textarea>
                 </div>
@@ -216,7 +216,7 @@ const SignupPage: React.FC = () => {
                       valueAsNumber: true,
                       min: { value: 0, message: t('auth.validation.positiveNumberRequired') }
                     })}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500/50 focus:border-green-500 transition-shadow duration-300 ${errors.company_events_per_month ? 'border-red-500' : 'border-gray-300'}`}
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-shadow duration-300 ${errors.company_events_per_month ? 'border-red-500' : 'border-gray-300'}`}
                   />
                   {errors.company_events_per_month && <p className="text-red-500 text-xs mt-1">{errors.company_events_per_month.message}</p>}
                 </div>
@@ -233,7 +233,7 @@ const SignupPage: React.FC = () => {
                       valueAsNumber: true,
                       min: { value: 0, message: t('auth.validation.positiveNumberRequired') }
                     })}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500/50 focus:border-green-500 transition-shadow duration-300 ${errors.company_staff_needed ? 'border-red-500' : 'border-gray-300'}`}
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-shadow duration-300 ${errors.company_staff_needed ? 'border-red-500' : 'border-gray-300'}`}
                   />
                   {errors.company_staff_needed && <p className="text-red-500 text-xs mt-1">{errors.company_staff_needed.message}</p>}
                 </div>

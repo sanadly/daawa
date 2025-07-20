@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '../../hooks/useLanguage';
 import api from '../../lib/api';
+import Loading from '../../components/ui/loading';
 
 interface ResetPasswordFormData {
   newPassword: string;
@@ -68,7 +69,7 @@ const ResetPasswordPage: React.FC = () => {
   };
   
   if (isTokenValid === null) {
-      return <div className="min-h-screen flex items-center justify-center">{t('common.loading')}</div>
+      return <Loading />
   }
 
   return (
@@ -85,7 +86,7 @@ const ResetPasswordPage: React.FC = () => {
               <Link to={getLocalizedPath('/auth/forgot-password')} className="link mt-4 inline-block">{t('auth.resetPassword.requestAgain')}</Link>
             </div>
           ) : message ? (
-            <div className="text-center text-green-600">
+            <div className="text-center text-primary-600">
               <p>{message}</p>
               <Link to={getLocalizedPath('/auth/login')} className="link mt-4 inline-block">{t('auth.resetPassword.backToLogin')}</Link>
             </div>

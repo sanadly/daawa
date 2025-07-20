@@ -26,6 +26,7 @@ import EventDesign from '../components/events/EventDesign';
 import EventGuests from '../components/events/EventGuests';
 import EventInvitations from '../components/events/EventInvitations';
 import EventCheckin from '../components/events/EventCheckin';
+import Loading from '../components/ui/loading';
 
 
 const EventDetailsTab: React.FC<{ event: Event }> = ({ event }) => {
@@ -56,7 +57,7 @@ const EventDetailsTab: React.FC<{ event: Event }> = ({ event }) => {
         </CardHeader>
         <CardContent>
           <div className="flex items-center gap-2">
-            {event.platform_payment_status === 'paid' ? <CheckCircle className="w-5 h-5 text-green-500" /> : <Clock className="w-5 h-5 text-orange-500" />}
+            {event.platform_payment_status === 'paid' ? <CheckCircle className="w-5 h-5 text-primary-500" /> : <Clock className="w-5 h-5 text-primary-500" />}
             <p>
               Status: <span className="font-semibold">{t(`paymentStatus.${event.platform_payment_status}`)}</span>
             </p>
@@ -151,7 +152,7 @@ const EventDetailsPage: React.FC = () => {
   };
 
   if (loading) {
-    return <div>{t('common.loading')}</div>;
+    return <Loading />;
   }
 
   if (!event) {

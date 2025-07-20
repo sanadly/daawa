@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 // Extend AxiosRequestConfig to include metadata
 declare module 'axios' {
@@ -6,6 +6,24 @@ declare module 'axios' {
     metadata?: { startTime: Date };
   }
 }
+
+// Request deduplication cache
+const pendingRequests = new Map<string, Promise<any>>();
+
+// Simple cache for GET requests (5 minute TTL)
+const responseCache = new Map<string, { data: any; timestamp: number }>();
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+// Create a unique key for requests
+const createRequestKey = (config: any) => {
+  const { method, url, params, data } = config;
+  return `${method?.toUpperCase()}:${url}:${JSON.stringify(params)}:${JSON.stringify(data)}`;
+};
+
+// Check if cached response is still valid
+const isCacheValid = (timestamp: number) => {
+  return Date.now() - timestamp < CACHE_TTL;
+};
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || '/api/v1',
@@ -43,94 +61,120 @@ api.interceptors.request.use(
   }
 );
 
-// Response interceptor for token refresh and performance monitoring
+// Response interceptor for request deduplication
 api.interceptors.response.use(
   (response) => {
-    // Log performance for slow requests
-    const endTime = new Date();
-    const duration = endTime.getTime() - (response.config.metadata?.startTime?.getTime() || endTime.getTime());
-    if (duration > 2000) { // Log requests taking more than 2 seconds
-      console.warn(`Slow API request: ${response.config.url} took ${duration}ms`);
-    }
+    // Remove from pending requests on success
+    const requestKey = createRequestKey(response.config);
+    pendingRequests.delete(requestKey);
     return response;
   },
-  async (error) => {
-    const originalRequest = error.config;
-    
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      
-      try {
-        const tokensString = localStorage.getItem('tokens');
-        if (!tokensString) {
-          // Clear any existing tokens and redirect
-          localStorage.removeItem('user');
-          localStorage.removeItem('tokens');
-          delete api.defaults.headers.common['Authorization'];
-          window.location.href = '/auth/login';
-          return Promise.reject(error);
-        }
-        
-        const tokens = JSON.parse(tokensString);
-        const refreshToken = tokens.refreshToken;
-        
-        if (!refreshToken) {
-          // Clear tokens and redirect
-          localStorage.removeItem('user');
-          localStorage.removeItem('tokens');
-          delete api.defaults.headers.common['Authorization'];
-          window.location.href = '/auth/login';
-          return Promise.reject(error);
-        }
-        
-        // Use a fresh axios instance for refresh to avoid interceptor loops
-        const refreshResponse = await axios.post('/api/v1/auth/refresh', { 
-          refreshToken 
-        }, {
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          timeout: 5000, // Shorter timeout for refresh
-        });
-        
-        const { user, tokens: newTokens } = refreshResponse.data.data;
-        
-        // Update stored tokens and user
-        localStorage.setItem('user', JSON.stringify(user));
-        localStorage.setItem('tokens', JSON.stringify(newTokens));
-        
-        // Update the failed request with new token
-        originalRequest.headers['Authorization'] = `Bearer ${newTokens.accessToken}`;
-        
-        return api(originalRequest);
-      } catch (refreshError) {
-        // Refresh failed, clear everything and redirect
-        localStorage.removeItem('user');
-        localStorage.removeItem('tokens');
-        delete api.defaults.headers.common['Authorization'];
-        window.location.href = '/auth/login';
-        return Promise.reject(refreshError);
-      }
+  (error) => {
+    // Remove from pending requests on error
+    if (error.config) {
+      const requestKey = createRequestKey(error.config);
+      pendingRequests.delete(requestKey);
     }
-    
-    // Log error details for debugging
-    if (error.response) {
-      console.error(`API Error: ${error.response.status} - ${error.response.statusText}`, {
-        url: error.config?.url,
-        method: error.config?.method,
-        data: error.response.data,
-      });
-    } else if (error.request) {
-      console.error('API Request Error: No response received', {
-        url: error.config?.url,
-        method: error.config?.method,
-      });
-    } else {
-      console.error('API Error:', error.message);
-    }
-    
     return Promise.reject(error);
   }
 );
+
+// Enhanced request method with deduplication
+const originalRequest = api.request.bind(api);
+api.request = function<T = any, R = AxiosResponse<T>>(config: AxiosRequestConfig): Promise<R> {
+  const requestKey = createRequestKey(config);
+  
+  // For GET requests, check cache first
+  if (config.method?.toUpperCase() === 'GET') {
+    const cached = responseCache.get(requestKey);
+    if (cached && isCacheValid(cached.timestamp)) {
+      console.log(`🚀 API Cache HIT: ${config.url}`);
+      return Promise.resolve({
+        data: cached.data,
+        status: 200,
+        statusText: 'OK',
+        headers: {},
+        config: config as any,
+      } as R);
+    }
+  }
+  
+  // If there's already a pending request with the same key, return it
+  if (pendingRequests.has(requestKey)) {
+    console.log(`🔄 API Request Deduplication: ${config.url}`);
+    return pendingRequests.get(requestKey) as Promise<R>;
+  }
+  
+  console.log(`📡 API Request: ${config.method?.toUpperCase()} ${config.url}`);
+  
+  // Create new request and store it
+  const requestPromise = originalRequest(config) as Promise<R>;
+  pendingRequests.set(requestKey, requestPromise);
+  
+  // Cache successful GET responses
+  if (config.method?.toUpperCase() === 'GET') {
+    requestPromise.then((response: any) => {
+      console.log(`💾 API Cache SET: ${config.url}`);
+      responseCache.set(requestKey, {
+        data: response.data,
+        timestamp: Date.now(),
+      });
+    }).catch(() => {
+      // Don't cache failed requests
+    });
+  }
+  
+  return requestPromise;
+};
+
+// Enhanced get method
+const originalGet = api.get.bind(api);
+api.get = function(url, config) {
+  return this.request({ ...config, method: 'GET', url });
+};
+
+// Enhanced post method
+const originalPost = api.post.bind(api);
+api.post = function(url, data, config) {
+  return this.request({ ...config, method: 'POST', url, data });
+};
+
+// Enhanced put method
+const originalPut = api.put.bind(api);
+api.put = function(url, data, config) {
+  return this.request({ ...config, method: 'PUT', url, data });
+};
+
+// Enhanced delete method
+const originalDelete = api.delete.bind(api);
+api.delete = function(url, config) {
+  return this.request({ ...config, method: 'DELETE', url });
+};
+
+// Enhanced patch method
+const originalPatch = api.patch.bind(api);
+api.patch = function(url, data, config) {
+  return this.request({ ...config, method: 'PATCH', url, data });
+};
+
+// Utility function to clear cache
+export const clearApiCache = () => {
+  responseCache.clear();
+  pendingRequests.clear();
+};
+
+// Utility function to clear cache for specific endpoints
+export const clearApiCacheForEndpoint = (endpoint: string) => {
+  for (const [key] of responseCache) {
+    if (key.includes(endpoint)) {
+      responseCache.delete(key);
+    }
+  }
+  for (const [key] of pendingRequests) {
+    if (key.includes(endpoint)) {
+      pendingRequests.delete(key);
+    }
+  }
+};
 
 export default api; 

@@ -70,7 +70,7 @@ export function LanguageSwitcher({ compact = false }: LanguageSwitcherProps) {
               {language.name}
             </span>
             {currentLanguage.code === language.code && (
-              <span className="ml-auto text-blue-600">✓</span>
+              <span className="ml-auto text-primary-600">✓</span>
             )}
         </DropdownMenuItem>
         ))}

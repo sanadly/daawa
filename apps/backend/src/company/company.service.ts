@@ -1,7 +1,7 @@
 import { Injectable, ForbiddenException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User, UserRole } from '../database/entities';
+import { User, UserRole, Event, Guest } from '../database/entities';
 import { RegisterDto } from '../auth/dtos/register.dto';
 import { AuthService } from '../auth/services/auth.service';
 
@@ -10,13 +10,17 @@ export class CompanyService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Event)
+    private readonly eventRepository: Repository<Event>,
+    @InjectRepository(Guest)
+    private readonly guestRepository: Repository<Guest>,
     private readonly authService: AuthService,
   ) {}
 
   async registerStaff(
     createStaffDto: Omit<RegisterDto, 'account_type' | 'role'>,
     companyOrganizer: User,
-  ): Promise<User> {
+  ): Promise<Omit<User, 'password_hash'>> {
     if (companyOrganizer.role !== UserRole.COMPANY_ORGANIZER) {
       throw new ForbiddenException('Only company organizers can register staff.');
     }
@@ -33,8 +37,19 @@ export class CompanyService {
       throw new NotFoundException('Failed to retrieve created user ID after registration.');
     }
 
-    // Fetch the full user object to return
-    const newUser = await this.userRepository.findOneBy({ id: authResponse.user.id });
+    // Fetch the user object without password_hash
+    const newUser = await this.userRepository.findOne({
+      where: { id: authResponse.user.id },
+      select: [
+        'id', 'email', 'name', 'role', 'account_type', 'company_name', 
+        'company_registration_number', 'company_website', 'company_address', 
+        'job_title', 'company_location', 'company_description', 
+        'company_events_per_month', 'company_staff_needed', 'managing_organization_id',
+        'preferred_language', 'phone', 'avatar_url', 'email_verified', 
+        'is_active', 'last_login_at', 'created_at', 'updated_at'
+      ]
+    });
+    
     if (!newUser) {
       throw new NotFoundException('Could not find the newly created user.');
     }
@@ -53,5 +68,32 @@ export class CompanyService {
     });
 
     return users;
+  }
+
+  async getCompanyStats(companyOrganizer: User) {
+    if (companyOrganizer.role !== UserRole.COMPANY_ORGANIZER) {
+      throw new ForbiddenException('Only company organizers can view company statistics.');
+    }
+
+    // Return a simple test response first
+    return {
+      company: {
+        name: companyOrganizer.company_name,
+        organizer: {
+          id: companyOrganizer.id,
+          name: companyOrganizer.name,
+          email: companyOrganizer.email,
+        },
+      },
+      stats: {
+        totalEvents: 0,
+        totalGuests: 0,
+        managedUsers: 0,
+        eventsByStatus: {},
+        guestsByRsvpStatus: {},
+      },
+      recentEvents: [],
+      lastUpdated: new Date().toISOString(),
+    };
   }
 } 

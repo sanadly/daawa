@@ -52,7 +52,7 @@ const ForgotPasswordPage: React.FC = () => {
         <div className="bg-white rounded-xl shadow-lg p-8">
           {message ? (
             <div className="text-center">
-              <p className="text-green-600">{message}</p>
+              <p className="text-primary-600">{message}</p>
               <Link to={getLocalizedPath('/auth/login')} className="link mt-4 inline-block">{t('auth.forgotPassword.backToLogin')}</Link>
             </div>
           ) : (

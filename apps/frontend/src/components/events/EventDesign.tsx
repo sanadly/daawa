@@ -456,7 +456,7 @@ export default function EventDesign({ eventId }: EventDesignProps) {
                   <div
                     key={element.id}
                     className={`p-2 rounded border cursor-pointer flex items-center justify-between ${
-                      selectedElementId === element.id ? 'bg-blue-50 border-blue-300' : ''
+                      selectedElementId === element.id ? 'bg-primary-50 border-primary-300' : ''
                     }`}
                     onClick={() => setSelectedElementId(element.id)}
                   >

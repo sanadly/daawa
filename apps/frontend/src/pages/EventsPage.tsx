@@ -4,12 +4,14 @@ import { useNavigate } from 'react-router-dom'
 import { Plus, Search, Calendar, Users, DollarSign, Eye, Edit, Trash2, CreditCard, Palette } from 'lucide-react'
 
 import { useLanguage } from '../hooks/useLanguage'
+import { useStrictModeSafeEffect } from '../hooks/useStrictModeSafeEffect'
 import { Button } from '../components/ui/button'
 import { Input } from '../components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { formatPrice, formatDate } from '../lib/utils'
-import api from '../lib/api'
+import api, { clearApiCacheForEndpoint } from '../lib/api'
 import { Event, EventStatus, PlatformPaymentStatus } from '../types'
+import Loading from '../components/ui/loading'
 
 const EventsPage: React.FC = () => {
   const { t } = useTranslation()
@@ -22,7 +24,7 @@ const EventsPage: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
 
-  useEffect(() => {
+  useStrictModeSafeEffect(() => {
     fetchEvents()
   }, [])
 
@@ -39,7 +41,7 @@ const EventsPage: React.FC = () => {
   }
 
   const handleCreateEvent = () => {
-    navigate(getLocalizedPath('/events/new'))
+    navigate(getLocalizedPath('/events/create'))
   }
 
   const handleEventAction = (eventId: string, action: 'manage' | 'delete') => {
@@ -56,6 +58,7 @@ const EventsPage: React.FC = () => {
     try {
       await api.delete(`/events/${eventId}`)
       fetchEvents()
+      clearApiCacheForEndpoint('/events')
     } catch (error) {
       console.error('Error deleting event:', error)
     }
@@ -67,30 +70,30 @@ const EventsPage: React.FC = () => {
   )
 
   const getStatusBadge = (status: EventStatus) => {
-    const baseClasses = "px-2 py-1 rounded-full text-xs font-medium"
+    const baseClasses = 'px-2 py-1 text-xs font-medium rounded-full';
     
     switch (status) {
-      case EventStatus.PUBLISHED:
-        return `${baseClasses} bg-green-100 text-green-800`
       case EventStatus.DRAFT:
-        return `${baseClasses} bg-yellow-100 text-yellow-800`
+        return `${baseClasses} bg-gray-100 text-gray-800`;
+      case EventStatus.PUBLISHED:
+        return `${baseClasses} bg-primary-100 text-primary-800`;
       case EventStatus.PENDING_PAYMENT:
-        return `${baseClasses} bg-orange-100 text-orange-800`
+        return `${baseClasses} bg-primary-100 text-primary-800`;
       case EventStatus.ENDED:
-        return `${baseClasses} bg-blue-100 text-blue-800`
+        return `${baseClasses} bg-primary-100 text-primary-800`;
       case EventStatus.CANCELLED:
-        return `${baseClasses} bg-red-100 text-red-800`
+        return `${baseClasses} bg-red-100 text-red-800`;
       default:
-        return `${baseClasses} bg-gray-100 text-gray-800`
+        return `${baseClasses} bg-primary-100 text-primary-800`;
     }
-  }
+  };
 
   const getPaymentBadge = (status: PlatformPaymentStatus) => {
     const baseClasses = "px-2 py-1 rounded-full text-xs font-medium"
     
     switch (status) {
       case PlatformPaymentStatus.PAID:
-        return `${baseClasses} bg-green-100 text-green-800`
+        return `${baseClasses} bg-primary-100 text-primary-800`
       case PlatformPaymentStatus.PENDING:
         return `${baseClasses} bg-yellow-100 text-yellow-800`
       case PlatformPaymentStatus.FAILED:
@@ -103,11 +106,7 @@ const EventsPage: React.FC = () => {
   }
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-lg">{t('common.loading')}</div>
-      </div>
-    )
+    return <Loading />
   }
 
   return (

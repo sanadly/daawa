@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 import { Plus, Search, User, Users, CheckSquare, BarChart2, MoreVertical, Trash2, Edit, QrCode } from 'lucide-react';
@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { QRCodeCanvas } from 'qrcode.react';
 
-import api from '../../lib/api';
+import api, { clearApiCacheForEndpoint } from '../../lib/api';
 import { Event, Guest, PaginatedGuestResponse, GuestQueryParams, GuestStats, CreateGuestDto, UpdateGuestDto, Tier } from '../../types';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -19,6 +19,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Label } from '../ui/label';
 import { Checkbox } from '../ui/checkbox';
 import { useAuth } from '../../hooks/useAuth';
+import { useLanguage } from '../../hooks/useLanguage';
 
 const GuestCard: React.FC<{ guest: Guest, onEdit: (guest: Guest) => void, onDelete: (id: string) => void }> = ({ guest, onEdit, onDelete }) => {
   const { t } = useTranslation();
@@ -28,8 +29,8 @@ const GuestCard: React.FC<{ guest: Guest, onEdit: (guest: Guest) => void, onDele
         <h3 className="font-bold text-lg">{guest.name}</h3>
         <p className="text-sm text-gray-500">{guest.email}</p>
         <div className="flex flex-wrap gap-2 mt-2">
-          <span className="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full">{guest.tier?.name || 'N/A'}</span>
-          <span className="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">{t(`rsvp_status.${guest.rsvp_status}`)}</span>
+          <span className="text-xs px-2 py-1 bg-primary-100 text-primary-800 rounded-full">{guest.tier?.name || 'N/A'}</span>
+          <span className="text-xs px-2 py-1 bg-primary-100 text-primary-800 rounded-full">{t(`rsvp_status.${guest.rsvp_status}`)}</span>
           <span className="text-xs px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full">{t(`checkin_status.${guest.checkin_status}`)}</span>
         </div>
       </div>
@@ -137,6 +138,8 @@ const AddEditGuestForm: React.FC<{
 const EventGuests: React.FC<{ event: Event }> = ({ event }) => {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const language = useLanguage((state) => state.language);
+  const isRTL = language === 'ar';
   const [guests, setGuests] = useState<Guest[]>([]);
   const [stats, setStats] = useState<GuestStats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -150,15 +153,32 @@ const EventGuests: React.FC<{ event: Event }> = ({ event }) => {
   const [qrCode, setQrCode] = useState<{ guestName: string; code: string } | null>(null);
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
+  // Refs to prevent infinite loops
+  const isFetching = useRef(false);
+  const statsFetched = useRef(false);
+  const lastFetchParams = useRef<string>('');
+  const fetchGuestsRef = useRef<(() => Promise<void>) | null>(null);
+
   const fetchGuests = useCallback(async () => {
-    setLoading(true);
+    if (isFetching.current) return;
+
+    const params = {
+      event_id: event.id,
+      page: pagination.page,
+      limit: pagination.limit,
+      search: debouncedSearchTerm,
+    };
+
+    // Create a string representation of params to check if they've changed
+    const paramsString = JSON.stringify(params);
+    if (lastFetchParams.current === paramsString) return;
+
     try {
-      const params: GuestQueryParams = {
-        event_id: event.id,
-        page: pagination.page,
-        limit: pagination.limit,
-        search: debouncedSearchTerm,
-      };
+      isFetching.current = true;
+      lastFetchParams.current = paramsString;
+      setLoading(true);
+      setError(null);
+      
       const response = await api.get<PaginatedGuestResponse>('/guests', { params });
       setGuests(response.data.guests);
       setPagination(prev => ({ ...prev, total: response.data.total }));
@@ -167,23 +187,48 @@ const EventGuests: React.FC<{ event: Event }> = ({ event }) => {
       toast.error(t('guests.fetchFailed'));
     } finally {
       setLoading(false);
+      isFetching.current = false;
     }
-  }, [event.id, pagination.page, debouncedSearchTerm]);
+  }, [event.id, pagination.page, pagination.limit, debouncedSearchTerm]);
 
-  const fetchStats = async () => {
+  // Store the fetch function in a ref to avoid dependency issues
+  useEffect(() => {
+    fetchGuestsRef.current = fetchGuests;
+  }, [fetchGuests]);
+
+  const fetchStats = useCallback(async () => {
+    if (statsFetched.current) return;
+    
     try {
+      statsFetched.current = true;
       const response = await api.get<GuestStats>(`/guests/events/${event.id}/stats`);
       setStats(response.data);
     } catch (e) {
       // It's ok if stats fail, not critical
       console.error('Failed to fetch guest stats', e);
+      statsFetched.current = false; // Reset flag on error
     }
-  };
+  }, [event.id]);
+
+  // Fetch guests when dependencies change - use separate effects for each dependency
+  useEffect(() => {
+    if (fetchGuestsRef.current) {
+      fetchGuestsRef.current();
+    }
+  }, [pagination.page, pagination.limit]);
 
   useEffect(() => {
-    fetchGuests();
-    fetchStats();
-  }, [fetchGuests]);
+    if (fetchGuestsRef.current) {
+      fetchGuestsRef.current();
+    }
+  }, [debouncedSearchTerm]);
+
+  // Fetch stats only once on mount
+  useEffect(() => {
+    if (!statsFetched.current) {
+      fetchStats();
+    }
+  }, [fetchStats]);
   
   const handlePageChange = (newPage: number) => {
     setPagination(prev => ({ ...prev, page: newPage }));
@@ -204,8 +249,12 @@ const EventGuests: React.FC<{ event: Event }> = ({ event }) => {
       try {
         await api.delete(`/guests/${guestId}`);
         toast.success(t('guests.deleteSuccess'));
-        fetchGuests(); // Refresh list
-        fetchStats(); // Refresh stats
+        // Trigger re-fetch by updating a dependency
+        setPagination(prev => ({ ...prev }));
+        // Reset stats flag to re-fetch stats
+        statsFetched.current = false;
+        fetchStats();
+        clearApiCacheForEndpoint('/guests');
       } catch (error) {
         toast.error(t('guests.deleteFailed'));
       }
@@ -214,8 +263,12 @@ const EventGuests: React.FC<{ event: Event }> = ({ event }) => {
 
   const handleFormSuccess = () => {
     setIsFormOpen(false);
-    fetchGuests();
+    // Trigger re-fetch by updating a dependency
+    setPagination(prev => ({ ...prev }));
+    // Reset stats flag to re-fetch stats
+    statsFetched.current = false;
     fetchStats();
+    clearApiCacheForEndpoint('/guests');
   };
 
   const handleShowQrCode = async (guest: Guest) => {
@@ -233,12 +286,12 @@ const EventGuests: React.FC<{ event: Event }> = ({ event }) => {
     }
   };
 
-  const statCards = useMemo(() => [
+  const statCards = [
     { icon: Users, label: t('guests.totalGuests'), value: stats?.totalGuests },
     { icon: User, label: t('guests.primaryGuests'), value: stats?.primaryGuests },
     { icon: CheckSquare, label: t('guests.checkedIn'), value: stats?.checkedIn },
     { icon: BarChart2, label: t('guests.rsvpAccepted'), value: stats?.acceptedRsvps },
-  ], [stats, t]);
+  ];
 
   return (
     <div className="space-y-6">
@@ -258,10 +311,10 @@ const EventGuests: React.FC<{ event: Event }> = ({ event }) => {
 
       <div className="flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="relative w-full md:w-auto md:flex-1">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Search className={`absolute ${isRTL ? 'right-2.5' : 'left-2.5'} top-2.5 h-4 w-4 text-muted-foreground`} />
           <Input 
             placeholder={t('guests.searchPlaceholder')} 
-            className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]" 
+            className={`${isRTL ? 'pr-8' : 'pl-8'} sm:w-[300px] md:w-[200px] lg:w-[300px]`} 
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
           />
