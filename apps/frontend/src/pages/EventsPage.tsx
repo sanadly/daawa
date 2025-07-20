@@ -111,7 +111,7 @@ const EventsPage: React.FC = () => {
   }
 
   return (
-    <div className={`space-y-6 ${isRTL ? 'rtl' : 'ltr'}`}>
+    <div dir={isRTL ? "rtl" : "ltr"} className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -119,12 +119,12 @@ const EventsPage: React.FC = () => {
             {t('events.title')}
           </h1>
           <p className="text-gray-600 mt-1">
-            Manage and organize your events
+            {t('events.subtitle')}
           </p>
         </div>
         <Button 
           onClick={handleCreateEvent}
-          className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}
+          className="flex items-center gap-2"
         >
           <Plus className="h-4 w-4" />
           {t('events.create')}
@@ -134,14 +134,12 @@ const EventsPage: React.FC = () => {
       {/* Search */}
       <div className="max-w-md">
         <div className="relative">
-          <Search className={`absolute top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4 ${
-            isRTL ? 'right-3' : 'left-3'
-          }`} />
+          <Search className={`absolute top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4 ${isRTL ? 'right-3' : 'left-3'}`} />
           <Input
-            placeholder="Search events..."
+            placeholder={t('events.searchPlaceholder')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className={`${isRTL ? 'pr-10' : 'pl-10'}`}
+            className={isRTL ? 'pr-10' : 'pl-10'}
           />
         </div>
       </div>
@@ -190,23 +188,23 @@ const EventsPage: React.FC = () => {
               <CardContent className="space-y-4">
                 {/* Event Details */}
                 <div className="space-y-2 text-sm text-gray-600">
-                  <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <div className="flex items-center gap-2">
                     <Calendar className="h-4 w-4" />
                     <span>{formatDate(event.start_datetime)}</span>
                   </div>
                   
-                  <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <div className="flex items-center gap-2">
                     <Users className="h-4 w-4" />
-                    <span>{event.registered_count}/{event.total_capacity} guests</span>
+                    <span>{event.registered_count}/{event.total_capacity} {t('events.guests')}</span>
                   </div>
                   
-                  <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <div className="flex items-center gap-2">
                     <CreditCard className="h-4 w-4" />
                     <span>Platform fee: {formatPrice(event.platform_fee, event.platform_currency)}</span>
                   </div>
 
                   {event.tiers && event.tiers.length > 0 && (
-                    <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <div className="flex items-center gap-2">
                       <DollarSign className="h-4 w-4" />
                       <span>{event.tiers.length} tier{event.tiers.length > 1 ? 's' : ''}</span>
                     </div>
@@ -224,7 +222,7 @@ const EventsPage: React.FC = () => {
                 </div>
 
                 {/* Actions */}
-                <div className={`flex gap-2 pt-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                <div className="flex gap-2 pt-2">
                   <Button
                     size="sm"
                     variant="default"

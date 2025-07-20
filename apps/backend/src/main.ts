@@ -10,6 +10,18 @@ import { join } from 'path';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
+  // Performance monitoring middleware
+  app.use((req, res, next) => {
+    const start = Date.now();
+    res.on('finish', () => {
+      const duration = Date.now() - start;
+      if (duration > 1000) { // Log slow requests (>1s)
+        logger.warn(`Slow request: ${req.method} ${req.url} took ${duration}ms`);
+      }
+    });
+    next();
+  });
+
   // Serve static assets (e.g., template previews)
   app.useStaticAssets(join(__dirname, 'assets'), {
     prefix: '/assets/',

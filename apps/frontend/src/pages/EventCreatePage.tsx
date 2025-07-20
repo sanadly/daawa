@@ -325,7 +325,7 @@ const EventCreatePage: React.FC = () => {
   ]
 
   return (
-    <div className={`max-w-4xl mx-auto ${isRTL ? 'rtl' : 'ltr'}`}>
+    <div dir={isRTL ? "rtl" : "ltr"} className="max-w-4xl mx-auto">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
           {t('events.create')}
@@ -353,7 +353,7 @@ const EventCreatePage: React.FC = () => {
                   step.icon
                 )}
               </div>
-              <div className={`ml-3 ${isRTL ? 'mr-3 ml-0' : ''}`}>
+              <div className="ml-3">
                 <p className={`text-sm font-medium ${
                   currentStep >= step.number ? 'text-primary-600' : 'text-gray-500'
                 }`}>
@@ -361,7 +361,7 @@ const EventCreatePage: React.FC = () => {
                 </p>
               </div>
               {index < steps.length - 1 && (
-                <div className={`flex-1 h-px bg-gray-300 mx-4 ${isRTL ? 'mx-4' : ''}`} />
+                <div className="flex-1 h-px bg-gray-300 mx-4" />
               )}
             </div>
           ))}
@@ -378,15 +378,15 @@ const EventCreatePage: React.FC = () => {
         </Card>
 
         {/* Navigation */}
-        <div className={`flex justify-between mt-6 ${isRTL ? 'flex-row-reverse' : ''}`}>
+        <div className="flex justify-between mt-6">
           <Button
             type="button"
             variant="outline"
             onClick={prevStep}
             disabled={currentStep === 1}
-            className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}
+            className="flex items-center gap-2"
           >
-            {isRTL ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+            <ChevronLeft className="w-4 h-4" />
             {t('common.previous')}
           </Button>
 
@@ -394,10 +394,10 @@ const EventCreatePage: React.FC = () => {
             <Button
               type="button"
               onClick={handleNext}
-              className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}
+              className="flex items-center gap-2"
             >
               {t('common.next')}
-              {isRTL ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+              <ChevronRight className="w-4 h-4" />
             </Button>
           ) : (
             <Button

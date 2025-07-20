@@ -171,7 +171,7 @@ const EventDetailsPage: React.FC = () => {
       case 'details':
         return <EventDetailsTab event={event} />;
       case 'design':
-        return <EventDesign event={event} onUpdate={fetchEvent} onSave={fetchEvent} />;
+        return <EventDesign eventId={event.id} />;
       case 'guests':
         return <EventGuests event={event} />;
       case 'invitations':
@@ -185,11 +185,11 @@ const EventDetailsPage: React.FC = () => {
 
 
   return (
-    <div className={`max-w-6xl mx-auto p-4 space-y-6 ${isRTL ? 'rtl' : 'ltr'}`}>
+    <div dir={isRTL ? "rtl" : "ltr"} className="max-w-6xl mx-auto p-4 space-y-6">
       <div className="flex justify-between items-start">
         <div>
           <Button onClick={() => navigate(getLocalizedPath('/events'))} variant="ghost" className="mb-4">
-            <ArrowLeft className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+            <ArrowLeft className="w-4 h-4 mr-2" />
             {t('common.backToList')}
           </Button>
           <h1 className="text-3xl font-bold">{event.name}</h1>
@@ -197,7 +197,7 @@ const EventDetailsPage: React.FC = () => {
         </div>
         <div className="flex gap-2">
           <Button variant="destructive" onClick={handleDelete}>
-            <Trash2 className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+            <Trash2 className="w-4 h-4 mr-2" />
             {t('common.delete')}
           </Button>
         </div>

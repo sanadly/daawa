@@ -58,24 +58,21 @@
     "all": "All",
     "paginationText": "Page {{page}} of {{totalPages}} ({{total}} items)"
   },
+  "sidebar": {
+    "platform": "Platform",
+    "settings": "Settings",
+    "language": "Language",
+    "welcome": "Welcome, {{name}}"
+  },
   "navigation": {
-    "home": "Home",
     "dashboard": "Dashboard",
     "events": "Events",
     "guests": "Guests",
-    "invitations": "Invitations",
-    "checkin": "Check-in",
+    "passes": "Passes",
+    "qrTest": "QR Scanner",
     "reports": "Reports",
     "profile": "Profile",
-    "help": "Help",
-    "about": "About",
-    "admin": "Admin",
-    "company": "Company",
-    "analytics": "Analytics",
-    "billing": "Billing",
-    "qrTest": "QR Test",
-    "settings": "Settings",
-    "logout": "Logout"
+    "company": "Company"
   },
   "landing": {
     "hero": {
@@ -165,6 +162,7 @@
       "emailInvalid": "Invalid email format",
       "passwordRequired": "Password is required",
       "passwordMinLength": "Password must be at least {{min}} characters",
+      "passwordComplexity": "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
       "confirmPasswordRequired": "Please confirm your password",
       "passwordsDoNotMatch": "Passwords do not match",
       "nameRequired": "Name is required",
@@ -196,10 +194,25 @@
       "createEvent": "Create New Event",
       "viewAllEvents": "View All Events",
       "manageGuests": "Manage Guests"
-    }
+    },
+    "subtitle": "Manage your events with ease and efficiency",
+    "quickActionsHeader": "Quick Actions",
+    "recentActivityHeader": "Recent Activity",
+    "viewAll": "View all",
+    "quickInsightsHeader": "Quick Insights",
+    "attendanceRate": "Attendance Rate",
+    "avgGuestsPerEvent": "Avg. Guests per Event",
+    "activeEventsLabel": "Active Events",
+    "checkinDashboard": "Check-in Dashboard",
+    "monitorEventCheckins": "Monitor event check-ins",
+    "startPlanning": "Start planning your next event",
+    "manageAllEvents": "Manage all your events",
+    "manageGuestLists": "View and manage guest lists"
   },
   "events": {
     "title": "Events",
+    "subtitle": "Manage and organize your events",
+    "searchPlaceholder": "Search events...",
     "create": "Create Event",
     "edit": "Edit Event",
     "delete": "Delete Event",
@@ -207,6 +220,16 @@
     "created": "Event created successfully! Redirecting to designer...",
     "createFailed": "Failed to create event.",
     "noEvents": "No events found. Create your first one!",
+    "createFirst": "Create your first event to get started",
+    "guests": "guests",
+    "platformPayment": "Platform Payment",
+    "tiers": "Event Tiers",
+    "tiersDescription": "Manage different ticket types and pricing",
+    "registered": "registered",
+    "noTiers": "No tiers found for this event.",
+    "confirmDelete": "Are you sure you want to delete this event?",
+    "deleteSuccess": "Event deleted successfully",
+    "deleteFailed": "Failed to delete event",
     "form": {
       "basicInfo": "Basic Info",
       "tiersAndCapacity": "Tiers & Capacity",
@@ -245,9 +268,16 @@
     },
     "status": {
       "draft": "Draft",
-      "active": "Active",
+      "published": "Published",
+      "pending_payment": "Pending Payment",
       "ended": "Ended",
-      "cancelled": "Cancelled"
+      "cancelled": "Cancelled",
+      "active": "Active"
+    },
+    "paymentStatus": {
+      "paid": "Paid",
+      "pending": "Pending",
+      "failed": "Failed"
     },
     "pricing": {
       "free": "Free Event",
@@ -266,10 +296,22 @@
       "EARLY_BIRD": "Early Bird"
     },
     "deleteFailed": "Failed to delete event.",
-    "noTiers": "No tiers found for this event.",
-    "tier": "Tier",
-    "tiers": "Tiers",
-    "tiersDescription": "Manage pricing tiers for your event."
+    "tier": "Tier"
+  },
+  "company": {
+    "subtitle": "Manage your company profile and settings",
+    "stats": {
+      "totalEvents": "Total Events",
+      "eventsScheduled": "Events scheduled"
+    }
+  },
+  "qrTest": {
+    "step1": "Go to your Events page and create an event",
+    "step2": "Add guests to the event",
+    "step3": "Copy the Event ID and Guest ID from the URLs or browser dev tools",
+    "step4": "Paste them here and click \"Generate QR Code\"",
+    "step5": "Click \"Validate & Check-in\" to simulate scanning the QR code",
+    "step6": "Check the result to see if the check-in was successful"
   },
   "designer": {
     "title": "Event Design",

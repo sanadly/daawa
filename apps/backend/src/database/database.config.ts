@@ -42,8 +42,8 @@ const createDatabaseConfig = (): TypeOrmModuleOptions => {
     // Synchronization (only in development/test)
     synchronize: !isProduction && process.env.DATABASE_SYNCHRONIZE !== 'false',
     
-    // Logging
-    logging: process.env.DATABASE_LOGGING === 'true',
+    // Logging - only enable in development for debugging
+    logging: process.env.DATABASE_LOGGING === 'true' && nodeEnv === 'development',
     logger: 'advanced-console',
     
     // Migration configuration
@@ -54,16 +54,25 @@ const createDatabaseConfig = (): TypeOrmModuleOptions => {
     // Entity configuration
     entities: [join(__dirname, 'entities', '*.entity.{ts,js}')],
     
-    // Connection pool settings
+    // Optimized connection pool settings for better performance
     extra: {
-      max: parseInt(process.env.DATABASE_POOL_MAX || '10'),
-      min: parseInt(process.env.DATABASE_POOL_MIN || '2'),
-      acquire: parseInt(process.env.DATABASE_POOL_ACQUIRE_TIMEOUT || '60000'),
+      max: parseInt(process.env.DATABASE_POOL_MAX || '20'), // Increased from 10
+      min: parseInt(process.env.DATABASE_POOL_MIN || '5'),  // Increased from 2
+      acquire: parseInt(process.env.DATABASE_POOL_ACQUIRE_TIMEOUT || '30000'), // Reduced from 60000
       idle: parseInt(process.env.DATABASE_POOL_IDLE_TIMEOUT || '10000'),
+      // Add connection timeout
+      connectionTimeoutMillis: 10000,
+      // Add query timeout
+      statement_timeout: 30000,
+      // Enable connection pooling
+      pool: {
+        max: parseInt(process.env.DATABASE_POOL_MAX || '20'),
+        min: parseInt(process.env.DATABASE_POOL_MIN || '5'),
+        acquire: parseInt(process.env.DATABASE_POOL_ACQUIRE_TIMEOUT || '30000'),
+        idle: parseInt(process.env.DATABASE_POOL_IDLE_TIMEOUT || '10000'),
+      },
     },
 
-    // Timezone handling (handled by PostgreSQL/SQLite internally)
-    
     // Skip Redis cache for now to avoid connection issues
     // cache: {
     //   type: 'redis',

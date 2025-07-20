@@ -1,10 +1,14 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { useLanguage } from '../hooks/useLanguage'
 
 const NotFoundPage: React.FC = () => {
   const { t } = useTranslation()
+  const language = useLanguage((state) => state.language)
+  const isRTL = language === 'ar'
+  
   return (
-    <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
+    <div dir={isRTL ? "rtl" : "ltr"} className="min-h-screen bg-neutral-50 flex items-center justify-center">
       <div className="text-center">
         <h1 className="heading-1 mb-4">{t('errors.404.title')}</h1>
         <p className="text-neutral-600">{t('errors.404.message')}</p>

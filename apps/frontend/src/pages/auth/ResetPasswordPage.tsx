@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useLanguage } from '../../hooks/useLanguage';
 import api from '../../lib/api';
 
 interface ResetPasswordFormData {
@@ -11,6 +12,9 @@ interface ResetPasswordFormData {
 
 const ResetPasswordPage: React.FC = () => {
   const { t } = useTranslation();
+  const language = useLanguage((state) => state.language);
+  const getLocalizedPath = useLanguage((state) => state.getLocalizedPath);
+  const isRTL = language === 'ar';
   const { token } = useParams<{ token: string }>();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -54,7 +58,7 @@ const ResetPasswordPage: React.FC = () => {
     try {
       await api.post('/auth/password-reset/confirm', { token, newPassword: data.newPassword });
       setMessage(t('auth.resetPassword.successMessage'));
-      setTimeout(() => navigate('/auth/login'), 3000);
+      setTimeout(() => navigate(getLocalizedPath('/auth/login')), 3000);
     } catch (err: any) {
       console.error('Reset password error:', err);
       setErrorState(t('auth.errors.passwordResetFailed'));
@@ -68,7 +72,7 @@ const ResetPasswordPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-accent-50 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div dir={isRTL ? "rtl" : "ltr"} className="min-h-screen bg-gradient-to-br from-primary-50 to-accent-50 flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <h2 className="text-2xl font-semibold text-gray-900 mb-2">{t('auth.resetPassword.title')}</h2>
@@ -78,12 +82,12 @@ const ResetPasswordPage: React.FC = () => {
           {!isTokenValid ? (
             <div className="text-center text-red-600">
               <p>{error}</p>
-              <Link to="/auth/forgot-password" className="link mt-4 inline-block">{t('auth.resetPassword.requestAgain')}</Link>
+              <Link to={getLocalizedPath('/auth/forgot-password')} className="link mt-4 inline-block">{t('auth.resetPassword.requestAgain')}</Link>
             </div>
           ) : message ? (
             <div className="text-center text-green-600">
               <p>{message}</p>
-              <Link to="/auth/login" className="link mt-4 inline-block">{t('auth.resetPassword.backToLogin')}</Link>
+              <Link to={getLocalizedPath('/auth/login')} className="link mt-4 inline-block">{t('auth.resetPassword.backToLogin')}</Link>
             </div>
           ) : (
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

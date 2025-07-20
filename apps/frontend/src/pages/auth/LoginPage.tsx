@@ -12,12 +12,13 @@ interface LoginFormData {
 
 const LoginPage: React.FC = () => {
   const { t } = useTranslation();
-  const { isRTL } = useLanguage();
   const { login } = useAuth();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const language = useLanguage((state) => state.language);
+  const getLocalizedPath = useLanguage((state) => state.getLocalizedPath);
+  const isRTL = language === 'ar';
 
   const {
     register,
@@ -50,7 +51,7 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-accent-50 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div dir={isRTL ? "rtl" : "ltr"} className="min-h-screen bg-gradient-to-br from-primary-50 to-accent-50 flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         {/* Header */}
         <div className="text-center">
@@ -89,7 +90,6 @@ const LoginPage: React.FC = () => {
                 className={`
                   w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors
                   ${errors.email ? 'border-red-500' : 'border-gray-300'}
-                  ${isRTL ? 'text-right' : 'text-left'}
                 `}
                 placeholder={t('auth.placeholders.email')}
                 disabled={isLoading}
@@ -123,7 +123,7 @@ const LoginPage: React.FC = () => {
                   className={`
                     w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors
                     ${errors.password ? 'border-red-500' : 'border-gray-300'}
-                    ${isRTL ? 'text-right pr-12' : 'text-left pl-12'}
+                    ${isRTL ? 'pl-12' : 'pr-12'}
                   `}
                   placeholder={t('auth.placeholders.password')}
                   disabled={isLoading}
@@ -177,17 +177,21 @@ const LoginPage: React.FC = () => {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  {t('auth.login.signingIn')}
+                  <span>
+                    {t('auth.login.signingIn')}
+                  </span>
                 </div>
               ) : (
-                t('auth.login.signIn')
+                <span>
+                  {t('auth.login.signIn')}
+                </span>
               )}
             </button>
 
             {/* Forgot Password Link */}
             <div className="text-center">
               <Link
-                to={`/${language}/auth/forgot-password`}
+                to={getLocalizedPath('/auth/forgot-password')}
                 className="text-sm text-primary-600 hover:text-primary-800 transition-colors"
               >
                 {t('auth.login.forgotPassword')}
@@ -200,7 +204,7 @@ const LoginPage: React.FC = () => {
             <p className="text-sm text-gray-600">
               {t('auth.login.noAccount')}{' '}
               <Link
-                to="/auth/signup"
+                to={getLocalizedPath('/auth/signup')}
                 className="text-primary-600 hover:text-primary-800 font-medium transition-colors"
               >
                 {t('auth.login.signUpLink')}

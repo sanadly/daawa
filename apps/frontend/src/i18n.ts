@@ -33,5 +33,19 @@ i18n
       caches: ['localStorage']
     }
   })
+  .then(() => {
+    // Set document direction after i18n is initialized
+    const detectedLang = i18n.language?.split('-')[0] as 'en' | 'ar';
+    const finalLang = detectedLang === 'ar' ? 'ar' : 'en';
+    
+    // Ensure document direction is set immediately
+    document.documentElement.dir = finalLang === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.lang = finalLang;
+    
+    // Also set the language in i18n if it's different
+    if (i18n.language !== finalLang) {
+      i18n.changeLanguage(finalLang);
+    }
+  });
 
 export default i18n 

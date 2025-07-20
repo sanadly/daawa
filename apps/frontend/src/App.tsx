@@ -2,6 +2,8 @@ import { Routes, Route, Navigate, Outlet } from 'react-router-dom'
 import { AuthProvider } from './hooks/useAuth'
 import ProtectedRoute from './components/ProtectedRoute'
 import { AppSidebar } from './components/AppSidebar'
+import { useLanguage } from './hooks/useLanguage'
+import { useEffect } from 'react'
 
 // Pages
 import LoginPage from './pages/auth/LoginPage'
@@ -18,6 +20,21 @@ import QRTestPage from './pages/QRTestPage'
 import ReportsPage from './pages/ReportsPage'
 import LandingPage from './pages/LandingPage'
 import NotFoundPage from './pages/NotFoundPage'
+
+// Language initializer component
+function LanguageInitializer() {
+  const { language, isRTL } = useLanguage();
+  
+  useEffect(() => {
+    // Ensure document direction is set immediately
+    const direction = isRTL ? 'rtl' : 'ltr';
+    document.documentElement.dir = direction;
+    document.documentElement.lang = language;
+    console.log('LanguageInitializer: Set document direction to', direction, 'for language:', language);
+  }, [language, isRTL]);
+  
+  return null;
+}
 
 // Public layout wrapper
 function PublicLayout() {
@@ -47,6 +64,7 @@ function ProtectedLayout() {
 function App() {
   return (
     <AuthProvider>
+      <LanguageInitializer />
       <Routes>
         {/* Redirect root to English */}
         <Route path="/" element={<Navigate to="/en" replace />} />

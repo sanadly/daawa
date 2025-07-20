@@ -3,12 +3,13 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useLanguage } from '../hooks/useLanguage'
+import { LanguageSwitcher } from '../components/LanguageSwitcher'
 
 const LandingPage: React.FC = () => {
   const { t } = useTranslation()
   const getLocalizedPath = useLanguage((state) => state.getLocalizedPath)
-  const setLanguage = useLanguage((state) => state.setLanguage)
   const language = useLanguage((state) => state.language)
+  const isRTL = language === 'ar'
 
   const features = [
     {
@@ -34,7 +35,7 @@ const LandingPage: React.FC = () => {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-neutral-50">
+    <div dir={isRTL ? "rtl" : "ltr"} className="min-h-screen bg-gradient-to-br from-primary-50 to-neutral-50">
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-sm border-b border-neutral-200">
         <div className="container-custom">
@@ -51,12 +52,7 @@ const LandingPage: React.FC = () => {
 
             {/* Navigation */}
             <div className="flex items-center space-x-4">
-              <button
-                onClick={() => setLanguage(language === 'en' ? 'ar' : 'en')}
-                className="px-3 py-1 text-sm font-medium text-neutral-600 hover:text-primary-500 transition-colors"
-              >
-                {language === 'en' ? 'العربية' : 'English'}
-              </button>
+              <LanguageSwitcher compact={true} />
               
               <Link
                 to={getLocalizedPath('/auth/login')}

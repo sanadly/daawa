@@ -5,11 +5,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
+import { useLanguage } from '../hooks/useLanguage';
 import api from '../lib/api';
 import toast from 'react-hot-toast';
 
 const QRTestPage: React.FC = () => {
   const { t } = useTranslation();
+  const language = useLanguage((state) => state.language);
+  const isRTL = language === 'ar';
   const [eventId, setEventId] = useState('');
   const [guestId, setGuestId] = useState('');
   const [qrCode, setQrCode] = useState('');
@@ -72,7 +75,7 @@ const QRTestPage: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div dir={isRTL ? "rtl" : "ltr"} className="container mx-auto p-6 space-y-6">
       <Card>
         <CardHeader>
           <CardTitle>QR Code Test & Check-in</CardTitle>
@@ -140,12 +143,12 @@ const QRTestPage: React.FC = () => {
           <CardTitle>Instructions</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2 text-sm">
-          <p><strong>1.</strong> Go to your Events page and create an event</p>
-          <p><strong>2.</strong> Add guests to the event</p>
-          <p><strong>3.</strong> Copy the Event ID and Guest ID from the URLs or browser dev tools</p>
-          <p><strong>4.</strong> Paste them here and click "Generate QR Code"</p>
-          <p><strong>5.</strong> Click "Validate & Check-in" to simulate scanning the QR code</p>
-          <p><strong>6.</strong> Check the result to see if the check-in was successful</p>
+          <p><strong>1.</strong> {t('qrTest.step1')}</p>
+          <p><strong>2.</strong> {t('qrTest.step2')}</p>
+          <p><strong>3.</strong> {t('qrTest.step3')}</p>
+          <p><strong>4.</strong> {t('qrTest.step4')}</p>
+          <p><strong>5.</strong> {t('qrTest.step5')}</p>
+          <p><strong>6.</strong> {t('qrTest.step6')}</p>
         </CardContent>
       </Card>
     </div>

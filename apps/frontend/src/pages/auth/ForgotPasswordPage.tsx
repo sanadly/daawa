@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useLanguage } from '../../hooks/useLanguage';
 import api from '../../lib/api';
 
 interface ForgotPasswordFormData {
@@ -10,6 +11,9 @@ interface ForgotPasswordFormData {
 
 const ForgotPasswordPage: React.FC = () => {
   const { t } = useTranslation();
+  const language = useLanguage((state) => state.language);
+  const getLocalizedPath = useLanguage((state) => state.getLocalizedPath);
+  const isRTL = language === 'ar';
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
 
@@ -38,7 +42,7 @@ const ForgotPasswordPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-accent-50 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div dir={isRTL ? "rtl" : "ltr"} className="min-h-screen bg-gradient-to-br from-primary-50 to-accent-50 flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <h2 className="text-2xl font-semibold text-gray-900 mb-2">{t('auth.forgotPassword.title')}</h2>
@@ -49,7 +53,7 @@ const ForgotPasswordPage: React.FC = () => {
           {message ? (
             <div className="text-center">
               <p className="text-green-600">{message}</p>
-              <Link to="/auth/login" className="link mt-4 inline-block">{t('auth.forgotPassword.backToLogin')}</Link>
+              <Link to={getLocalizedPath('/auth/login')} className="link mt-4 inline-block">{t('auth.forgotPassword.backToLogin')}</Link>
             </div>
           ) : (
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

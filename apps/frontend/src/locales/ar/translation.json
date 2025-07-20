@@ -55,24 +55,21 @@
     "all": "الكل",
     "paginationText": "صفحة {{page}} من {{totalPages}} ({{total}} عناصر)"
   },
+  "sidebar": {
+    "platform": "المنصة",
+    "settings": "الإعدادات",
+    "language": "اللغة",
+    "welcome": "مرحباً بعودتك، {{name}}"
+  },
   "navigation": {
-    "home": "الرئيسية",
     "dashboard": "لوحة التحكم",
     "events": "الفعاليات",
     "guests": "الضيوف",
-    "invitations": "الدعوات",
-    "checkin": "تسجيل الوصول",
+    "passes": "التذاكر",
+    "qrTest": "اختبار QR",
     "reports": "التقارير",
     "profile": "الملف الشخصي",
-    "help": "المساعدة",
-    "about": "حول",
-    "admin": "الإدارة",
-    "company": "الشركة",
-    "analytics": "التحليلات",
-    "billing": "الفوترة",
-    "qrTest": "اختبار QR",
-    "settings": "الإعدادات",
-    "logout": "تسجيل الخروج"
+    "company": "الشركة"
   },
   "landing": {
     "hero": {
@@ -187,6 +184,7 @@
       "emailInvalid": "تنسيق البريد الإلكتروني غير صحيح",
       "passwordRequired": "كلمة المرور مطلوبة",
       "passwordMinLength": "كلمة المرور يجب أن تكون {{min}} أحرف على الأقل",
+      "passwordComplexity": "كلمة المرور يجب أن تحتوي على حرف كبير واحد على الأقل، وحرف صغير واحد، ورقم واحد، ورمز خاص واحد",
       "confirmPasswordRequired": "يرجى تأكيد كلمة المرور",
       "passwordsDoNotMatch": "كلمتا المرور غير متطابقتان",
       "nameRequired": "الاسم مطلوب",
@@ -218,16 +216,42 @@
       "createEvent": "إنشاء فعالية جديدة",
       "viewAllEvents": "عرض جميع الفعاليات",
       "manageGuests": "إدارة الضيوف"
-    }
+    },
+    "subtitle": "إدارة فعالياتك بسهولة وكفاءة",
+    "quickActionsHeader": "إجراءات سريعة",
+    "recentActivityHeader": "النشاط الأخير",
+    "viewAll": "عرض الكل",
+    "quickInsightsHeader": "رؤى سريعة",
+    "attendanceRate": "معدل الحضور",
+    "avgGuestsPerEvent": "متوسط الضيوف لكل فعالية",
+    "activeEventsLabel": "فعاليات نشطة",
+    "checkinDashboard": "لوحة تحكم تسجيل الوصول",
+    "monitorEventCheckins": "راقب تسجيلات الوصول للفعاليات",
+    "startPlanning": "ابدأ التخطيط لفعاليتك القادمة",
+    "manageAllEvents": "إدارة جميع فعالياتك",
+    "manageGuestLists": "عرض وإدارة قوائم الضيوف"
   },
   "events": {
     "title": "الفعاليات",
+    "subtitle": "إدارة وتنظيم فعالياتك",
+    "searchPlaceholder": "البحث في الفعاليات...",
     "create": "إنشاء فعالية",
     "edit": "تعديل فعالية",
     "delete": "حذف فعالية",
     "details": "تفاصيل الفعالية",
     "noEvents": "لا توجد فعاليات",
     "createFirst": "أنشئ فعاليتك الأولى",
+    "guests": "ضيوف",
+    "platformPayment": "دفع المنصة",
+    "tiers": "فئات الفعالية",
+    "tiersDescription": "إدارة أنواع التذاكر المختلفة والتسعير",
+    "registered": "مسجل",
+    "noTiers": "لا توجد فئات لهذه الفعالية",
+    "confirmDelete": "هل أنت متأكد أنك تريد حذف هذه الفعالية؟",
+    "deleteSuccess": "تم حذف الفعالية بنجاح",
+    "deleteFailed": "فشل في حذف الفعالية",
+    "created": "تم إنشاء الفعالية بنجاح! جاري إعادة التوجيه إلى المصمم...",
+    "createFailed": "فشل في إنشاء الفعالية",
     "form": {
       "basicInfo": "المعلومات الأساسية",
       "eventDetails": "تفاصيل الفعالية",
@@ -275,9 +299,16 @@
     },
     "status": {
       "draft": "مسودة",
-      "active": "نشط",
+      "published": "منشور",
+      "pending_payment": "في انتظار الدفع",
       "ended": "انتهت",
-      "cancelled": "ملغاة"
+      "cancelled": "ملغاة",
+      "active": "نشط"
+    },
+    "paymentStatus": {
+      "paid": "مدفوع",
+      "pending": "في الانتظار",
+      "failed": "فشل"
     },
     "pricing": {
       "free": "فعالية مجانية",
@@ -287,6 +318,21 @@
       "additionalCost": "تكلفة الدعوات الإضافية",
       "totalEstimate": "التكلفة الإجمالية المقدرة"
     }
+  },
+  "company": {
+    "subtitle": "إدارة ملف الشركة والإعدادات",
+    "stats": {
+      "totalEvents": "إجمالي الفعاليات",
+      "eventsScheduled": "الفعاليات المجدولة"
+    }
+  },
+  "qrTest": {
+    "step1": "اذهب إلى صفحة الفعاليات وأنشئ فعالية",
+    "step2": "أضف ضيوف إلى الفعالية",
+    "step3": "انسخ معرف الفعالية ومعرف الضيف من الروابط أو أدوات المطور في المتصفح",
+    "step4": "الصقها هنا وانقر على \"إنشاء رمز QR\"",
+    "step5": "انقر على \"التحقق وتسجيل الوصول\" لمحاكاة مسح رمز QR",
+    "step6": "تحقق من النتيجة لمعرفة ما إذا كان تسجيل الوصول ناجحاً"
   },
   "designer": {
     "title": "تصميم الفعالية",

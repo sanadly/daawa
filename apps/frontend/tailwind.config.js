@@ -92,7 +92,7 @@ export default {
   				'sans-serif'
   			],
   			arabic: [
-  				'Noto Sans Arabic',
+  				'IBM Plex Sans Arabic',
   				'system-ui',
   				'-apple-system',
   				'sans-serif'
@@ -157,6 +157,12 @@ export default {
         },
         '.ltr': {
           direction: 'ltr',
+        },
+        '.arabic-text': {
+          direction: 'rtl',
+          'font-family': "'IBM Plex Sans Arabic', system-ui, -apple-system, sans-serif",
+          'text-align': 'right',
+          'unicode-bidi': 'bidi-override',
         },
       })
     },

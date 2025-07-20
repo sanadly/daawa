@@ -33,12 +33,13 @@ interface SignupFormData {
 
 const SignupPage: React.FC = () => {
   const { t } = useTranslation();
-  const { isRTL } = useLanguage();
   const { signup } = useAuth();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const language = useLanguage((state) => state.language);
+  const getLocalizedPath = useLanguage((state) => state.getLocalizedPath);
+  const isRTL = language === 'ar';
 
   const {
     register,
@@ -93,12 +94,12 @@ const SignupPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-accent-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-xl w-full space-y-8">
+    <div dir={isRTL ? "rtl" : "ltr"} className="min-h-screen bg-gradient-to-br from-primary-50 to-accent-50 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
         {/* Header */}
         <div className="text-center">
           <h1 className="text-4xl font-bold text-primary-800 mb-2">
-            {t('common.appName')}
+            {t('common.siteName')}
           </h1>
           <h2 className="text-2xl font-semibold text-gray-900 mb-2">
             {t('auth.signup.title')}
@@ -147,18 +148,27 @@ const SignupPage: React.FC = () => {
             {/* Company Name (conditional) */}
             {accountType === AccountType.COMPANY && (
               <div>
-                <label htmlFor="company_name" className="block text-sm font-medium text-gray-700 mb-2">{t('auth.fields.companyName')}</label>
+                <label 
+                  htmlFor="company_name" 
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  {t('auth.fields.companyName')}
+                </label>
                 <input
                   type="text"
                   id="company_name"
                   {...register('company_name', {
-                    required: accountType === AccountType.COMPANY ? t('auth.validation.companyNameRequired') : false,
+                    required: t('auth.validation.companyNameRequired'),
                   })}
-                  className={`w-full input ${errors.company_name ? 'border-red-500' : 'border-gray-300'} ${isRTL ? 'text-right' : 'text-left'}`}
+                  className={`w-full input ${errors.company_name ? 'border-red-500' : 'border-gray-300'}`}
                   placeholder={t('auth.placeholders.companyName')}
                   disabled={isLoading}
                 />
-                {errors.company_name && <p className="mt-1 text-sm text-red-600">{errors.company_name.message}</p>}
+                {errors.company_name && (
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.company_name.message}
+                  </p>
+                )}
               </div>
             )}
 
@@ -237,7 +247,7 @@ const SignupPage: React.FC = () => {
                 type="text"
                 id="name"
                 {...register('name', { required: t('auth.validation.nameRequired') })}
-                className={`w-full input ${errors.name ? 'border-red-500' : 'border-gray-300'} ${isRTL ? 'text-right' : 'text-left'}`}
+                className={`w-full input ${errors.name ? 'border-red-500' : 'border-gray-300'}`}
                 placeholder={t('auth.placeholders.fullName')}
                 disabled={isLoading}
               />
@@ -257,7 +267,7 @@ const SignupPage: React.FC = () => {
                     message: t('auth.validation.emailInvalid'),
                   },
                 })}
-                className={`w-full input ${errors.email ? 'border-red-500' : 'border-gray-300'} ${isRTL ? 'text-right' : 'text-left'}`}
+                className={`w-full input ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
                 placeholder={t('auth.placeholders.email')}
                 disabled={isLoading}
               />
@@ -272,7 +282,7 @@ const SignupPage: React.FC = () => {
                   type="text"
                   id="job_title"
                   {...register('job_title')}
-                  className={`w-full input border-gray-300 ${isRTL ? 'text-right' : 'text-left'}`}
+                  className={`w-full input border-gray-300`}
                   placeholder={t('auth.placeholders.jobTitle')}
                   disabled={isLoading}
                 />
@@ -285,11 +295,17 @@ const SignupPage: React.FC = () => {
               <input
                 type="tel"
                 id="phone"
-                {...register('phone')}
-                className={`w-full input border-gray-300 ${isRTL ? 'text-right' : 'text-left'}`}
+                {...register('phone', {
+                  pattern: {
+                    value: /^[+]?[1-9][\d\s\-()]+$/,
+                    message: t('auth.validation.phoneInvalid') || 'Please provide a valid phone number',
+                  },
+                })}
+                className={`w-full input ${errors.phone ? 'border-red-500' : 'border-gray-300'}`}
                 placeholder={t('auth.placeholders.phone')}
                 disabled={isLoading}
               />
+              {errors.phone && <p className="mt-1 text-sm text-red-600">{errors.phone.message}</p>}
             </div>
 
             {/* Password Field */}
@@ -302,17 +318,37 @@ const SignupPage: React.FC = () => {
                   {...register('password', {
                     required: t('auth.validation.passwordRequired'),
                     minLength: { value: 8, message: t('auth.validation.passwordMinLength', { min: 8 }) },
+                    pattern: {
+                      value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
+                      message: t('auth.validation.passwordComplexity') || 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character',
+                    },
                   })}
-                  className={`w-full input ${errors.password ? 'border-red-500' : 'border-gray-300'} ${isRTL ? 'text-right pr-12' : 'text-left pl-12'}`}
+                  className={`
+                    w-full input ${errors.password ? 'border-red-500' : 'border-gray-300'}
+                    ${isRTL ? 'pl-12' : 'pr-12'}
+                  `}
                   placeholder={t('auth.placeholders.password')}
                   disabled={isLoading}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className={`absolute top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 ${isRTL ? 'left-3' : 'right-3'}`}
+                  className={`
+                    absolute top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600
+                    ${isRTL ? 'left-3' : 'right-3'}
+                  `}
+                  disabled={isLoading}
                 >
-                  {/* Eye icon SVG */}
+                  {showPassword ? (
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L8.464 8.464m1.414 1.414L8.464 8.464m5.656 5.656l1.415 1.415m-1.415-1.415l1.415 1.415" />
+                    </svg>
+                  ) : (
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.543 7-1.275 4.057-5.065 7-9.543 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                  )}
                 </button>
               </div>
               {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>}
@@ -327,7 +363,7 @@ const SignupPage: React.FC = () => {
                 {...register('confirmPassword', {
                   required: t('auth.validation.confirmPasswordRequired'),
                 })}
-                className={`w-full input ${errors.confirmPassword ? 'border-red-500' : 'border-gray-300'} ${isRTL ? 'text-right' : 'text-left'}`}
+                className={`w-full input ${errors.confirmPassword ? 'border-red-500' : 'border-gray-300'}`}
                 placeholder={t('auth.placeholders.confirmPassword')}
                 disabled={isLoading}
               />
@@ -355,7 +391,7 @@ const SignupPage: React.FC = () => {
           <div className="mt-8 text-center border-t pt-6">
             <p className="text-sm text-gray-600">
               {t('auth.signup.haveAccount')}{' '}
-              <Link to={`/${language}/auth/login`} className="link">
+              <Link to={getLocalizedPath('/auth/login')} className="link">
                 {t('auth.signup.loginLink')}
               </Link>
             </p>
