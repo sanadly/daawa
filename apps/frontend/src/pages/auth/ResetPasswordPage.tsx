@@ -32,7 +32,7 @@ const ResetPasswordPage: React.FC = () => {
   useEffect(() => {
     const validateToken = async () => {
       try {
-        await api.post('/auth/password-reset/validate', { token });
+        await api.post('/auth/validate-reset-token', { token });
         setTokenValid(true);
       } catch (err) {
         setTokenValid(false);
@@ -56,7 +56,7 @@ const ResetPasswordPage: React.FC = () => {
     setErrorState('');
 
     try {
-      await api.post('/auth/password-reset/confirm', { token, newPassword: data.newPassword });
+      await api.post('/auth/reset-password', { token, newPassword: data.newPassword });
       setMessage(t('auth.resetPassword.successMessage'));
       setTimeout(() => navigate(getLocalizedPath('/auth/login')), 3000);
     } catch (err: any) {

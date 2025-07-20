@@ -170,14 +170,14 @@ const DashboardPage: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex-1">
-          {/* Welcome Section */}
-          <div className="bg-gradient-to-r from-primary-500 to-primary-600 rounded-xl p-8 text-white">
-            <h1 className="text-3xl font-bold mb-2">
-              {t('dashboard.welcome', { name: user?.email?.split('@')[0] || user?.name || 'User' })}
-            </h1>
-            <p className="text-primary-100 text-lg"> 
+      {/* Welcome Section */}
+      <div className="bg-gradient-to-r from-primary-500 to-primary-600 rounded-xl p-8 text-white">
+        <h1 className="text-3xl font-bold mb-2">
+          {t('dashboard.welcome', { name: user?.email?.split('@')[0] || user?.name || 'User' })}
+        </h1>
+        <p className="text-primary-100 text-lg">
               {t('dashboard.subtitle')}
-            </p>
+        </p>
           </div>
         </div>
       </div>
@@ -215,7 +215,7 @@ const DashboardPage: React.FC = () => {
         {/* Quick Actions */}
         <div className="lg:col-span-2">
           <div className="bg-white rounded-xl shadow-soft p-6">
-            <h2 className="text-xl font-semibold text-neutral-900 mb-6"> 
+            <h2 className="text-xl font-semibold text-neutral-900 mb-6">
               {t('dashboard.quickActionsHeader')}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -247,9 +247,9 @@ const DashboardPage: React.FC = () => {
         {/* Recent Activity */}
         <div className="lg:col-span-1">
           <div className="bg-white rounded-xl shadow-soft p-6">
-            <h2 className="text-xl font-semibold text-neutral-900"> 
+              <h2 className="text-xl font-semibold text-neutral-900">
               {t('dashboard.recentActivity')}
-            </h2>
+              </h2>
             <div className="mt-4 space-y-3">
               {recentActivity.length > 0 ? (
                 recentActivity.slice(0, 5).map((activity, index) => (
@@ -260,7 +260,7 @@ const DashboardPage: React.FC = () => {
                   <p className="text-sm text-neutral-600">
                     {t('dashboard.noRecentActivity')}
                   </p>
-                </div>
+            </div>
               )}
             </div>
           </div>
@@ -270,10 +270,10 @@ const DashboardPage: React.FC = () => {
       {/* Additional Stats */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Upcoming Events */}
-        <div className="bg-white rounded-xl shadow-soft p-6">
-          <h2 className="text-xl font-semibold text-neutral-900 mb-6"> 
+      <div className="bg-white rounded-xl shadow-soft p-6">
+        <h2 className="text-xl font-semibold text-neutral-900 mb-6">
             {t('dashboard.upcomingEvents')}
-          </h2>
+        </h2>
           <div className="space-y-4">
             <div className="text-center py-8">
               <p className="text-sm text-neutral-600">
@@ -304,7 +304,7 @@ const DashboardPage: React.FC = () => {
               <span className="text-sm font-medium text-neutral-900">
                 {t('dashboard.notAvailable')}
               </span>
-            </div>
+          </div>
             <div className="flex justify-between items-center">
               <span className="text-sm text-neutral-600">
                 {t('dashboard.checkinRate')}

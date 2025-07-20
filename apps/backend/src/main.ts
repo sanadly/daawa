@@ -10,6 +10,10 @@ import { join } from 'path';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
+  // Configure Express to handle large headers
+  const server = app.getHttpServer();
+  (server as any).maxHttpHeaderSize = 16384;
+
   // Performance monitoring middleware
   app.use((req, res, next) => {
     const start = Date.now();

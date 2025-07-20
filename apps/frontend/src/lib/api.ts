@@ -8,7 +8,7 @@ declare module 'axios' {
 }
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL || '/api/v1',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -84,7 +84,7 @@ api.interceptors.response.use(
         }
         
         // Use a fresh axios instance for refresh to avoid interceptor loops
-        const refreshResponse = await axios.post('/api/auth/refresh', { 
+        const refreshResponse = await axios.post('/api/v1/auth/refresh', { 
           refreshToken 
         }, {
           headers: {

@@ -30,7 +30,7 @@ i18n
     detection: {
       order: ['path', 'localStorage', 'navigator'],
       lookupFromPathIndex: 0,
-      caches: ['localStorage']
+      caches: ['localStorage'],
     }
   })
   .then(() => {
@@ -46,6 +46,8 @@ i18n
     if (i18n.language !== finalLang) {
       i18n.changeLanguage(finalLang);
     }
+    
+    console.log('i18n initialized with language:', finalLang);
   });
 
 export default i18n 

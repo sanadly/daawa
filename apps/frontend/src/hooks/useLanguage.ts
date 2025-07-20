@@ -8,9 +8,23 @@ interface LanguageState {
   getLocalizedPath: (path: string) => string;
 }
 
+// Flag to prevent infinite loops
+let isUpdatingFromI18n = false;
+
 // Initialize language from various sources
 const getInitialLanguage = (): 'en' | 'ar' => {
-  // First, check if i18n is already initialized
+  // First, check URL path for language (highest priority)
+  const pathLang = window.location.pathname.split('/')[1];
+  if (pathLang === 'ar') {
+    console.log('Language detected from URL path:', pathLang);
+    return 'ar';
+  }
+  if (pathLang === 'en') {
+    console.log('Language detected from URL path:', pathLang);
+    return 'en';
+  }
+  
+  // Check if i18n is already initialized
   if (i18n.isInitialized && i18n.language) {
     const detectedLang = i18n.language.split('-')[0] as 'en' | 'ar';
     console.log('Language detected from i18n:', detectedLang);
@@ -29,13 +43,6 @@ const getInitialLanguage = (): 'en' | 'ar' => {
   const browserLang = navigator.language.split('-')[0] as 'en' | 'ar';
   if (browserLang === 'ar') {
     console.log('Language detected from browser:', browserLang);
-    return 'ar';
-  }
-  
-  // Check URL path for language
-  const pathLang = window.location.pathname.split('/')[1];
-  if (pathLang === 'ar') {
-    console.log('Language detected from URL path:', pathLang);
     return 'ar';
   }
   
@@ -61,9 +68,33 @@ export const useLanguage = create<LanguageState>((set, get) => ({
   isRTL: initialLanguage === 'ar',
   setLanguage: (lang) => {
     console.log('Setting language to:', lang);
+    
+    // Prevent infinite loop
+    if (isUpdatingFromI18n) {
+      console.log('Skipping setLanguage - updating from i18n');
+      return;
+    }
+    
+    // Update i18n
+    isUpdatingFromI18n = true;
     i18n.changeLanguage(lang);
+    isUpdatingFromI18n = false;
+    
+    // Update localStorage
+    localStorage.setItem('i18nextLng', lang);
+    
+    // Update store
     set({ language: lang, isRTL: lang === 'ar' });
+    
+    // Update document direction
     setDocumentDirection(lang);
+    
+    // Update URL if not already correct
+    const currentPath = window.location.pathname;
+    const expectedPath = `/${lang}${currentPath.replace(/^\/(en|ar)/, '')}`;
+    if (currentPath !== expectedPath) {
+      window.history.replaceState(null, '', expectedPath);
+    }
   },
   getLocalizedPath: (path) => {
     const lang = get().language;
@@ -73,7 +104,7 @@ export const useLanguage = create<LanguageState>((set, get) => ({
     }
     return `/${lang}${path}`;
   },
-}));
+})); 
 
 // Update the store when i18n is ready
 i18n.on('initialized', () => {
@@ -81,8 +112,12 @@ i18n.on('initialized', () => {
   const finalLang = detectedLang === 'ar' ? 'ar' : 'en';
   
   console.log('i18n initialized, detected language:', finalLang);
-  // Update the store and document direction
-  useLanguage.getState().setLanguage(finalLang);
+  
+  // Only update if different from current
+  const currentLang = useLanguage.getState().language;
+  if (finalLang !== currentLang) {
+    useLanguage.getState().setLanguage(finalLang);
+  }
 });
 
 // Also listen for language changes from i18n
@@ -91,9 +126,12 @@ i18n.on('languageChanged', (lng) => {
   const finalLang = lang === 'ar' ? 'ar' : 'en';
   
   console.log('i18n language changed to:', finalLang);
-  // Only update if different from current
+  
+  // Only update if different from current and not already updating
   const currentLang = useLanguage.getState().language;
-  if (finalLang !== currentLang) {
+  if (finalLang !== currentLang && !isUpdatingFromI18n) {
+    isUpdatingFromI18n = true;
     useLanguage.getState().setLanguage(finalLang);
+    isUpdatingFromI18n = false;
   }
 }); 

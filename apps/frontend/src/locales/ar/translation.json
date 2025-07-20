@@ -109,6 +109,7 @@
       "forgotPassword": "نسيت كلمة المرور؟",
       "noAccount": "ليس لديك حساب؟",
       "rememberMe": "تذكرني",
+      "signUpLink": "إنشاء حساب",
       "errors": {
         "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
         "accountLocked": "الحساب مقفل. يرجى التواصل مع الدعم.",

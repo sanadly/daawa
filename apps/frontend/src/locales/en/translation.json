@@ -110,7 +110,8 @@
       "signIn": "Sign In",
       "signingIn": "Signing in...",
       "forgotPassword": "Forgot your password?",
-      "noAccount": "Don't have an account?"
+      "noAccount": "Don't have an account?",
+      "signUpLink": "Sign up"
     },
     "signup": {
       "title": "Create Account",

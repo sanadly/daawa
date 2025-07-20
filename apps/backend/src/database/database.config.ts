@@ -72,7 +72,7 @@ const createDatabaseConfig = (): TypeOrmModuleOptions => {
         idle: parseInt(process.env.DATABASE_POOL_IDLE_TIMEOUT || '10000'),
       },
     },
-
+    
     // Skip Redis cache for now to avoid connection issues
     // cache: {
     //   type: 'redis',

@@ -68,101 +68,103 @@ export function AppSidebar({ className }: { className?: string }) {
         w-64 bg-white shadow-lg
         transform transition-transform duration-300 ease-in-out
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-        flex flex-col
+        flex flex-col h-screen
         ${className}
       `}
     >
-      {/* Header */}
-      <div className="p-6 border-b">
-        <h2 className="text-xl font-semibold text-gray-800">Daawa</h2>
+        {/* Header */}
+        <div className="p-6 border-b flex-shrink-0">
+          <h2 className="text-xl font-semibold text-gray-800">Daawa</h2>
         <p className="text-sm text-gray-600 mt-1">
           {t('sidebar.welcome', { name: user?.name })}
         </p>
-      </div>
-
-      {/* Navigation */}
-      <div className="flex-1 overflow-y-auto p-4">
-        {/* Platform Section */}
-        <div className="mb-6">
-          <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3"> 
-            {t('sidebar.platform')}
-          </h3>
-          <nav className="space-y-1">
-            {platformItems.map((item) => {
-              const Icon = item.icon
-              return (
-                <button
-                  key={item.key}
-                  onClick={() => handleNavigation(item.url)}
-                  className={`
-                    w-full flex items-center px-3 py-2 text-sm font-medium rounded-md
-                    transition-colors duration-150 ease-in-out
-                    ${isActive(item.url)
-                      ? 'bg-blue-100 text-blue-700 border-r-2 border-blue-700'
-                      : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
-                    }
-                  `}
-                >
-                  <Icon className="mr-3 h-5 w-5" />
-                  <span>
-                    {t(`navigation.${item.key}`)}
-                  </span>
-                </button>
-              )
-            })}
-          </nav>
         </div>
 
-        {/* Settings Section */}
-        <div className="mb-6">
-          <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3"> 
-            {t('sidebar.settings')}
-          </h3>
-          <nav className="space-y-1">
-            {settingsItems.map((item) => {
-              const Icon = item.icon
-              return (
-                <button
-                  key={item.key}
-                  onClick={() => handleNavigation(item.url)}
-                  className={`
-                    w-full flex items-center px-3 py-2 text-sm font-medium rounded-md
-                    transition-colors duration-150 ease-in-out
-                    ${isActive(item.url)
-                      ? 'bg-blue-100 text-blue-700 border-r-2 border-blue-700'
-                      : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
-                    }
-                  `}
-                >
-                  <Icon className="mr-3 h-5 w-5" />
-                  <span>
-                    {t(`navigation.${item.key}`)}
-                  </span>
-                </button>
-              )
-            })}
-          </nav>
+        {/* Navigation */}
+        <div className="flex-1 p-4 flex flex-col justify-between">
+          <div>
+            {/* Platform Section */}
+            <div className="mb-6">
+              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+              {t('sidebar.platform')}
+              </h3>
+              <nav className="space-y-1">
+                {platformItems.map((item) => {
+                  const Icon = item.icon
+                  return (
+                    <button
+                    key={item.key}
+                      onClick={() => handleNavigation(item.url)}
+                      className={`
+                        w-full flex items-center px-3 py-2 text-sm font-medium rounded-md
+                        transition-colors duration-150 ease-in-out
+                        ${isActive(item.url)
+                          ? 'bg-blue-100 text-blue-700 border-r-2 border-blue-700'
+                          : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                        }
+                      `}
+                    >
+                      <Icon className="mr-3 h-5 w-5" />
+                    <span>
+                      {t(`navigation.${item.key}`)}
+                    </span>
+                    </button>
+                  )
+                })}
+              </nav>
+            </div>
+
+            {/* Settings Section */}
+            <div className="mb-6">
+              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+              {t('sidebar.settings')}
+              </h3>
+              <nav className="space-y-1">
+                {settingsItems.map((item) => {
+                  const Icon = item.icon
+                  return (
+                    <button
+                    key={item.key}
+                      onClick={() => handleNavigation(item.url)}
+                      className={`
+                        w-full flex items-center px-3 py-2 text-sm font-medium rounded-md
+                        transition-colors duration-150 ease-in-out
+                        ${isActive(item.url)
+                          ? 'bg-blue-100 text-blue-700 border-r-2 border-blue-700'
+                          : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                        }
+                      `}
+                    >
+                      <Icon className="mr-3 h-5 w-5" />
+                    <span>
+                      {t(`navigation.${item.key}`)}
+                    </span>
+                    </button>
+                  )
+                })}
+              </nav>
+            </div>
+
+            {/* Language Switcher */}
+            <div className="mb-6">
+              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+              {t('sidebar.language')}
+              </h3>
+            <LanguageSwitcher />
+            </div>
+          </div>
         </div>
 
-        {/* Language Switcher */}
-        <div className="mb-6">
-          <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3"> 
-            {t('sidebar.language')}
-          </h3>
-          <LanguageSwitcher />
-        </div>
-      </div>
-
-      {/* Footer */}
-      <div className="p-4 border-t">
-        <button
-          onClick={handleLogout}
-          className="w-full flex items-center px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-md transition-colors"
-        >
-          <LogOut className="mr-3 h-5 w-5" />
+        {/* Footer */}
+        <div className="p-4 border-t flex-shrink-0 mt-auto">
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-md transition-colors"
+          >
+            <LogOut className="mr-3 h-5 w-5" />
           <span>{t('common.logout')}</span>
-        </button>
+          </button>
+        </div>
       </div>
-    </div>
   )
 } 

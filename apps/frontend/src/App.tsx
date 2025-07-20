@@ -50,7 +50,7 @@ function ProtectedLayout() {
   console.log('ProtectedLayout rendering')
   
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="h-screen bg-gray-50 flex">
       <AppSidebar />
       <main className="flex-1 lg:ml-0 overflow-auto">
         <div className="p-6 lg:p-8">

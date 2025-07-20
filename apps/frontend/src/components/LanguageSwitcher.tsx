@@ -4,6 +4,7 @@ import { useLanguage } from '../hooks/useLanguage';
 import { Button } from './ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 import { ChevronDown } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 interface LanguageSwitcherProps {
   compact?: boolean;
@@ -17,13 +18,25 @@ const languages = [
 export function LanguageSwitcher({ compact = false }: LanguageSwitcherProps) {
   const { i18n } = useTranslation();
   const { language, setLanguage } = useLanguage();
+  const navigate = useNavigate();
+  const location = useLocation();
   const isRTL = language === 'ar';
 
   const currentLanguage = languages.find(lang => lang.code === language) || languages[0];
 
   const changeLanguage = (newLanguage: 'en' | 'ar') => {
+    console.log('LanguageSwitcher: Changing language to', newLanguage);
+    
+    // Update the language store and i18n
     setLanguage(newLanguage);
-    i18n.changeLanguage(newLanguage);
+    
+    // Update the URL to reflect the new language
+    const currentPath = location.pathname;
+    const pathWithoutLang = currentPath.replace(/^\/(en|ar)/, '');
+    const newPath = `/${newLanguage}${pathWithoutLang}`;
+    
+    console.log('LanguageSwitcher: Navigating to', newPath);
+    navigate(newPath, { replace: true });
   };
 
   return (
@@ -59,7 +72,7 @@ export function LanguageSwitcher({ compact = false }: LanguageSwitcherProps) {
             {currentLanguage.code === language.code && (
               <span className="ml-auto text-blue-600">✓</span>
             )}
-          </DropdownMenuItem>
+        </DropdownMenuItem>
         ))}
       </DropdownMenuContent>
     </DropdownMenu>

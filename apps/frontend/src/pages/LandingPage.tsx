@@ -55,14 +55,14 @@ const LandingPage: React.FC = () => {
               <LanguageSwitcher compact={true} />
               
               <Link
-                to={getLocalizedPath('/auth/login')}
+                to={getLocalizedPath('/login')}
                 className="text-sm font-medium text-neutral-600 hover:text-primary-500 transition-colors"
               >
                 {t('common.login')}
               </Link>
               
               <Link
-                to={getLocalizedPath('/auth/signup')}
+                to={getLocalizedPath('/signup')}
                 className="btn btn-primary"
               >
                 {t('common.signup')}
@@ -89,7 +89,7 @@ const LandingPage: React.FC = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
-                  to={getLocalizedPath('/auth/signup')}
+                  to={getLocalizedPath('/signup')}
                   className="btn btn-primary px-8 py-3 text-lg"
                 >
                   {t('landing.hero.cta.getStarted')}

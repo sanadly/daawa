@@ -109,33 +109,13 @@ const LoginPage: React.FC = () => {
               >
                 {t('auth.fields.password')}
               </label>
-              <div className="relative">
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  id="password"
-                  {...register('password', {
-                    required: t('auth.validation.passwordRequired'),
-                    minLength: {
-                      value: 8,
-                      message: t('auth.validation.passwordMinLength', {min: 8}),
-                    },
-                  })}
-                  className={`
-                    w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors
-                    ${errors.password ? 'border-red-500' : 'border-gray-300'}
-                    ${isRTL ? 'pl-12' : 'pr-12'}
-                  `}
-                  placeholder={t('auth.placeholders.password')}
-                  disabled={isLoading}
-                />
+              <div className={`flex items-center border rounded-lg focus-within:ring-2 focus-within:ring-primary-500 focus-within:border-primary-500 transition-colors ${errors.password ? 'border-red-500' : 'border-gray-300'} ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}> 
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className={`
-                    absolute top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600
-                    ${isRTL ? 'left-3' : 'right-3'}
-                  `}
+                  className="text-gray-400 hover:text-gray-600 px-4 py-3 focus:outline-none flex-shrink-0 border-0"
                   disabled={isLoading}
+                  aria-label={showPassword ? t('auth.login.hidePassword') : t('auth.login.showPassword')}
                 >
                   {showPassword ? (
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -148,6 +128,21 @@ const LoginPage: React.FC = () => {
                     </svg>
                   )}
                 </button>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  id="password"
+                  dir="ltr"
+                  {...register('password', {
+                    required: t('auth.validation.passwordRequired'),
+                    minLength: {
+                      value: 8,
+                      message: t('auth.validation.passwordMinLength', {min: 8}),
+                    },
+                  })}
+                  className={`flex-1 bg-transparent px-4 py-3 focus:outline-none border-0 text-gray-900 ${isRTL ? 'text-right' : 'text-left'}`}
+                  placeholder={t('auth.placeholders.password')}
+                  disabled={isLoading}
+                />
               </div>
               {errors.password && (
                 <p className="mt-1 text-sm text-red-600">
@@ -191,7 +186,7 @@ const LoginPage: React.FC = () => {
             {/* Forgot Password Link */}
             <div className="text-center">
               <Link
-                to={getLocalizedPath('/auth/forgot-password')}
+                to={getLocalizedPath('/forgot-password')}
                 className="text-sm text-primary-600 hover:text-primary-800 transition-colors"
               >
                 {t('auth.login.forgotPassword')}
@@ -204,7 +199,7 @@ const LoginPage: React.FC = () => {
             <p className="text-sm text-gray-600">
               {t('auth.login.noAccount')}{' '}
               <Link
-                to={getLocalizedPath('/auth/signup')}
+                to={getLocalizedPath('/signup')}
                 className="text-primary-600 hover:text-primary-800 font-medium transition-colors"
               >
                 {t('auth.login.signUpLink')}
