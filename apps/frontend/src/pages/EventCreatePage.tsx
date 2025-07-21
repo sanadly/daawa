@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useForm, Controller, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { Calendar, Users, DollarSign, ChevronLeft, ChevronRight, Plus, Trash2 } from 'lucide-react'
+import { Calendar, Users, DollarSign, ChevronLeft, ChevronRight, Plus, Trash2, Clock } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 import { useLanguage } from '../hooks/useLanguage'
@@ -172,43 +172,67 @@ const EventCreatePage: React.FC = () => {
                   {form.formState.errors.description && <p className="text-sm text-red-500">{t('events.validation.descriptionRequired')}</p>}
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="start_date">{t('events.form.startDate')}</Label>
+                  <div className="relative">
+                    <Label htmlFor="start_date" className="flex items-center gap-2">
+                      <Calendar className="h-4 w-4" />
+                      {t('events.form.startDate')}
+                    </Label>
                     <Input 
                       id="start_date" 
                       type="date" 
                       {...form.register('start_date')}
+                      dir={isRTL ? 'rtl' : 'ltr'}
                     />
-                    {form.formState.errors.start_date && <p className="text-sm text-red-500">{t('events.validation.startDateRequired')}</p>}
+                    {form.formState.errors.start_date && (
+                      <p className="text-sm text-red-500 mt-1">{t('events.validation.startDateRequired')}</p>
+                    )}
                   </div>
-                  <div>
-                    <Label htmlFor="start_time">{t('events.form.startTime')}</Label>
+                  <div className="relative">
+                    <Label htmlFor="start_time" className="flex items-center gap-2">
+                      <Clock className="h-4 w-4" />
+                      {t('events.form.startTime')}
+                    </Label>
                     <Input 
                       id="start_time" 
                       type="time" 
                       {...form.register('start_time')}
+                      dir={isRTL ? 'rtl' : 'ltr'}
                     />
-                    {form.formState.errors.start_time && <p className="text-sm text-red-500">{t('events.validation.startTimeRequired')}</p>}
+                    {form.formState.errors.start_time && (
+                      <p className="text-sm text-red-500 mt-1">{t('events.validation.startTimeRequired')}</p>
+                    )}
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="end_date">{t('events.form.endDate')}</Label>
+                  <div className="relative">
+                    <Label htmlFor="end_date" className="flex items-center gap-2">
+                      <Calendar className="h-4 w-4" />
+                      {t('events.form.endDate')}
+                    </Label>
                     <Input 
                       id="end_date" 
                       type="date" 
                       {...form.register('end_date')}
+                      dir={isRTL ? 'rtl' : 'ltr'}
                     />
-                    {form.formState.errors.end_date && <p className="text-sm text-red-500">{t('events.validation.endDateRequired')}</p>}
+                    {form.formState.errors.end_date && (
+                      <p className="text-sm text-red-500 mt-1">{t('events.validation.endDateRequired')}</p>
+                    )}
                   </div>
-                  <div>
-                    <Label htmlFor="end_time">{t('events.form.endTime')}</Label>
+                  <div className="relative">
+                    <Label htmlFor="end_time" className="flex items-center gap-2">
+                      <Clock className="h-4 w-4" />
+                      {t('events.form.endTime')}
+                    </Label>
                     <Input 
                       id="end_time" 
                       type="time" 
                       {...form.register('end_time')}
+                      dir={isRTL ? 'rtl' : 'ltr'}
                     />
-                    {form.formState.errors.end_time && <p className="text-sm text-red-500">{t('events.validation.endTimeRequired')}</p>}
+                    {form.formState.errors.end_time && (
+                      <p className="text-sm text-red-500 mt-1">{t('events.validation.endTimeRequired')}</p>
+                    )}
                   </div>
                 </div>
               </CardContent>

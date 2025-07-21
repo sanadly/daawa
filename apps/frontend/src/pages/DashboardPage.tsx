@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { 
@@ -15,7 +15,6 @@ import {
 } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth.tsx'
 import { useLanguage } from '../hooks/useLanguage.ts'
-import { useStrictModeSafeEffect } from '../hooks/useStrictModeSafeEffect'
 import api from '../lib/api'
 import Loading from '../components/ui/loading'
 import ApiErrorHandler from '../components/ApiErrorHandler'
@@ -29,7 +28,7 @@ interface DashboardStats {
 
 interface RecentActivity {
   id: string
-  type: string
+  type: 'event_created' | 'guest_registered' | 'event_published' | 'checkin_completed'
   message: string
   timestamp: string
   user?: string
@@ -59,6 +58,11 @@ const DashboardPage: React.FC = () => {
   const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<any>(null)
+  
+  // Add refs to prevent multiple API calls
+  const mountedRef = useRef(false)
+  const isFetchingRef = useRef(false)
+  const hasInitializedRef = useRef(false)
 
   const quickActions: QuickAction[] = [
     {
@@ -92,7 +96,28 @@ const DashboardPage: React.FC = () => {
   ]
 
   const fetchDashboardData = async () => {
+    // Prevent multiple simultaneous calls
+    if (isFetchingRef.current) {
+      console.log('Dashboard: Skipping fetch - already in progress')
+      return
+    }
+    
+    // Prevent calls if component is unmounted
+    if (!mountedRef.current) {
+      console.log('Dashboard: Skipping fetch - component not mounted')
+      return
+    }
+
+    // Prevent multiple initializations
+    if (hasInitializedRef.current) {
+      console.log('Dashboard: Skipping fetch - already initialized')
+      return
+    }
+
     try {
+      console.log('Dashboard: Starting fetch')
+      isFetchingRef.current = true
+      hasInitializedRef.current = true
       setLoading(true)
       setError(null)
       
@@ -112,26 +137,42 @@ const DashboardPage: React.FC = () => {
       // We can implement this later or use a different approach
       const activityData: RecentActivity[] = []
       
-      setStats(statsData)
-      setRecentActivity(activityData)
+      // Only update state if component is still mounted
+      if (mountedRef.current) {
+        setStats(statsData)
+        setRecentActivity(activityData)
+      }
     } catch (err: any) {
       console.error('Failed to fetch dashboard data:', err)
-      setError(err)
-      // Set default values on error
-      setStats({
-        totalEvents: 0,
-        activeEvents: 0,
-        totalGuests: 0,
-        checkedIn: 0
-      })
-      setRecentActivity([])
+      if (mountedRef.current) {
+        setError(err)
+        // Set default values on error
+        setStats({
+          totalEvents: 0,
+          activeEvents: 0,
+          totalGuests: 0,
+          checkedIn: 0
+        })
+        setRecentActivity([])
+      }
     } finally {
-      setLoading(false)
+      if (mountedRef.current) {
+        setLoading(false)
+      }
+      isFetchingRef.current = false
     }
   }
 
-  useStrictModeSafeEffect(() => {
+  useEffect(() => {
+    console.log('Dashboard: Component mounted')
+    mountedRef.current = true
     fetchDashboardData()
+    
+    return () => {
+      console.log('Dashboard: Component unmounted')
+      mountedRef.current = false
+      hasInitializedRef.current = false
+    }
   }, [])
 
   const StatCard: React.FC<{ title: string; value: number; icon: React.ComponentType<{ className?: string }>; color: string }> = ({ 

@@ -10,31 +10,31 @@ export const useStrictModeSafeEffect = (
 ) => {
   const hasRun = useRef(false);
   const cleanupRef = useRef<(() => void) | void>();
-  const effectRef = useRef(effect);
-
-  // Update the effect ref when the effect function changes
-  useEffect(() => {
-    effectRef.current = effect;
-  }, [effect]);
 
   useEffect(() => {
-    console.log('useStrictModeSafeEffect called, hasRun.current:', hasRun.current);
-    
+    // Only run once per mount cycle
     if (hasRun.current) {
-      console.log('useStrictModeSafeEffect: skipping execution (already run)');
       return;
     }
 
     console.log('useStrictModeSafeEffect: executing effect');
     hasRun.current = true;
-    cleanupRef.current = effectRef.current();
+    
+    // Clean up previous effect
+    if (cleanupRef.current) {
+      cleanupRef.current();
+    }
+    
+    cleanupRef.current = effect();
 
     return () => {
       console.log('useStrictModeSafeEffect: cleanup');
-      // Don't reset hasRun.current here to prevent infinite loops
       if (cleanupRef.current) {
         cleanupRef.current();
+        cleanupRef.current = undefined;
       }
+      // Reset for next mount cycle
+      hasRun.current = false;
     };
   }, deps);
 }; 

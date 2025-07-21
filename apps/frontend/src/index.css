@@ -245,8 +245,83 @@
   }
 
   [dir="rtl"] [data-radix-select-item] span[class*="absolute left-2"] {
-    left: auto;
-    right: 0.5rem;
+    left: auto !important;
+    right: 0.5rem !important;
+  }
+
+  /* Date and Time Input RTL Styling */
+  [dir="rtl"] input[type="date"],
+  [dir="rtl"] input[type="time"] {
+    text-align: right;
+    direction: rtl;
+    unicode-bidi: bidi-override;
+  }
+
+  [dir="rtl"] input[type="date"]::-webkit-datetime-edit,
+  [dir="rtl"] input[type="time"]::-webkit-datetime-edit {
+    text-align: right;
+    direction: rtl;
+    unicode-bidi: bidi-override;
+  }
+
+  [dir="rtl"] input[type="date"]::-webkit-datetime-edit-fields-wrapper,
+  [dir="rtl"] input[type="time"]::-webkit-datetime-edit-fields-wrapper {
+    text-align: right;
+    direction: rtl;
+    unicode-bidi: bidi-override;
+  }
+
+  [dir="rtl"] input[type="date"]::-webkit-datetime-edit-text,
+  [dir="rtl"] input[type="time"]::-webkit-datetime-edit-text {
+    text-align: right;
+    direction: rtl;
+    unicode-bidi: bidi-override;
+  }
+
+  [dir="rtl"] input[type="date"]::-webkit-datetime-edit-month-field,
+  [dir="rtl"] input[type="date"]::-webkit-datetime-edit-day-field,
+  [dir="rtl"] input[type="date"]::-webkit-datetime-edit-year-field,
+  [dir="rtl"] input[type="time"]::-webkit-datetime-edit-hour-field,
+  [dir="rtl"] input[type="time"]::-webkit-datetime-edit-minute-field,
+  [dir="rtl"] input[type="time"]::-webkit-datetime-edit-second-field {
+    text-align: right;
+    direction: rtl;
+    unicode-bidi: bidi-override;
+  }
+
+  [dir="rtl"] input[type="date"]::-webkit-calendar-picker-indicator,
+  [dir="rtl"] input[type="time"]::-webkit-calendar-picker-indicator {
+    margin-left: 0;
+    margin-right: auto;
+  }
+
+  /* Remove the complex label and input icon styling that was causing issues */
+
+  /* Simple RTL support for labels and inputs */
+  [dir="rtl"] .label-with-icon {
+    flex-direction: row-reverse;
+  }
+
+  [dir="rtl"] .label-with-icon .icon {
+    margin-left: 0;
+    margin-right: 0.5rem;
+  }
+
+  [dir="rtl"] .label-with-icon .text {
+    text-align: right;
+  }
+
+  [dir="rtl"] .input-with-icon {
+    position: relative;
+  }
+
+  [dir="rtl"] .input-with-icon .icon {
+    position: absolute;
+    left: 0.75rem;
+    right: auto;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
   }
 
   /* RTL border fixes */
